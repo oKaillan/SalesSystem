@@ -178,3 +178,4 @@ C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSyst
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSys.5B7FCE65.Up2Date
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.genruntimeconfig.cache
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\ref\SalesSystem.dll
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.sourcelink.json
