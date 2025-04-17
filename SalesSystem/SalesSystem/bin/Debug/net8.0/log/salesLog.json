@@ -1,0 +1,24 @@
+{
+  "SaleId": 16,
+  "EmployeeId": 1,
+  "EmployeeName": "Kaillan Oliveira",
+  "Employee": null,
+  "ProductId": 1,
+  "Product": null,
+  "ProductName": "Laptop",
+  "Quantity": 10,
+  "TotalPrice": 12000,
+  "Time": "2025-04-16T11:01:48.1657335-03:00"
+}
+
+{
+  "SaleId": 1,
+  "EmployeeId": 1,
+  "Employee": "Kaillan Oliveira",
+  "ProductId": 1,
+  "Product": "Electronic",
+  "Quantity": 10,
+  "TotalPrice": 22000,
+  "Time": "2025-04-16T11:51:07.8348505-03:00"
+}
+

@@ -1,0 +1,14 @@
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\bin\Debug\net8.0\SallesSystem.exe
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\bin\Debug\net8.0\SallesSystem.deps.json
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\bin\Debug\net8.0\SallesSystem.runtimeconfig.json
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\bin\Debug\net8.0\SallesSystem.dll
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\bin\Debug\net8.0\SallesSystem.pdb
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\obj\Debug\net8.0\SallesSystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\obj\Debug\net8.0\SallesSystem.AssemblyInfoInputs.cache
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\obj\Debug\net8.0\SallesSystem.AssemblyInfo.cs
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\obj\Debug\net8.0\SallesSystem.csproj.CoreCompileInputs.cache
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\obj\Debug\net8.0\SallesSystem.dll
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\obj\Debug\net8.0\refint\SallesSystem.dll
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\obj\Debug\net8.0\SallesSystem.pdb
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\obj\Debug\net8.0\SallesSystem.genruntimeconfig.cache
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Salles System\SallesSystem\SallesSystem\obj\Debug\net8.0\ref\SallesSystem.dll
