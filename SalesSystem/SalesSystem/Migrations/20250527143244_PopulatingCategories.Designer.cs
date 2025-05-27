@@ -12,8 +12,8 @@ using SalesSystem.Database;
 namespace SalesSystem.Migrations
 {
     [DbContext(typeof(SalesSystemContext))]
-    [Migration("20250527132017_InitialDatabase")]
-    partial class InitialDatabase
+    [Migration("20250527143244_PopulatingCategories")]
+    partial class PopulatingCategories
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -85,11 +85,9 @@ namespace SalesSystem.Migrations
 
             modelBuilder.Entity("SalesSystem.Entities.SalesLog", b =>
                 {
-                    b.Property<int>("SaleId")
+                    b.Property<Guid>("SaleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SaleId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Employee")
                         .IsRequired()

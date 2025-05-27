@@ -82,11 +82,9 @@ namespace SalesSystem.Migrations
 
             modelBuilder.Entity("SalesSystem.Entities.SalesLog", b =>
                 {
-                    b.Property<int>("SaleId")
+                    b.Property<Guid>("SaleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SaleId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Employee")
                         .IsRequired()

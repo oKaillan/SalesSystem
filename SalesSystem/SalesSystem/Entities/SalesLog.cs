@@ -7,7 +7,7 @@ namespace SalesSystem.Entities
     internal class SalesLog
     {
         [Key]
-        public int SaleId { get; private set; }
+        public Guid SaleId { get; private set; } = new Guid();
 
         public int EmployeeId { get; private set; }
         public string Employee { get; private set; }
