@@ -46,12 +46,26 @@ namespace SalesSystem.MenuSytem
                         Console.WriteLine(product);
                     }
 
+                    //Checks product stock
+                    if (product.Quantity == 0)
+                    {
+                        throw new ArgumentOutOfRangeException("This product is out of stock!");
+                    }
+
 
                     Console.Write("Enter the Quantity to sell: ");
                     int pQuantity = int.Parse(Console.ReadLine());
+
+                    //Checks Quantity written by user
+                    if (pQuantity == 0 || pQuantity < 0)
+                    {
+                        throw new ArgumentOutOfRangeException("Quantity cannot be less or equal 0!");
+                    }
+
+                    //Checks if Quantity written is bigger than Product Stock
                     if (pQuantity > product.Quantity)
                     {
-                        throw new Exception("The quantity choosen is bigger than this Product Stock Quantity");
+                        throw new ArgumentOutOfRangeException("The quantity choosen exceeds this Product Stock Quantity");
                     }
 
 
@@ -63,7 +77,7 @@ namespace SalesSystem.MenuSytem
 
                     int selleriD = int.Parse(Console.ReadLine());
 
-                    //Gets the employee
+                    //Gets the employee and write in screen
                     var seller = empDAL.GetBy(e => e.Id == selleriD);
                     if (seller is null)
                     {
@@ -82,6 +96,7 @@ namespace SalesSystem.MenuSytem
                         soldDAL.Create(salesLog);
                         fileLog.LogFile(salesLog);
                         Console.WriteLine("\nSale Registered with Success!");
+                        Console.WriteLine("\nLog Saved at:\n" + AppDomain.CurrentDomain.BaseDirectory + @"log\salesLog.json");
                         product.RemoveStock(pQuantity);
                         prodDAL.Update(product);
                     }

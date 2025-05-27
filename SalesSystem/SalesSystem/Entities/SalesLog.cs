@@ -9,11 +9,11 @@ namespace SalesSystem.Entities
         [Key]
         public int SaleId { get; private set; }
 
-        public int EmployeeId { get; set; }
-        public string Employee { get; }
+        public int EmployeeId { get; private set; }
+        public string Employee { get; private set; }
 
-        public int ProductId { get; set; }
-        public string Product { get; }
+        public int ProductId { get; private set; }
+        public string Product { get; private set; }
 
         public int Quantity { get; private set; }
         public double TotalPrice { get; private set; }

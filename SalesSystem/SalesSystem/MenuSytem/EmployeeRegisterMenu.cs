@@ -22,7 +22,7 @@ namespace SalesSystem.MenuSytem
                     // Verifies if Employee Name is null or have Digits
                     if (string.IsNullOrEmpty(empName) || empName.Length <= 0 || empName.Any(char.IsDigit))
                     {
-                        throw new ArgumentNullException("Invalid Name!");
+                        throw new ArgumentOutOfRangeException("Invalid Name!");
                     }
 
 
