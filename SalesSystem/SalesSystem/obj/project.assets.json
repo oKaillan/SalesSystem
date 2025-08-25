@@ -1601,6 +1601,30 @@
             "rid": "win"
           }
         }
+      },
+      "SalesSystem.Shared.Database/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.SqlServer": "9.0.4",
+          "SalesSystem.Shared.Entities": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/SalesSystem.Shared.Database.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SalesSystem.Shared.Database.dll": {}
+        }
+      },
+      "SalesSystem.Shared.Entities/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/SalesSystem.Shared.Entities.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SalesSystem.Shared.Entities.dll": {}
+        }
       }
     }
   },
@@ -4712,13 +4736,25 @@
         "system.windows.extensions.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "SalesSystem.Shared.Database/1.0.0": {
+      "type": "project",
+      "path": "../SalesSystem.Shared.Database/SalesSystem.Shared.Database.csproj",
+      "msbuildProject": "../SalesSystem.Shared.Database/SalesSystem.Shared.Database.csproj"
+    },
+    "SalesSystem.Shared.Entities/1.0.0": {
+      "type": "project",
+      "path": "../SalesSystem.Shared.Entities/SalesSystem.Shared.Entities.csproj",
+      "msbuildProject": "../SalesSystem.Shared.Entities/SalesSystem.Shared.Entities.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net8.0": [
       "Microsoft.EntityFrameworkCore.Design >= 9.0.4",
       "Microsoft.EntityFrameworkCore.SqlServer >= 9.0.4",
-      "Microsoft.EntityFrameworkCore.Tools >= 9.0.4"
+      "Microsoft.EntityFrameworkCore.Tools >= 9.0.4",
+      "SalesSystem.Shared.Database >= 1.0.0",
+      "SalesSystem.Shared.Entities >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -4753,7 +4789,14 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.Shared.Database\\SalesSystem.Shared.Database.csproj": {
+              "projectPath": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.Shared.Database\\SalesSystem.Shared.Database.csproj"
+            },
+            "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.Shared.Entities\\SalesSystem.Shared.Entities.csproj": {
+              "projectPath": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.Shared.Entities\\SalesSystem.Shared.Entities.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

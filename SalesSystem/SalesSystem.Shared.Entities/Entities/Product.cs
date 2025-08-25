@@ -2,7 +2,7 @@
 
 namespace SalesSystem.Entities
 {
-    internal class Product
+    public class Product
     {
         public int Id { get; private set; }
         public string Name { get; private set; }

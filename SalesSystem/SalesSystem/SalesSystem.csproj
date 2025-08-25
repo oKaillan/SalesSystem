@@ -19,4 +19,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SalesSystem.Shared.Database\SalesSystem.Shared.Database.csproj" />
+    <ProjectReference Include="..\SalesSystem.Shared.Entities\SalesSystem.Shared.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

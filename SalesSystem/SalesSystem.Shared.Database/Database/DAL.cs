@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace SalesSystem.Database
 {
-    internal class DAL<T> where T : class
+    public class DAL<T> where T : class
     {
-        public readonly SalesSystemContext context = new();
+        private readonly SalesSystemContext context = new();
 
         public DAL(SalesSystemContext context)
         {

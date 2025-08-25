@@ -31,9 +31,7 @@ C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSyst
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.AssemblyInfoInputs.cache
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.AssemblyInfo.cs
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.csproj.CoreCompileInputs.cache
-C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.dll
-C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\refint\SalesSystem.dll
-C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.pdb
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.sourcelink.json
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\SalesSystem.exe
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\SalesSystem.deps.json
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\SalesSystem.runtimeconfig.json
@@ -175,7 +173,13 @@ C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSyst
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\runtimes\browser\lib\net8.0\System.Text.Encodings.Web.dll
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\SalesSystem.Shared.Database.dll
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\SalesSystem.Shared.Entities.dll
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\SalesSystem.Shared.Database.pdb
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\bin\Debug\net8.0\SalesSystem.Shared.Entities.pdb
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSys.5B7FCE65.Up2Date
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.dll
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\refint\SalesSystem.dll
+C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.pdb
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.genruntimeconfig.cache
 C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\ref\SalesSystem.dll
-C:\Users\olive\OneDrive\Desktop\Projects\.NET\Sales System\SalesSystem\SalesSystem\obj\Debug\net8.0\SalesSystem.sourcelink.json

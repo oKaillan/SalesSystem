@@ -3,7 +3,7 @@ using SalesSystem.Entities;
 
 namespace SalesSystem.Database
 {
-    internal class SalesSystemContext : DbContext
+    public class SalesSystemContext : DbContext
     {
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Product> Products { get; set; }

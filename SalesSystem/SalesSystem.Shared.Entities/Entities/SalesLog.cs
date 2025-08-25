@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace SalesSystem.Entities
 {
-    internal class SalesLog
+    public class SalesLog
     {
         [Key]
         public Guid SaleId { get; private set; } = new Guid();

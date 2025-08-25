@@ -2,7 +2,7 @@
 
 namespace SalesSystem.Entities
 {
-    internal class ProductCategory
+    public class ProductCategory
     {
         [Key]
         public string Name { get; private set; }
