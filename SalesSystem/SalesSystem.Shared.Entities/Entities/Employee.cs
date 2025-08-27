@@ -12,6 +12,15 @@
             Email = email;
         }
 
+        public void ChangeEmployeeName(string name)
+        {
+            Name = name;
+        }
+        public void ChangeEmployeeEmail(string email)
+        {
+            Email = email;
+        }
+
         public override string ToString()
         {
             return "\nEmployee Information:\n\n" +

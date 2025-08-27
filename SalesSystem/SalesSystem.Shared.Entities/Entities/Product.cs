@@ -20,9 +20,7 @@ namespace SalesSystem.Entities
             Category = category.Name;
         }
 
-        public Product()
-        {
-        }
+        public Product() { }
 
         public void RemoveStock(int qtd)
         {
@@ -36,6 +34,19 @@ namespace SalesSystem.Entities
         public double GetTotalPrice(int quantity)
         {
             return quantity * Price;
+        }
+
+        public void ChangeProductName(string name)
+        {
+            Name = name;
+        }
+        public void ChangeProductPrice(double price)
+        {
+            Price = price;
+        }
+        public void ChangeProductCategory(ProductCategory category)
+        {
+            Category = category.Name;
         }
 
         public override string ToString()

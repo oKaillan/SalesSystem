@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|c:\\users\\olive\\onedrive\\desktop\\projects\\.net\\sales system\\salessystem\\salessystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|solutionrelative:salessystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|c:\\users\\olive\\onedrive\\desktop\\projects\\.net\\sales system\\salessystem\\salessystem.api\\extensions\\productextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|solutionrelative:salessystem.api\\extensions\\productextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|c:\\users\\olive\\onedrive\\desktop\\projects\\.net\\sales system\\salessystem\\salessystem.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|solutionrelative:salessystem.api\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|c:\\users\\olive\\onedrive\\desktop\\projects\\.net\\sales system\\salessystem\\salessystem.api\\requests\\productrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|solutionrelative:salessystem.api\\requests\\productrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|c:\\users\\olive\\onedrive\\desktop\\projects\\.net\\sales system\\salessystem\\salessystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|solutionrelative:salessystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,28 +50,41 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ProductRequest.cs",
+              "DocumentMoniker": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Requests\\ProductRequest.cs",
+              "RelativeDocumentMoniker": "SalesSystem.API\\Requests\\ProductRequest.cs",
+              "ToolTip": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Requests\\ProductRequest.cs",
+              "RelativeToolTip": "SalesSystem.API\\Requests\\ProductRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-27T21:54:57.513Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "ProductExtensions.cs",
+              "DocumentMoniker": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Extensions\\ProductExtensions.cs",
+              "RelativeDocumentMoniker": "SalesSystem.API\\Extensions\\ProductExtensions.cs",
+              "ToolTip": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Extensions\\ProductExtensions.cs",
+              "RelativeToolTip": "SalesSystem.API\\Extensions\\ProductExtensions.cs",
+              "ViewState": "AgIAAEIAAAAAAAAAAAAowFYAAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-27T21:21:26.333Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Program.cs",
               "RelativeDocumentMoniker": "SalesSystem.API\\Program.cs",
               "ToolTip": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Program.cs",
               "RelativeToolTip": "SalesSystem.API\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA2AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-25T22:26:07.812Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "launchSettings.json",
-              "DocumentMoniker": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Properties\\launchSettings.json",
-              "RelativeDocumentMoniker": "SalesSystem.API\\Properties\\launchSettings.json",
-              "ToolTip": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Properties\\launchSettings.json",
-              "RelativeToolTip": "SalesSystem.API\\Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-08-25T22:24:57.613Z",
               "EditorCaption": ""
             }
           ]

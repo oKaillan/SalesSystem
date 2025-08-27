@@ -10,4 +10,13 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Responses\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SalesSystem.Shared.Database\SalesSystem.Shared.Database.csproj" />
+    <ProjectReference Include="..\SalesSystem.Shared.Entities\SalesSystem.Shared.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

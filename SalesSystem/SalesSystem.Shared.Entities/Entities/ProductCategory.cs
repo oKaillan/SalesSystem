@@ -11,7 +11,5 @@ namespace SalesSystem.Entities
         {
             Name = name;
         }
-
-        public ProductCategory() { }
     }
 }
