@@ -21,5 +21,6 @@ if (app.Environment.IsDevelopment())
 
 app.AddEndPointsEmployee();
 app.AddEndPointsProduct();
+app.AddEndPointsProductCategory();
 
 app.Run();

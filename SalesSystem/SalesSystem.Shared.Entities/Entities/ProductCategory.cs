@@ -11,5 +11,10 @@ namespace SalesSystem.Entities
         {
             Name = name;
         }
+
+        public void ChangeProductName(string name)
+        {
+            Name = name;
+        }
     }
 }
