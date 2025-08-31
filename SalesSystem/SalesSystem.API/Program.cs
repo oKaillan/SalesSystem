@@ -10,6 +10,7 @@ builder.Services.AddDbContext<SalesSystemContext>();
 builder.Services.AddTransient<DAL<Employee>>();
 builder.Services.AddTransient<DAL<Product>>();
 builder.Services.AddTransient<DAL<ProductCategory>>();
+builder.Services.AddTransient<DAL<SalesLog>>();
 
 var app = builder.Build();
 
@@ -22,5 +23,6 @@ if (app.Environment.IsDevelopment())
 app.AddEndPointsEmployee();
 app.AddEndPointsProduct();
 app.AddEndPointsProductCategory();
+app.AddEndPointsSalesLog();
 
 app.Run();
