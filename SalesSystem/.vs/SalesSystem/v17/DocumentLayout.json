@@ -3,15 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|c:\\users\\olive\\onedrive\\desktop\\projects\\.net\\sales system\\salessystem\\salessystem.api\\extensions\\saleslogextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|solutionrelative:salessystem.api\\extensions\\saleslogextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/SalesSystem/True/SqlTable/dbo.SalesLog.sql||{0058A1F7-65F3-4DB9-B3D0-CA7E64DD73CD}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|c:\\users\\olive\\onedrive\\desktop\\projects\\.net\\sales system\\salessystem\\salessystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|solutionrelative:salessystem.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|c:\\users\\olive\\onedrive\\desktop\\projects\\.net\\sales system\\salessystem\\salessystem.api\\extensions\\saleslogextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}|SalesSystem.API\\SalesSystem.API.csproj|solutionrelative:salessystem.api\\extensions\\saleslogextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -21,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -48,37 +45,31 @@
               "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "dbo.SalesLog [Data]",
-              "DocumentMoniker": "ViewDataWindow_MSSQL__/_localdb__MSSQLLocalDB/SalesSystem/True/SqlTable/dbo.SalesLog.sql",
-              "ToolTip": "dbo.SalesLog [Data]",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
-              "WhenOpened": "2025-08-31T12:16:27.465Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "SalesLogExtensions.cs",
               "DocumentMoniker": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Extensions\\SalesLogExtensions.cs",
               "RelativeDocumentMoniker": "SalesSystem.API\\Extensions\\SalesLogExtensions.cs",
               "ToolTip": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Extensions\\SalesLogExtensions.cs",
               "RelativeToolTip": "SalesSystem.API\\Extensions\\SalesLogExtensions.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-31T12:06:05.178Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Program.cs",
               "RelativeDocumentMoniker": "SalesSystem.API\\Program.cs",
               "ToolTip": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Program.cs",
               "RelativeToolTip": "SalesSystem.API\\Program.cs",
-              "ViewState": "AgIAAAwAAAAAAAAAAAAAAAwAAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-25T22:26:07.812Z",
               "EditorCaption": ""

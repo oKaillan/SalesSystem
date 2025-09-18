@@ -1,11 +1,20 @@
-using SalesSystem.API.Extensions;
+using Microsoft.OpenApi.Models;
 using SalesSystem.Database;
 using SalesSystem.Entities;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SalesSystemApi", Version = "v1" });
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
 builder.Services.AddDbContext<SalesSystemContext>();
 builder.Services.AddTransient<DAL<Employee>>();
 builder.Services.AddTransient<DAL<Product>>();
@@ -14,15 +23,14 @@ builder.Services.AddTransient<DAL<SalesLog>>();
 
 var app = builder.Build();
 
+app.MapControllers();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.AddEndPointsEmployee();
-app.AddEndPointsProduct();
-app.AddEndPointsProductCategory();
-app.AddEndPointsSalesLog();
+
 
 app.Run();

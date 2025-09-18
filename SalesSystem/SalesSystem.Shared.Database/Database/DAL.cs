@@ -6,44 +6,44 @@ namespace SalesSystem.Database
 {
     public class DAL<T> where T : class
     {
-        private readonly SalesSystemContext context = new();
+        private readonly SalesSystemContext _context = new();
 
-        public DAL(SalesSystemContext context)
+        public DAL(SalesSystemContext _context)
         {
-            this.context = context;
+            this._context = _context;
         }
 
         public List<T> GetAll()
         {
-            return context.Set<T>().ToList();
+            return _context.Set<T>().ToList();
         }
 
         public List<T> GetAllBy(Func<T, bool> funcPredicate)
         {
-            return context.Set<T>().Where(funcPredicate).ToList();
+            return _context.Set<T>().Where(funcPredicate).ToList();
         }
 
-        public T GetBy(Func<T, bool> functionPredicate)
+        public T? GetBy(Func<T, bool> functionPredicate)
         {
-            return context.Set<T>().FirstOrDefault(functionPredicate);
+            return _context.Set<T>().FirstOrDefault(functionPredicate);
         }
 
         public void Create(T member)
         {
-            context.Add(member);
-            context.SaveChanges();
+            _context.Add(member);
+            _context.SaveChanges();
         }
 
         public void Update(T member)
         {
-            context.Update(member);
-            context.SaveChanges();
+            _context.Update(member);
+            _context.SaveChanges();
         }
 
         public void Delete(T member)
         {
-            context.Remove(member);
-            context.SaveChanges();
+            _context.Remove(member);
+            _context.SaveChanges();
         }
     }
 }

@@ -3,7 +3,7 @@ using SalesSystem.API.Requests;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 
-namespace SalesSystem.API.Extensions
+namespace SalesSystem.API.Controllers
 {
     public static class ProductExtensions
     {
