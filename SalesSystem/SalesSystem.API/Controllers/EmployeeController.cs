@@ -63,8 +63,6 @@ public class EmployeeController : ControllerBase
         employee);
     }
 
-
-    //Update Employee
     /// <summary>
     /// Update an Employee at Database
     /// </summary>
