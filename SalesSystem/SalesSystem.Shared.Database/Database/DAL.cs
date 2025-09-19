@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
-using System.Linq;
-
-namespace SalesSystem.Database
+﻿namespace SalesSystem.Database
 {
     public class DAL<T> where T : class
     {

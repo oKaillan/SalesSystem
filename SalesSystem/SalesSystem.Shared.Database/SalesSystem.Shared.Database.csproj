@@ -19,7 +19,7 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-	  <ProjectReference Include="..\SalesSystem.Shared.Entities\SalesSystem.Shared.Entities.csproj" />
+		<ProjectReference Include="..\SalesSystem.Shared.Entities\SalesSystem.Shared.Entities.csproj" />
 	</ItemGroup>
 
 </Project>

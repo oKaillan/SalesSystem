@@ -1,11 +1,14 @@
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using SalesSystem.API.Profiles;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -20,6 +23,10 @@ builder.Services.AddTransient<DAL<Employee>>();
 builder.Services.AddTransient<DAL<Product>>();
 builder.Services.AddTransient<DAL<ProductCategory>>();
 builder.Services.AddTransient<DAL<SalesLog>>();
+builder.Services.AddAutoMapper(cfg =>
+{
+    // aqui você pode configurar globalmente se precisar
+}, typeof(Program).Assembly);
 
 var app = builder.Build();
 

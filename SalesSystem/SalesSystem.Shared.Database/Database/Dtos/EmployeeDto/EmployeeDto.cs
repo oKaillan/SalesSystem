@@ -2,7 +2,7 @@
 
 namespace SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
 
-internal class CreateEmployeeDto
+public class EmployeeDto
 {
     [Required]
     [RegularExpression(@"^[a-zA-ZÀ-ÿ\s]+$", ErrorMessage = "Name can only have letters and spaces.")]
@@ -10,4 +10,10 @@ internal class CreateEmployeeDto
     [Required]
     [EmailAddress]
     public string Email { get; private set; }
+
+    public EmployeeDto(string name, string email)
+    {
+        Name = name;
+        Email = email;
+    }
 }
