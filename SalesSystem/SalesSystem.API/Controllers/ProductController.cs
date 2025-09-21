@@ -13,6 +13,7 @@ public class ProductController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly DAL<Product> _prodDAL;
+    private readonly DAL<ProductCategory> _pCategoryDAL;
 
     public ProductController(IMapper mapper, DAL<Product> prodDAL)
     {
@@ -60,8 +61,7 @@ public class ProductController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="201">If the creation was successful</response>
     [HttpPost]
-    public IActionResult PostProduct([FromBody] ProductDto productDto,
-        [FromServices] DAL<ProductCategory> categoryDAL)
+    public IActionResult PostProduct([FromBody] ProductDto productDto)
     {
         var getProduct = _prodDAL.GetBy(e => e.Name.ToLower() == productDto.Name.ToLower());
         if (getProduct is not null)
@@ -70,7 +70,7 @@ public class ProductController : ControllerBase
         }
 
         //Check if Category exists in database
-        var categoryCheck = categoryDAL.GetBy(c => c.Name.ToLower() == productDto.Category?.Name.ToLower());
+        var categoryCheck = _pCategoryDAL.GetBy(c => c.Name.ToLower() == productDto.Category?.Name.ToLower());
         if (categoryCheck is null)
         {
             return NotFound("Category not found in database.");
@@ -93,7 +93,6 @@ public class ProductController : ControllerBase
     /// <response code="204">If the update was successful</response>
     [HttpPut("{id}")]
     public IActionResult UpdateProduct([FromBody] ProductDto productDto,
-        [FromServices] DAL<ProductCategory> categoryDAL,
         int id)
     {
         var getProduct = _prodDAL.GetBy(e => e.Id.Equals(id));
@@ -103,7 +102,7 @@ public class ProductController : ControllerBase
         }
 
         //Check if Category exists in database
-        var categoryCheck = categoryDAL.GetBy(c => c.Name.ToLower() == productDto.Category.Name.ToLower());
+        var categoryCheck = _pCategoryDAL.GetBy(c => c.Name.ToLower() == productDto.Category.Name.ToLower());
         if (categoryCheck is null)
         {
             return NotFound("Category not found in database.");
@@ -119,6 +118,7 @@ public class ProductController : ControllerBase
     /// <summary>
     /// Update a Product field at Database
     /// </summary>
+    /// <remarks>If Category was not selected or was invalid, it's back to what it was.</remarks>
     /// <param name="patch">Object with the neccessary fields</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
@@ -134,7 +134,15 @@ public class ProductController : ControllerBase
         patch.ApplyTo(productToUpdate, ModelState);
         if (!TryValidateModel(productToUpdate)) return ValidationProblem(ModelState);
 
+        var checkCategory = _pCategoryDAL.GetBy(c => c.Name.ToLower().Equals(productToUpdate.Category.ToLower()));
+
+        if (checkCategory is null) // If category was not found, it backs to what it was
+            checkCategory = getProduct.Category;
+        
         _mapper.Map(productToUpdate, getProduct);
+
+        getProduct.ChangeProductCategory(checkCategory); // Always changing, to not create a new one
+
         _prodDAL.Update(getProduct);
         return NoContent();
     }
