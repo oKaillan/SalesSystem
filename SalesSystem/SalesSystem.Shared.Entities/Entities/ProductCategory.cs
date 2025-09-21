@@ -12,6 +12,10 @@ namespace SalesSystem.Entities
             Name = name;
         }
 
+        public ProductCategory()
+        {
+        }
+
         public void ChangeProductName(string name)
         {
             Name = name;

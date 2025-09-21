@@ -1,4 +1,7 @@
-﻿namespace SalesSystem.Database
+﻿using Microsoft.EntityFrameworkCore;
+using SalesSystem.Entities;
+
+namespace SalesSystem.Database
 {
     public class DAL<T> where T : class
     {
@@ -14,6 +17,13 @@
             return _context.Set<T>().ToList();
         }
 
+        public List<Product> GetProductsWithInclude()
+        {
+            return _context.Set<Product>()
+                .Include(p => p.Category)
+                .ToList();
+        }
+
         public List<T> GetAllBy(Func<T, bool> funcPredicate)
         {
             return _context.Set<T>().Where(funcPredicate).ToList();
@@ -22,6 +32,13 @@
         public T? GetBy(Func<T, bool> functionPredicate)
         {
             return _context.Set<T>().FirstOrDefault(functionPredicate);
+        }
+
+        public Product GetProductWithInclude(Func<Product, bool> functionPredicate)
+        {
+            return _context.Set<Product>()
+                .Include(p => p.Category)
+                .FirstOrDefault(functionPredicate);
         }
 
         public void Create(T member)
