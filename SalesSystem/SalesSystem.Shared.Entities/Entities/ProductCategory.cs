@@ -5,15 +5,13 @@ namespace SalesSystem.Entities
     public class ProductCategory
     {
         [Key]
+        public int Id { get; private set; }
+        [Required]
         public string Name { get; private set; }
 
         public ProductCategory(string name)
         {
             Name = name;
-        }
-
-        public ProductCategory()
-        {
         }
 
         public void ChangeProductName(string name)

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Database;
 using SalesSystem.Entities;
-using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 
 namespace SalesSystem.API.Controllers;
@@ -116,7 +115,7 @@ public class ProductController : ControllerBase
         _prodDAL.Update(getProduct);
         return NoContent();
     }
-    /*
+
     /// <summary>
     /// Update a Product field at Database
     /// </summary>
@@ -127,14 +126,9 @@ public class ProductController : ControllerBase
     public IActionResult PatchProduct(int id,
         JsonPatchDocument<PatchProductDto> patch)
     {
-        var getProduct = _prodDAL.GetBy(e => e.Id.Equals(id));
+        var getProduct = _prodDAL.GetBy(e => e.Id == id);
         if (getProduct is null)
-        {
             return NotFound("Product iD not Found.");
-        }
-
-        if (getProduct.Category == null)
-            getProduct.Category = new ProductCategory();
 
         var productToUpdate = _mapper.Map<PatchProductDto>(getProduct);
         patch.ApplyTo(productToUpdate, ModelState);
@@ -144,7 +138,7 @@ public class ProductController : ControllerBase
         _prodDAL.Update(getProduct);
         return NoContent();
     }
-    */
+
 
     /// <summary>
     /// Delete a Product at Database
@@ -152,7 +146,6 @@ public class ProductController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="204">If the delete was successful</response>
     [HttpDelete("{id}")]
-    //Delete Product
     public IActionResult DeleteProduct([FromServices] DAL<Product> _prodDAL, int id)
     {
         var getProduct = _prodDAL.GetBy(e => e.Id.Equals(id));

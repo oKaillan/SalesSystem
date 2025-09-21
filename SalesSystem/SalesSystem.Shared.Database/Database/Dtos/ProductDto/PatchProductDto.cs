@@ -12,6 +12,6 @@ public class PatchProductDto
     [Required]
     [Range(4.00, Double.PositiveInfinity, ErrorMessage = "The minimum price is 4.00")]
     public double Price { get; set; }
-
+    [Required(ErrorMessage = "Category can't be null")]
     public string Category { get; set; }
 }
