@@ -24,9 +24,9 @@ public class ProductCategoryController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
-    public IActionResult GetCategories()
+    public IActionResult GetCategories(int skip = 0, int take = 50)
     {
-        var categories = _pCategoryDal.GetAll();
+        var categories = _pCategoryDal.GetAllInRange(skip, take);
         return Ok(categories);
     }
 

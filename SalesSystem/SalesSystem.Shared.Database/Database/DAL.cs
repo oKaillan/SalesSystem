@@ -17,6 +17,11 @@ namespace SalesSystem.Database
             return _context.Set<T>().ToList();
         }
 
+        public List<T> GetAllInRange(int skip, int take)
+        {
+            return _context.Set<T>().Skip(skip).Take(take).ToList();
+        }
+
         public List<Product> GetProductsWithInclude()
         {
             return _context.Set<Product>()

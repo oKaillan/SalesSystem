@@ -23,9 +23,9 @@ public class SalesLogController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
-    public IActionResult GetLogs()
+    public IActionResult GetLogs(int skip = 0, int take = 50)
     {
-        var slogCheck = _slogDal.GetAll();
+        var slogCheck = _slogDal.GetAllInRange(skip, take);
         if (slogCheck is null)
         {
             return NoContent();
@@ -42,7 +42,7 @@ public class SalesLogController : ControllerBase
     [HttpGet("{id:guid}")]
     public IActionResult GetLogByiD(Guid id)
     {
-        var slogCheck = _slogDal.GetBy(s => s.SaleId.Equals(id));
+        var slogCheck = _slogDal.GetBy(s => s.SaleId == id);
         if (slogCheck is null)
         {
             return NoContent();
@@ -67,6 +67,23 @@ public class SalesLogController : ControllerBase
         if (log is null)
             return NotFound("Employee hasn't sales.");
         return Ok(log);
+    }
+
+    /// <summary>
+    /// Returns a log by Year
+    /// </summary>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">If the Search was successful</response>
+    /// <response code="204">If the Log was not found</response>
+    [HttpGet("{startYear:int}-{endYear:int}")]
+    public IActionResult GetLogByDate(int startYear, int endYear)
+    {
+        var slogCheck = _slogDal.GetBy(s => s.Time.Year >= startYear && s.Time.Year <= endYear);
+        if (slogCheck is null)
+        {
+            return NoContent();
+        }
+        return Ok(slogCheck);
     }
  
 }
