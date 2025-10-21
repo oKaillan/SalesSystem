@@ -123,9 +123,9 @@ public class ProductController : ControllerBase
 
         //Check if Category exists in database
         var categoryCheck = _pCategoryDAL.GetAllBy(c => productDto.CategoryIds.Contains(c.Id));
-        if (categoryCheck is null)
+        if (categoryCheck is null || categoryCheck.Count == 0)
         {
-            return NotFound("Category not found in database.");
+            return NotFound("One or more Categories not found in database.");
         }
         //
 
@@ -138,7 +138,7 @@ public class ProductController : ControllerBase
     /// <summary>
     /// Update a Product field at Database
     /// </summary>
-    /// <remarks>If Category was not selected or was invalid, it's back to what it was.</remarks>
+    /// <remarks>If Category was not selected or was invalid, it backs to what it was.</remarks>
     /// <param name="patch">Object with the neccessary fields</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
