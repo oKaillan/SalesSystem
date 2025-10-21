@@ -26,7 +26,7 @@ public class ProductCategoryController : ControllerBase
     [HttpGet]
     public IActionResult GetCategories(int skip = 0, int take = 50)
     {
-        var categories = _pCategoryDal.GetAllInRange(skip, take);
+        var categories = _pCategoryDal.GetAllInRange(skip, take).Select(c => new { c.Id, c.Name });
         return Ok(categories);
     }
 

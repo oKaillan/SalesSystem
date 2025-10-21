@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SalesSystem.Database;
 
@@ -11,9 +12,11 @@ using SalesSystem.Database;
 namespace SalesSystem.Migrations
 {
     [DbContext(typeof(SalesSystemContext))]
-    partial class SalesSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20250929133538_Creating Category-Product Relation")]
+    partial class CreatingCategoryProductRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace SalesSystem.Migrations
 
                     b.HasIndex("ProductsId");
 
-                    b.ToTable("ProductProductCategory", (string)null);
+                    b.ToTable("ProductProductCategory");
                 });
 
             modelBuilder.Entity("SalesSystem.Entities.Employee", b =>
@@ -58,7 +61,7 @@ namespace SalesSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("SalesSystem.Entities.Product", b =>
@@ -81,7 +84,7 @@ namespace SalesSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("SalesSystem.Entities.ProductCategory", b =>
@@ -98,7 +101,7 @@ namespace SalesSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategories", (string)null);
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("SalesSystem.Entities.SalesLog", b =>
@@ -132,7 +135,7 @@ namespace SalesSystem.Migrations
 
                     b.HasKey("SaleId");
 
-                    b.ToTable("SalesLog", (string)null);
+                    b.ToTable("SalesLog");
                 });
 
             modelBuilder.Entity("ProductProductCategory", b =>

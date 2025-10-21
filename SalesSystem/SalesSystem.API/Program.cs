@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using SalesSystem.API.Profiles;
 using SalesSystem.Database;
 using SalesSystem.Entities;

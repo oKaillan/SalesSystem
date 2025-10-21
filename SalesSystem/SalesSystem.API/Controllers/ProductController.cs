@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
+using System.Linq.Expressions;
 
 namespace SalesSystem.API.Controllers;
 
@@ -14,11 +15,21 @@ public class ProductController : ControllerBase
     private readonly IMapper _mapper;
     private readonly DAL<Product> _prodDAL;
     private readonly DAL<ProductCategory> _pCategoryDAL;
+    //This is the Product GET Model, used in Get all Products and Get by iD
+    private readonly Func<Product, GetProductDto> getProductDto = p => new GetProductDto
+    {
+        Id = p.Id,
+        Name = p.Name,
+        Quantity = p.Quantity,
+        Price = p.Price,
+        Categories = p.Categories.Select(p => p.Name).ToList()
+    };
 
-    public ProductController(IMapper mapper, DAL<Product> prodDAL)
+    public ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCategory> pCategoryDAL)
     {
         _mapper = mapper;
         _prodDAL = prodDAL;
+        _pCategoryDAL = pCategoryDAL;
     }
 
     /// <summary>
@@ -27,9 +38,10 @@ public class ProductController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
-    public IActionResult GetProducts()
+    public IActionResult GetProducts(int skip = 0, int take = 50)
     {
-        var getProducts = _prodDAL.GetProductsWithInclude();
+        var getProducts = _prodDAL.GetAllInRange(skip, take)
+            .Select(getProductDto);
         if (getProducts is null)
         {
             return NotFound("There's no Products in database.");
@@ -46,14 +58,15 @@ public class ProductController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetProductById(int id)
     {
-        var getProduct = _prodDAL.GetProductWithInclude(e => e.Id == id);
-        if (getProduct is not null)
+        var getProduct = _prodDAL.GetBy(e => e.Id == id);
+        if (getProduct is null)
         {
-            return Ok(getProduct);
+            return NotFound("Product iD not found.");
         }
-        return NotFound("Product iD not found.");
-    }
 
+        var product = getProductDto(getProduct);
+        return Ok(product);
+    }
 
     /// <summary>
     /// Create a Product at Database
@@ -69,20 +82,27 @@ public class ProductController : ControllerBase
             return Conflict("Product with this Name already exists.");
         }
 
-        //Check if Category exists in database
-        var categoryCheck = _pCategoryDAL.GetBy(c => c.Name.ToLower() == productDto.Category?.Name.ToLower());
-        if (categoryCheck is null)
+        //Checks if atleast one category was informed
+        if (productDto.CategoryIds is null || !productDto.CategoryIds.Any())
+            return BadRequest("At least one category must be provided.");
+
+        //Checks if category exists in Database
+        var existingCategories = _pCategoryDAL.GetAllBy(c => productDto.CategoryIds.Contains(c.Id));
+
+        if (existingCategories.Count != productDto.CategoryIds.Count)
         {
-            return NotFound("Category not found in database.");
+            var missingIds = productDto.CategoryIds.Except(existingCategories.Select(c => c.Id));
+            return NotFound($"Categories not found in database: {string.Join(", ", missingIds)}");
         }
-        //
+
+        //Creates Product
         var product = _mapper.Map<Product>(productDto);
-        product.Category = categoryCheck;
+        product.Categories = existingCategories;
+
         _prodDAL.Create(product);
         return CreatedAtAction(nameof(GetProductById),
             new { id = product.Id }, product);
     }
-
 
 
     /// <summary>
@@ -102,7 +122,7 @@ public class ProductController : ControllerBase
         }
 
         //Check if Category exists in database
-        var categoryCheck = _pCategoryDAL.GetBy(c => c.Name.ToLower() == productDto.Category.Name.ToLower());
+        var categoryCheck = _pCategoryDAL.GetAllBy(c => productDto.CategoryIds.Contains(c.Id));
         if (categoryCheck is null)
         {
             return NotFound("Category not found in database.");
@@ -110,7 +130,7 @@ public class ProductController : ControllerBase
         //
 
         _mapper.Map(productDto, getProduct);
-        getProduct.ChangeProductCategory(categoryCheck);
+        getProduct.ChangeProductCategories(categoryCheck);
         _prodDAL.Update(getProduct);
         return NoContent();
     }
@@ -134,19 +154,18 @@ public class ProductController : ControllerBase
         patch.ApplyTo(productToUpdate, ModelState);
         if (!TryValidateModel(productToUpdate)) return ValidationProblem(ModelState);
 
-        var checkCategory = _pCategoryDAL.GetBy(c => c.Name.ToLower().Equals(productToUpdate.Category.ToLower()));
+        var checkCategory = _pCategoryDAL.GetAllBy(c => productToUpdate.CategoriesIds.Contains(c.Id));
 
-        if (checkCategory is null) // If category was not found, it backs to what it was
-            checkCategory = getProduct.Category;
+        if (checkCategory is null) // If categories was not found, it backs to what it was
+            checkCategory = (List<ProductCategory>?)getProduct.Categories;
         
         _mapper.Map(productToUpdate, getProduct);
 
-        getProduct.ChangeProductCategory(checkCategory); // Always changing, to not create a new one
+        getProduct.ChangeProductCategories(checkCategory); // Always changing, to not create a new one
 
         _prodDAL.Update(getProduct);
         return NoContent();
     }
-
 
     /// <summary>
     /// Delete a Product at Database

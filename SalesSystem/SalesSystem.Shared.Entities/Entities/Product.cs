@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace SalesSystem.Entities
 {
@@ -17,7 +18,8 @@ namespace SalesSystem.Entities
         [Range(4.00, Double.PositiveInfinity, ErrorMessage = "The minimum price is 4.00")]
         public double Price { get; set; }
 
-        public ProductCategory? Category { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<ProductCategory> Categories { get; set; } = new List<ProductCategory>();
 
 
         public Product(string name, int quantity, double price, ProductCategory category)
@@ -25,7 +27,7 @@ namespace SalesSystem.Entities
             Name = name;
             Quantity = quantity;
             Price = price;
-            Category = category;
+            Categories.Add(category);
         }
 
         public Product() { }
@@ -52,17 +54,18 @@ namespace SalesSystem.Entities
         {
             Price = price;
         }
-        public void ChangeProductCategory(ProductCategory category)
+        
+        public void ChangeProductCategories(ICollection<ProductCategory> categories)
         {
-            Category = category;
+            Categories = categories;
         }
-
+        
         public override string ToString()
         {
             return "\nProduct Information:\n\n" +
                 $"iD: {Id}\n" +
                 $"Name: {Name}\n" +
-                $"Category: {Category}\n" +
+                $"Category: {Categories}\n" +
                 $"Quantity: {Quantity}\n" +
                 $"Price: ${Price.ToString("F2", CultureInfo.InvariantCulture)}\n";
         }

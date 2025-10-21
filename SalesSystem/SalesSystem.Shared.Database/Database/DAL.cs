@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesSystem.Entities;
+using System.Linq.Expressions;
 
 namespace SalesSystem.Database
 {
@@ -22,13 +23,14 @@ namespace SalesSystem.Database
             return _context.Set<T>().Skip(skip).Take(take).ToList();
         }
 
+        /*
         public List<Product> GetProductsWithInclude()
         {
             return _context.Set<Product>()
                 .Include(p => p.Category)
                 .ToList();
         }
-
+        */
         public List<T> GetAllBy(Func<T, bool> funcPredicate)
         {
             return _context.Set<T>().Where(funcPredicate).ToList();
@@ -39,13 +41,14 @@ namespace SalesSystem.Database
             return _context.Set<T>().FirstOrDefault(functionPredicate);
         }
 
+        /*
         public Product GetProductWithInclude(Func<Product, bool> functionPredicate)
         {
             return _context.Set<Product>()
                 .Include(p => p.Category)
                 .FirstOrDefault(functionPredicate);
         }
-
+        */
         public void Create(T member)
         {
             _context.Add(member);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SalesSystem.Database;
 
@@ -11,9 +12,11 @@ using SalesSystem.Database;
 namespace SalesSystem.Migrations
 {
     [DbContext(typeof(SalesSystemContext))]
-    partial class SalesSystemContextModelSnapshot : ModelSnapshot
+    [Migration("20250922214830_Creating Product - Category relation")]
+    partial class CreatingProductCategoryrelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,21 +27,6 @@ namespace SalesSystem.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("ProductProductCategory", b =>
-                {
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CategoriesId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("ProductProductCategory", (string)null);
-                });
 
             modelBuilder.Entity("SalesSystem.Entities.Employee", b =>
                 {
@@ -58,7 +46,7 @@ namespace SalesSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("SalesSystem.Entities.Product", b =>
@@ -81,7 +69,7 @@ namespace SalesSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("SalesSystem.Entities.ProductCategory", b =>
@@ -96,9 +84,14 @@ namespace SalesSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategories", (string)null);
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("SalesSystem.Entities.SalesLog", b =>
@@ -132,22 +125,19 @@ namespace SalesSystem.Migrations
 
                     b.HasKey("SaleId");
 
-                    b.ToTable("SalesLog", (string)null);
+                    b.ToTable("SalesLog");
                 });
 
-            modelBuilder.Entity("ProductProductCategory", b =>
+            modelBuilder.Entity("SalesSystem.Entities.ProductCategory", b =>
                 {
-                    b.HasOne("SalesSystem.Entities.ProductCategory", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("SalesSystem.Entities.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Category")
+                        .HasForeignKey("ProductId");
+                });
+
+            modelBuilder.Entity("SalesSystem.Entities.Product", b =>
+                {
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

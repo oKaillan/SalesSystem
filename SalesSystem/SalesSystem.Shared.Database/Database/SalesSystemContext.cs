@@ -13,7 +13,14 @@ namespace SalesSystem.Database
         private string connection = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=SalesSystem;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(connection);
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connection);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.Categories)
+                .WithMany(c => c.Products);
         }
 
     }
