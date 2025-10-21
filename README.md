@@ -1,7 +1,7 @@
 # SalesSystem
 
-As it name says, this is a Sales System created by me. 
-This is my first project from scratch in C#, it's a simple Console Application using my knowledge in C#
-it has Employee, Product and Sales Registration, Logs and Integration with Database. 
+In this branch, I Created the first version of SalesSystem API, documented by Swagger.
+I've implemented more features to the program, with a better code reuse.
+
 ### Created with .NET EF Core 8
-![image](https://github.com/user-attachments/assets/c0443e56-a5ff-4970-b410-d6d1baa1c860)
+![image](https://github.com/user-attachments/assets/aa5b1e94-ae56-404e-b743-a9247e6dac5a)
