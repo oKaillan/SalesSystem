@@ -6,7 +6,7 @@ namespace SalesSystem.Database
 {
     public class DAL<T> where T : class
     {
-        private readonly SalesSystemContext _context = new();
+        private readonly SalesSystemContext _context;
 
         public DAL(SalesSystemContext _context)
         {
