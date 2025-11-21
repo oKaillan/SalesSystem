@@ -4,7 +4,7 @@ namespace SalesSystem.MenuSytem
 {
     internal abstract class MenuModel<T> : MenuPrintBase where T : class
     {
-        private readonly SalesSystemContext context = new();
+        private readonly SalesSystemContext context;
         private DAL<T> dal;
 
         public override void PrintMenu()
