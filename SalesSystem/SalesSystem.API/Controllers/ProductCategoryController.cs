@@ -10,12 +10,10 @@ namespace SalesSystem.API.Controllers;
 public class ProductCategoryController : ControllerBase
 {
     private readonly DAL<ProductCategory> _pCategoryDal;
-    private readonly IMapper _mapper;
 
-    public ProductCategoryController(DAL<ProductCategory> pCategoryDal, IMapper mapper)
+    public ProductCategoryController(DAL<ProductCategory> pCategoryDal)
     {
         _pCategoryDal = pCategoryDal;
-        _mapper = mapper;
     }
 
     /// <summary>
