@@ -18,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -45,6 +45,10 @@
               "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "SalesLogExtensions.cs",
@@ -52,7 +56,7 @@
               "RelativeDocumentMoniker": "SalesSystem.API\\Extensions\\SalesLogExtensions.cs",
               "ToolTip": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Extensions\\SalesLogExtensions.cs",
               "RelativeToolTip": "SalesSystem.API\\Extensions\\SalesLogExtensions.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-31T12:06:05.178Z",
               "EditorCaption": ""
@@ -65,7 +69,7 @@
               "RelativeDocumentMoniker": "SalesSystem.API\\Program.cs",
               "ToolTip": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem.API\\Program.cs",
               "RelativeToolTip": "SalesSystem.API\\Program.cs",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAAABMAAAAXAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-25T22:26:07.812Z",
               "EditorCaption": ""

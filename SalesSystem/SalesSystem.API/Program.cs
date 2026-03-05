@@ -1,11 +1,9 @@
-using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Newtonsoft.Json;
-using SalesSystem.API.Profiles;
 using SalesSystem.Database;
 using SalesSystem.Entities;
+using SalesSystem.Shared.Database.Entities;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,7 +12,13 @@ builder.Services.AddDbContext<SalesSystemContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
            .UseLazyLoadingProxies());
 
+builder.Services.AddAuthorization();
+
 builder.Services.AddControllers().AddNewtonsoftJson();
+
+builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<SalesSystemContext>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -31,10 +35,11 @@ builder.Services.AddTransient<DAL<ProductCategory>>();
 builder.Services.AddTransient<DAL<SalesLog>>();
 builder.Services.AddAutoMapper(cfg =>
 {
-    // aqui você pode configurar globalmente se precisar
 }, typeof(Program).Assembly);
 
 var app = builder.Build();
+
+app.MapGroup("auth").MapIdentityApi<ApplicationUser>().WithTags("Authentication");
 
 app.MapControllers();
 
@@ -44,6 +49,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await IdentitySeed.SeedAsync(services);
+}
 
 app.Run();

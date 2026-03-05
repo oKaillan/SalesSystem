@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SalesSystem.Entities;
-using System.Configuration;
+using SalesSystem.Shared.Database.Entities;
 
 namespace SalesSystem.Database
 {
-    public class SalesSystemContext : DbContext
+    public class SalesSystemContext : IdentityDbContext<ApplicationUser>
     {
 
         public DbSet<Employee> Employees { get; set; }
@@ -26,6 +27,7 @@ namespace SalesSystem.Database
             modelBuilder.Entity<Product>()
                 .HasMany(p => p.Categories)
                 .WithMany(c => c.Products);
+            base.OnModelCreating(modelBuilder);
         }
 
     }
