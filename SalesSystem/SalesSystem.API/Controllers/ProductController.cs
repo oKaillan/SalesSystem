@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
+using SalesSystem.Shared.Database.Entities;
 using System.Linq.Expressions;
 
 namespace SalesSystem.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(Roles = Roles.AdminOrEmployee)]
 public class ProductController : ControllerBase
 {
     private readonly IMapper _mapper;

@@ -3,12 +3,16 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Database;
 using SalesSystem.Entities;
+using Microsoft.AspNetCore.Identity;
 using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
+using Microsoft.AspNetCore.Authorization;
+using SalesSystem.Shared.Database.Entities;
 
 namespace SalesSystem.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(Roles = Roles.Admin)]
 public class EmployeeController : ControllerBase
 {
     private readonly IMapper _mapper;

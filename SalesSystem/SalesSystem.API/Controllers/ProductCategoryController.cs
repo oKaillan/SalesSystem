@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Database;
 using SalesSystem.Entities;
+using SalesSystem.Shared.Database.Entities;
 
 namespace SalesSystem.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(Roles = Roles.AdminOrEmployee)]
 public class ProductCategoryController : ControllerBase
 {
     private readonly DAL<ProductCategory> _pCategoryDal;
