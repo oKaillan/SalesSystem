@@ -8,10 +8,10 @@ public class EmployeeProfile : Profile
 {
     public EmployeeProfile()
     {
-        CreateMap<EmployeeDto, Employee>();
-        CreateMap<Employee, EmployeeDto>();
+        CreateMap<GetEmployeeDto, Employee>();
+        CreateMap<Employee, GetEmployeeDto>();
         CreateMap<PatchEmployeeDto, Employee>();
         CreateMap<Employee, PatchEmployeeDto>();
-        CreateMap<PostEmployeeDto,  Employee>();
+        CreateMap<EmployeeDto,  Employee>();
     }
 }

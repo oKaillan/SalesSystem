@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Shared.Database.Entities;
 
 [ApiController]
-[Route("auth")]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly UserManager<ApplicationUser> _userManager;
@@ -44,26 +44,4 @@ public class AuthController : ControllerBase
 
         return Ok($"Successful logged as {string.Join(",", userRoles)}");
     }
-
-    /*
-    [HttpPost("register")]
-    [Authorize(Roles = Roles.Admin)]
-    public async Task<IActionResult> Register(RegisterRequest request)
-    {
-        var user = new ApplicationUser
-        {
-            UserName = request.Email,
-            Email = request.Email
-        };
-
-        var result = await _userManager.CreateAsync(user, request.Password);
-
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
-
-        await _userManager.AddToRoleAsync(user, Roles.Employee);
-
-        return Ok("Employee created with Success");
-    }
-    */
 }

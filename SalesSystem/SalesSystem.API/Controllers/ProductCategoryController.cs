@@ -80,7 +80,8 @@ public class ProductCategoryController : ControllerBase
     /// </summary>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the delete was successful</response>
-    [HttpDelete("{id}")]
+    [Authorize(Roles = Roles.Admin)]
+    [HttpDelete("admin/{id}")]
     public IActionResult DeleteCategory(int id)
     {
         var categoryCheck = _pCategoryDal.GetBy(p => p.Id == id);

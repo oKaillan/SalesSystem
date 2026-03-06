@@ -114,7 +114,8 @@ public class ProductController : ControllerBase
     /// <param name="productDto">Object with the neccessary fields</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
-    [HttpPut("{id}")]
+    [Authorize(Roles = Roles.Admin)]
+    [HttpPut("admin/{id}")]
     public IActionResult UpdateProduct([FromBody] ProductDto productDto,
         int id)
     {
@@ -145,7 +146,8 @@ public class ProductController : ControllerBase
     /// <param name="patch">Object with the neccessary fields</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
-    [HttpPatch]
+    [Authorize(Roles = Roles.Admin)]
+    [HttpPatch("admin")]
     public IActionResult PatchProduct(int id,
         JsonPatchDocument<PatchProductDto> patch)
     {
@@ -175,7 +177,8 @@ public class ProductController : ControllerBase
     /// </summary>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the delete was successful</response>
-    [HttpDelete("{id}")]
+    [Authorize(Roles = Roles.Admin)]
+    [HttpDelete("admin/{id}")]
     public IActionResult DeleteProduct([FromServices] DAL<Product> _prodDAL, int id)
     {
         var getProduct = _prodDAL.GetBy(e => e.Id.Equals(id));

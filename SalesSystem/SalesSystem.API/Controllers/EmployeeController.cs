@@ -12,17 +12,19 @@ using BC = BCrypt.Net.BCrypt;
 namespace SalesSystem.API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("admin/[controller]")]
 [Authorize(Roles = Roles.Admin)]
 public class EmployeeController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly DAL<Employee> _empDAL;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public EmployeeController(IMapper mapper, DAL<Employee> empDAL)
+    public EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManager<ApplicationUser> userManager)
     {
         _mapper = mapper;
         _empDAL = empDAL;
+        _userManager = userManager;
     }
 
 
@@ -38,7 +40,7 @@ public class EmployeeController : ControllerBase
         if (getEmployees is null)
             return NotFound("There's no Employees in database.");
 
-        var employees = _mapper.Map<List<EmployeeDto>>(getEmployees);
+        var employees = _mapper.Map<List<GetEmployeeDto>>(getEmployees);
 
         return Ok(employees);
     }
@@ -56,7 +58,7 @@ public class EmployeeController : ControllerBase
         if (getEmployee is null)
             return NotFound("Employee iD not found.");
 
-        var empMapper = _mapper.Map<EmployeeDto>(getEmployee);
+        var empMapper = _mapper.Map<GetEmployeeDto>(getEmployee);
         return Ok(empMapper);
     }
 
@@ -66,16 +68,29 @@ public class EmployeeController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="201">If the creation was successful</response>
     [HttpPost]
-    public IActionResult CreateEmployee([FromBody] PostEmployeeDto employeeDto)
+    public async Task<IActionResult> CreateEmployeeAsync([FromBody] EmployeeDto employeeDto)
     {
         var getEmployee = _empDAL.GetBy(e => e.Email == employeeDto.Email);
         if (getEmployee is not null)
             return Conflict("Employee with this email already exists.");
 
+        var user = new ApplicationUser
+        {
+            UserName = employeeDto.Email,
+            Email = employeeDto.Email
+        };
+
+        var result = await _userManager.CreateAsync(user, employeeDto.Password);
+        if (!result.Succeeded)
+            return BadRequest(result.Errors);
+
+        await _userManager.AddToRoleAsync(user, Roles.Employee);
+
         var passwordCrypt = BC.HashPassword(employeeDto.Password);
 
         var employee = _mapper.Map<Employee>(employeeDto);
 
+        //Change the Password to encrypted one
         employee.ChangeEmployeePassword(passwordCrypt);
 
         _empDAL.Create(employee);
@@ -91,15 +106,41 @@ public class EmployeeController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
     [HttpPut("{id}")]
-    public IActionResult UpdateEmployee(int id, [FromBody] EmployeeDto employeeUpdated)
+    public async Task<IActionResult> UpdateEmployeeAsync(int id, [FromBody] EmployeeDto employeeUpdated)
     {
         var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
+        var user = await _userManager.FindByEmailAsync(getEmployee.Email);
 
-        if (getEmployee is null)
-            return NotFound("Employee iD not Found.");
+        if (getEmployee is null || user is null)
+            return NotFound("Employee not Found.");
 
+        //Changes Employee in Database
         getEmployee.ChangeEmployeeName(employeeUpdated.Name);
         getEmployee.ChangeEmployeeEmail(employeeUpdated.Email);
+
+        //Changes Employee User in IdentityDB
+        user.UserName = employeeUpdated.Email;
+        user.Email = employeeUpdated.Email;
+        await _userManager.UpdateAsync(user);
+        //Change Password
+        if (!string.IsNullOrEmpty(employeeUpdated.Password))
+        {
+            //Change Password in Employee Database
+            var passwordCrypt = BC.HashPassword(employeeUpdated.Password);
+            getEmployee.ChangeEmployeePassword(passwordCrypt);
+
+            //Change Password in IdentityDB
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var tryPasswordChange = await _userManager.ResetPasswordAsync(
+                user, 
+                token, 
+                employeeUpdated.Password);
+
+            if (!tryPasswordChange.Succeeded)
+                return BadRequest(tryPasswordChange.Errors);
+        }
+
         _empDAL.Update(getEmployee);
         return NoContent();
     }
@@ -111,17 +152,50 @@ public class EmployeeController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
     [HttpPatch]
-    public IActionResult PatchEmployee(int id,
+    public async Task<IActionResult> PatchEmployeeAsync(int id,
         JsonPatchDocument<PatchEmployeeDto> patch)
     {
         var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
-        if (getEmployee is null) return NotFound("Employee iD not Found.");
+        var user = await _userManager.FindByEmailAsync(getEmployee.Email);
+        if (getEmployee is null || user is null) 
+            return NotFound("Employee not Found.");
 
         var empToUpdate = _mapper.Map<PatchEmployeeDto>(getEmployee);
         patch.ApplyTo(empToUpdate, ModelState);
         if (!TryValidateModel(empToUpdate)) return ValidationProblem(ModelState);
 
         _mapper.Map(empToUpdate, getEmployee);
+
+        // Updates Identity if Email's changed
+        if (user.Email != empToUpdate.Email)
+        {
+            user.Email = empToUpdate.Email;
+            user.UserName = empToUpdate.Email;
+
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+        }
+
+        // Updates Identity if Password's changed
+        if (!string.IsNullOrEmpty(empToUpdate.Password))
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            var tryPasswordChange = await _userManager.ResetPasswordAsync(
+                user,
+                token,
+                empToUpdate.Password);
+
+            if (!tryPasswordChange.Succeeded)
+                return BadRequest(tryPasswordChange.Errors);
+
+            var passwordCrypt = BC.HashPassword(empToUpdate.Password);
+            getEmployee.ChangeEmployeePassword(passwordCrypt);
+        }
+
+
         _empDAL.Update(getEmployee);
         return NoContent();
     }
@@ -132,14 +206,16 @@ public class EmployeeController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="204">If the delete was successful</response>
     [HttpDelete("{id}")]
-    public IActionResult DeleteEmployee(int id)
+    public async Task<IActionResult> DeleteEmployeeAsync(int id)
     {
         var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
-        if (getEmployee is null)
+        var user = await _userManager.FindByEmailAsync(getEmployee.Email);
+        if (getEmployee is null || user is null)
         {
-            return NotFound("Employee iD not Found.");
+            return NotFound("Employee not Found.");
         }
         _empDAL.Delete(getEmployee);
+        await _userManager.DeleteAsync(user);
         return NoContent();
     }
 }

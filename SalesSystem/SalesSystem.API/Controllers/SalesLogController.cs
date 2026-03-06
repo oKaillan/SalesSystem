@@ -7,8 +7,8 @@ using SalesSystem.Shared.Database.Entities;
 namespace SalesSystem.API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-[Authorize(Roles = Roles.AdminOrEmployee)]
+[Route("admin/[controller]")]
+[Authorize(Roles = Roles.Admin)]
 public class SalesLogController : ControllerBase
 {
     private readonly DAL<SalesLog> _slogDal;
