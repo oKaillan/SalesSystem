@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace SalesSystem.Entities
 {
@@ -13,6 +14,8 @@ namespace SalesSystem.Entities
         [Required]
         [EmailAddress]
         public string Email { get; private set; }
+        [PasswordPropertyText]
+        public string Password { get; private set; }
 
         public Employee(string name, string email)
         {
@@ -27,6 +30,11 @@ namespace SalesSystem.Entities
         public void ChangeEmployeeEmail(string email)
         {
             Email = email;
+        }
+
+        public void ChangeEmployeePassword(string password)
+        {
+            Password = password;
         }
 
         public override string ToString()

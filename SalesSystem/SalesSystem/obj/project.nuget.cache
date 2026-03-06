@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "kz119a8SYeU=",
+  "dgSpecHash": "grxG/9W6tu4=",
   "success": true,
   "projectFilePath": "C:\\Users\\olive\\OneDrive\\Desktop\\Projects\\.NET\\Sales System\\SalesSystem\\SalesSystem\\SalesSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\olive\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\olive\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
+    "C:\\Users\\olive\\.nuget\\packages\\bcrypt.net-next\\4.1.0\\bcrypt.net-next.4.1.0.nupkg.sha512",
     "C:\\Users\\olive\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\olive\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\olive\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\8.0.24\\microsoft.aspnetcore.cryptography.internal.8.0.24.nupkg.sha512",

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
 using Microsoft.AspNetCore.Authorization;
 using SalesSystem.Shared.Database.Entities;
+using BC = BCrypt.Net.BCrypt;
 
 namespace SalesSystem.API.Controllers;
 
@@ -37,7 +38,9 @@ public class EmployeeController : ControllerBase
         if (getEmployees is null)
             return NotFound("There's no Employees in database.");
 
-        return Ok(getEmployees);
+        var employees = _mapper.Map<List<EmployeeDto>>(getEmployees);
+
+        return Ok(employees);
     }
 
     /// <summary>
@@ -63,13 +66,17 @@ public class EmployeeController : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="201">If the creation was successful</response>
     [HttpPost]
-    public IActionResult CreateEmployee([FromBody] EmployeeDto employeeDto)
+    public IActionResult CreateEmployee([FromBody] PostEmployeeDto employeeDto)
     {
         var getEmployee = _empDAL.GetBy(e => e.Email == employeeDto.Email);
         if (getEmployee is not null)
             return Conflict("Employee with this email already exists.");
 
+        var passwordCrypt = BC.HashPassword(employeeDto.Password);
+
         var employee = _mapper.Map<Employee>(employeeDto);
+
+        employee.ChangeEmployeePassword(passwordCrypt);
 
         _empDAL.Create(employee);
         return CreatedAtAction(nameof(GetEmployeeById),
@@ -89,7 +96,7 @@ public class EmployeeController : ControllerBase
         var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
 
         if (getEmployee is null)
-           return NotFound("Employee iD not Found.");
+            return NotFound("Employee iD not Found.");
 
         getEmployee.ChangeEmployeeName(employeeUpdated.Name);
         getEmployee.ChangeEmployeeEmail(employeeUpdated.Email);

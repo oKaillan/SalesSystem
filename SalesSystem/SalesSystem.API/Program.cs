@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using SalesSystem.Database;
@@ -12,13 +13,19 @@ builder.Services.AddDbContext<SalesSystemContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
            .UseLazyLoadingProxies());
 
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 
-builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<SalesSystemContext>();
+//builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
+//    .AddRoles<IdentityRole>()
+//    .AddEntityFrameworkStores<SalesSystemContext>();
+
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole>()
+    .AddEntityFrameworkStores<SalesSystemContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -38,8 +45,6 @@ builder.Services.AddAutoMapper(cfg =>
 }, typeof(Program).Assembly);
 
 var app = builder.Build();
-
-app.MapGroup("auth").MapIdentityApi<ApplicationUser>().WithTags("Authentication");
 
 app.MapControllers();
 
