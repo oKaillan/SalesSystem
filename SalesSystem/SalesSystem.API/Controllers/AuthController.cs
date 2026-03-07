@@ -4,21 +4,23 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Shared.Database.Entities;
 
+namespace SalesSystem.API.Controllers;
+
 [ApiController]
 [Route("[controller]")]
-public class AuthController : ControllerBase
+public class AuthController(
+    UserManager<ApplicationUser> userManager,
+    SignInManager<ApplicationUser> signInManager) : ControllerBase
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
 
-    public AuthController(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
-
+    /// <summary>
+    /// Login User
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">If the Login was succesfull</response>
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)
     {
@@ -43,5 +45,16 @@ public class AuthController : ControllerBase
 
 
         return Ok($"Successful logged as {string.Join(",", userRoles)}");
+    }
+    /// <summary>
+    /// Logout User
+    /// </summary>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">If the Logout was succesfull</response>
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout()
+    {
+        await _signInManager.SignOutAsync();
+        return Ok("Logout Succesful!");
     }
 }

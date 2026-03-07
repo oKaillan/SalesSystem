@@ -59,6 +59,7 @@ public class ProductCategoryController : ControllerBase
     /// <param name="pCategory">Object with the neccessary fields</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
+    [Authorize(Roles = Roles.Admin)]
     [HttpPut("{id}")]
         public IActionResult UpdateCategory([FromBody] ProductCategory pCategory, 
         int id)
