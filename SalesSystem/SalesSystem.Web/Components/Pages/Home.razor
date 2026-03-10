@@ -1,0 +1,19 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Components.Authorization
+
+<PageTitle>Home</PageTitle>
+
+<h1>Welcome to Sales System, User!</h1>
+<h4>SalesSystem simulates an employee’s sales point of view when a sale is made manually. It includes CRUD operations for Employees, Products, and Sales.</h4>
+
+<AuthorizeView Roles="@Roles.AdminOrEmployee">
+    <Authorized>
+        <p>Authorized</p>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin/>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+}

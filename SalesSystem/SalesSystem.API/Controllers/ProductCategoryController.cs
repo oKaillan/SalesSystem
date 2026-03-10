@@ -70,7 +70,7 @@ public class ProductCategoryController : ControllerBase
                 return NotFound("Category does not exist.");
             }
 
-            getCategory.ChangeProductName(pCategory.Name);
+            getCategory.ChangeCategoryName(pCategory.Name);
             _pCategoryDal.Update(getCategory);
             return NoContent();
         }

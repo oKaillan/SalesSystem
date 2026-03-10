@@ -1,0 +1,49 @@
+﻿@page "/login-form"
+@inject ApiAuthenticationStateProvider auth
+@inject NavigationManager nav
+<AuthorizeView>
+    <Authorized>
+        <p>Authorized</p>
+    </Authorized>
+    <NotAuthorized>
+<div class="login-container">
+
+    <h2>Login</h2>
+
+    <form>
+
+        <div class="input-group">
+            <label>Email</label>
+            <input @bind-value="email" type="email" placeholder="example@mail.com" />
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input @bind-value="password" type="password" placeholder="Password123*" />
+        </div>
+
+        <div id="error-input">
+            <p>@errors</p>
+        </div>
+
+        <button @onclick="Login" type="button">Sign In</button>
+
+    </form>
+
+</div>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private string? email;
+    private string? password;
+    private string? errors;
+
+    private async Task Login()
+    {
+        var response = await auth.LoginAsync(email, password);
+        if (!response.Success)
+            errors = response.Errors.FirstOrDefault();
+        else nav.NavigateTo(nav.Uri, forceLoad: true);
+    }
+}

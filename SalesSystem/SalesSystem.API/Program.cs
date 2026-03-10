@@ -15,12 +15,22 @@ builder.Services.AddDbContext<SalesSystemContext>(options =>
 
 
 builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddCookie();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 
-//builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
-//    .AddRoles<IdentityRole>()
-//    .AddEntityFrameworkStores<SalesSystemContext>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Blazor",
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:5001")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
 
 builder.Services
     .AddIdentity<ApplicationUser, IdentityRole>()
@@ -45,6 +55,8 @@ builder.Services.AddAutoMapper(cfg =>
 }, typeof(Program).Assembly);
 
 var app = builder.Build();
+
+app.UseCors();
 
 app.MapControllers();
 

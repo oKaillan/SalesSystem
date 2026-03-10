@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Shared.Database.Entities;
+using System.Security.Claims;
 
 namespace SalesSystem.API.Controllers;
 
@@ -56,5 +57,23 @@ public class AuthController(
     {
         await _signInManager.SignOutAsync();
         return Ok("Logout Succesful!");
+    }
+
+    /// <summary>
+    /// Returns logged User
+    /// </summary>
+    /// <returns>IActionResult</returns>
+    [Authorize]
+    [HttpGet("Me")]
+    public async Task<IActionResult> Me()
+    {
+        var roles = User.Claims
+            .Where(r => r.Type == ClaimTypes.Role)
+            .Select(r => r.Value);
+        return Ok(new
+        {
+            name = User.Identity?.Name,
+            roles
+        });
     }
 }

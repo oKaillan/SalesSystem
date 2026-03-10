@@ -19,7 +19,7 @@ namespace SalesSystem.Entities
             Name = name;
         }
 
-        public void ChangeProductName(string name)
+        public void ChangeCategoryName(string name)
         {
             Name = name;
         }

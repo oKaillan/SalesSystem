@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.13.35919.96
+# Visual Studio Version 18
+VisualStudioVersion = 18.4.11519.219
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesSystem", "SalesSystem\SalesSystem.csproj", "{B938B670-EFD3-4E3C-8AA0-997B3ABF16EE}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesSystem.Shared.Entities", "SalesSystem.Shared.Entities\SalesSystem.Shared.Entities.csproj", "{B2D693B8-C69A-4AB7-9594-6257D2A5A09A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesSystem.API", "SalesSystem.API\SalesSystem.API.csproj", "{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SalesSystem.Web", "SalesSystem.Web\SalesSystem.Web.csproj", "{1E13326A-5F30-4676-8591-CC6047B2AAC8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9AFC0D1D-4D42-4BD5-A6E3-34DF186F21DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E13326A-5F30-4676-8591-CC6047B2AAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E13326A-5F30-4676-8591-CC6047B2AAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E13326A-5F30-4676-8591-CC6047B2AAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E13326A-5F30-4676-8591-CC6047B2AAC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
