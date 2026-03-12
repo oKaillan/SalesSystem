@@ -1,13 +1,22 @@
-﻿@inherits LayoutComponentBase
+﻿@inject ApiAuthenticationStateProvider user
+@inherits LayoutComponentBase
 <div class="page">
+    <AuthorizeView>
+        <Authorized>
     <div class="sidebar">
         <NavMenu />
     </div>
+        </Authorized>
+    </AuthorizeView>
 
     <main>
+        <AuthorizeView>
+            <Authorized Context="user">
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <p>Welcome, @user.User.Identity!.Name</p>
         </div>
+            </Authorized>
+        </AuthorizeView>
 
         <article class="content px-4">
             @Body

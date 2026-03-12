@@ -1,43 +1,49 @@
 ﻿@page "/login-form"
+@layout LoginFormLayout
 @inject ApiAuthenticationStateProvider auth
 @inject NavigationManager nav
 <AuthorizeView>
-    <Authorized>
-        <p>Authorized</p>
-    </Authorized>
     <NotAuthorized>
-<div class="login-container">
+        <div class="login-container">
 
-    <h2>Login</h2>
+            <h2>Login</h2>
 
-    <form>
+            <form>
 
-        <div class="input-group">
-            <label>Email</label>
-            <input @bind-value="email" type="email" placeholder="example@mail.com" />
+                <div class="input-group">
+                    <label>Email</label>
+                    <input @bind-value="email" type="email" placeholder="example@mail.com" />
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input @bind-value="password" type="password" placeholder="Password123*" />
+                </div>
+
+                <div id="error-input">
+                    <p>@errors</p>
+                </div>
+
+                <button @onclick="Login" type="button">Sign In</button>
+
+            </form>
+
         </div>
-
-        <div class="input-group">
-            <label>Password</label>
-            <input @bind-value="password" type="password" placeholder="Password123*" />
-        </div>
-
-        <div id="error-input">
-            <p>@errors</p>
-        </div>
-
-        <button @onclick="Login" type="button">Sign In</button>
-
-    </form>
-
-</div>
     </NotAuthorized>
 </AuthorizeView>
+
 
 @code {
     private string? email;
     private string? password;
     private string? errors;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await auth.GetAuthenticationStateAsync();
+        if (user.User.Identity.IsAuthenticated)
+            nav.NavigateTo("/");
+    }
 
     private async Task Login()
     {

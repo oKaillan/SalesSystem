@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.Net.Http.Headers;
+using Microsoft.AspNetCore.Identity;
 using SalesSystem.Web.Components;
 using SalesSystem.Web.Services;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient(typeof(BaseApiService<>));
@@ -20,11 +19,26 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider,
     ApiAuthenticationStateProvider>();
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+}).AddCookie(IdentityConstants.ApplicationScheme, options =>
+{
+        options.LoginPath = "/not-authorized";
+        options.AccessDeniedPath = "/not-authorized";
+});
+
+builder.Services.AddAuthorization();
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
+
+app.UseAuthorization();
+app.UseAuthentication();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

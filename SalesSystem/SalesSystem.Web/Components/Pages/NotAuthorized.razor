@@ -1,0 +1,17 @@
+﻿@page "/not-authorized"
+<AuthorizeView>
+    @*
+        If user is logged in, but doesn't have required role to access, Show Not Authorized
+        If user isn't logged in, redirect to Login Form page
+    *@
+    <Authorized>
+        <h1>Not Authorized</h1>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+
+}

@@ -1,0 +1,62 @@
+﻿.table-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 3.5rem);
+}
+
+table {
+    width: 80%;
+    /*    max-width: 800px;*/
+    min-height: 80vh;
+    border-collapse: collapse;
+    background-color: #111827;
+    color: white;
+}
+
+th {
+    padding: 8px 12px 8px 12px;
+    text-align: left;
+}
+
+td, th {
+    border-bottom: 1px solid #374151;
+}
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+    th:not(:last-child), td:not(:last-child) {
+        border-right: 1px solid #374151;
+    }
+
+.add-field {
+    width: 30px;
+    height: 20px;
+    background-color: var(--main-background-color);
+    border: none;
+    padding-right: 5px;
+}
+
+.add-button {
+    display: flex;
+    border-radius: 50%;
+    background-color: #1cb039;
+    cursor: pointer;
+}
+
+.add-icon {
+    filter: invert();
+    align-self: center;
+}
+
+.id-field,
+.price-field,
+.qtd-field {
+    width: 30px;
+    text-align: center;
+}
+
+.price-field {
+    width: 150px;
+}

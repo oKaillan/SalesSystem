@@ -83,6 +83,11 @@
 
 .nav-scrollable {
     display: none;
+    background: #383838;
+    background: -webkit-linear-gradient(130deg, rgba(56, 56, 56, 1) 50%, rgba(59, 130, 246, 0.5) 100%);
+    background: -moz-linear-gradient(130deg, rgba(56, 56, 56, 1) 50%, rgba(59, 130, 246, 0.5) 100%);
+    background: linear-gradient(130deg, rgba(56, 56, 56, 1) 50%, rgba(59, 130, 246, 0.5) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#383838", endColorstr="#3B82F6", GradientType=0);
 }
 
 .navbar-toggler:checked ~ .nav-scrollable {

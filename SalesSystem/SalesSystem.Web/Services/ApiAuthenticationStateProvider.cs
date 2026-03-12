@@ -1,18 +1,16 @@
 ﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Identity;
 using SalesSystem.Shared.Database.Database.AuthDto;
 using SalesSystem.Web.Responses;
 using System.Security.Claims;
 
 namespace SalesSystem.Web.Services;
 
-public class ApiAuthenticationStateProvider : AuthenticationStateProvider
+public class ApiAuthenticationStateProvider(IHttpClientFactory factory) : AuthenticationStateProvider
 {
-    private readonly HttpClient _httpClient;
 
-    public ApiAuthenticationStateProvider(IHttpClientFactory factory)
-    {
-        _httpClient = factory.CreateClient("SSAPI");
-    }
+    private readonly HttpClient _httpClient = factory.CreateClient("SSAPI");
+
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
@@ -35,7 +33,7 @@ public class ApiAuthenticationStateProvider : AuthenticationStateProvider
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var identity = new ClaimsIdentity(claims, "cookies");
+            var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
 
             return new AuthenticationState(new ClaimsPrincipal(identity));
         }
