@@ -1,17 +1,19 @@
 ﻿.table-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: calc(100vh - 3.5rem);
 }
 
 table {
-    width: 80%;
+    width: 80%; /*When changing here, needs to change in #arrow-button-field*/
     /*    max-width: 800px;*/
     min-height: 80vh;
     border-collapse: collapse;
-    background-color: #111827;
+    background-color: var(--table-background-color);
     color: white;
+    border-radius: 15px;
 }
 
 th {
@@ -20,20 +22,20 @@ th {
 }
 
 td, th {
-    border-bottom: 1px solid #374151;
+    border-bottom: 1px solid var(--border-color);
 }
+
 tbody tr:last-child td {
     border-bottom: none;
 }
 
-    th:not(:last-child), td:not(:last-child) {
-        border-right: 1px solid #374151;
-    }
+th:not(:last-child), td:not(:last-child) {
+    border-right: 1px solid var(--border-color);
+}
 
 .add-field {
     width: 30px;
     height: 20px;
-    background-color: var(--main-background-color);
     border: none;
     padding-right: 5px;
 }
@@ -59,4 +61,50 @@ tbody tr:last-child td {
 
 .price-field {
     width: 150px;
+}
+
+.arrow-button-field {
+    display: flex;
+    align-self: end;
+    margin-top: 5px;
+    width: 20%; /*When changing here, needs to change in .table*/
+}
+
+
+    .arrow-button-field img,
+    #page-counter {
+        height: 30px;
+        width: 30px;
+        text-align: center;
+        user-select: none;
+    }
+
+    .arrow-button-field img {
+        height: 30px;
+        width: 30px;
+        cursor: pointer;
+    }
+
+#left-arrow {
+    transform: rotate(180deg);
+}
+
+#page-counter {
+    background-color: var(--table-background-color);
+    border-radius: 50%;
+    color: #fff;
+    border: none;
+    margin: 0 5px 0 5px;
+}
+#page-counter:focus-visible {
+    outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
 }

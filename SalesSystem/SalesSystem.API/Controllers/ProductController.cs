@@ -9,15 +9,20 @@ using SalesSystem.Shared.Database.Entities;
 using System.Linq.Expressions;
 
 namespace SalesSystem.API.Controllers;
-
+/// <summary>
+/// Controller Responsibly to delivery Products
+/// </summary>
+/// <param name="mapper"></param>
+/// <param name="prodDAL"></param>
+/// <param name="pCategoryDAL"></param>
 [ApiController]
 [Route("[controller]")]
 [Authorize(Roles = Roles.AdminOrEmployee)]
-public class ProductController : ControllerBase
+public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCategory> pCategoryDAL) : ControllerBase
 {
-    private readonly IMapper _mapper;
-    private readonly DAL<Product> _prodDAL;
-    private readonly DAL<ProductCategory> _pCategoryDAL;
+    private readonly IMapper _mapper = mapper;
+    private readonly DAL<Product> _prodDAL = prodDAL;
+    private readonly DAL<ProductCategory> _pCategoryDAL = pCategoryDAL;
     //This is the Product GET Model, used in Get all Products and Get by iD
     private readonly Func<Product, GetProductDto> getProductDto = p => new GetProductDto
     {
@@ -27,13 +32,6 @@ public class ProductController : ControllerBase
         Price = p.Price,
         Categories = p.Categories.Select(p => p.Name).ToList()
     };
-
-    public ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCategory> pCategoryDAL)
-    {
-        _mapper = mapper;
-        _prodDAL = prodDAL;
-        _pCategoryDAL = pCategoryDAL;
-    }
 
     /// <summary>
     /// Returns all Products in Database
@@ -112,6 +110,7 @@ public class ProductController : ControllerBase
     /// Update a Product at Database
     /// </summary>
     /// <param name="productDto">Object with the neccessary fields</param>
+    /// <param name="id">Object iD</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
     [Authorize(Roles = Roles.Admin)]
@@ -144,6 +143,7 @@ public class ProductController : ControllerBase
     /// </summary>
     /// <remarks>If Category was not selected or was invalid, it backs to what it was.</remarks>
     /// <param name="patch">Object with the neccessary fields</param>
+    /// <param name="id">Product id</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
     [Authorize(Roles = Roles.Admin)]
@@ -159,14 +159,14 @@ public class ProductController : ControllerBase
         patch.ApplyTo(productToUpdate, ModelState);
         if (!TryValidateModel(productToUpdate)) return ValidationProblem(ModelState);
 
-        var checkCategory = _pCategoryDAL.GetAllBy(c => productToUpdate.CategoriesIds.Contains(c.Id));
+        var checkCategory = _pCategoryDAL.GetAllBy(c => productToUpdate.CategoriesIds!.Contains(c.Id));
 
         if (checkCategory is null) // If categories was not found, it backs to what it was
             checkCategory = (List<ProductCategory>?)getProduct.Categories;
         
         _mapper.Map(productToUpdate, getProduct);
 
-        getProduct.ChangeProductCategories(checkCategory); // Always changing, to not create a new one
+        getProduct.ChangeProductCategories(checkCategory!); // Always changing, to not create a new one
 
         _prodDAL.Update(getProduct);
         return NoContent();

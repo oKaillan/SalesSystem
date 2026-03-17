@@ -24,18 +24,19 @@ public class ApiAuthenticationStateProvider(IHttpClientFactory factory) : Authen
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, response.Name),
-                new Claim(ClaimTypes.Email, response.Name)
+                new Claim(ClaimTypes.Name, response.Name ?? string.Empty),
+                new Claim(ClaimTypes.Email, response.Name ?? string.Empty)
             };
 
-            foreach (var role in response.Roles)
+            foreach (var role in response.Roles ?? new List<string>())
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
             var identity = new ClaimsIdentity(claims, IdentityConstants.ApplicationScheme);
+            var user = new ClaimsPrincipal(identity);
 
-            return new AuthenticationState(new ClaimsPrincipal(identity));
+            return new AuthenticationState(user);
         }
         catch
         {

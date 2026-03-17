@@ -41,13 +41,13 @@
     protected override async Task OnInitializedAsync()
     {
         var user = await auth.GetAuthenticationStateAsync();
-        if (user.User.Identity.IsAuthenticated)
+        if (user.User.Identity!.IsAuthenticated)
             nav.NavigateTo("/");
     }
 
     private async Task Login()
     {
-        var response = await auth.LoginAsync(email, password);
+        var response = await auth.LoginAsync(email!, password!);
         if (!response.Success)
             errors = response.Errors.FirstOrDefault();
         else nav.NavigateTo(nav.Uri, forceLoad: true);

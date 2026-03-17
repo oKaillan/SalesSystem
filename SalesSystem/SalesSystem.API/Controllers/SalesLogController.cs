@@ -6,19 +6,18 @@ using SalesSystem.Shared.Database.Entities;
 
 namespace SalesSystem.API.Controllers;
 
+/// <summary>
+/// Responsible Controller for Sales Logs
+/// </summary>
+/// <param name="slogDal"></param>
+/// <param name="empDal"></param>
 [ApiController]
 [Route("admin/[controller]")]
 [Authorize(Roles = Roles.Admin)]
-public class SalesLogController : ControllerBase
+public class SalesLogController(DAL<SalesLog> slogDal, DAL<Employee> empDal) : ControllerBase
 {
-    private readonly DAL<SalesLog> _slogDal;
-    private readonly DAL<Employee> _empDal;
-
-    public SalesLogController(DAL<SalesLog> slogDal, DAL<Employee> empDal)
-    {
-        _slogDal = slogDal;
-        _empDal = empDal;
-    }
+    private readonly DAL<SalesLog> _slogDal = slogDal;
+    private readonly DAL<Employee> _empDal = empDal;
 
     /// <summary>
     /// Returns all Logs in Database

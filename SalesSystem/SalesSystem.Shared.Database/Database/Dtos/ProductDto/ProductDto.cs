@@ -8,7 +8,7 @@ public class ProductDto
 
 
     [Required(ErrorMessage = "Name can't be null")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     [Range(0, 2200, ErrorMessage = "The minimum quantity is 0.")]
     [Required]
     public int Quantity { get; set; }
@@ -17,6 +17,4 @@ public class ProductDto
     public double Price { get; set; }
 
     public List<int> CategoryIds { get; set; } = new();
-
-    public ProductDto() {}
 }

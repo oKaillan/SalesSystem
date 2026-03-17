@@ -6,7 +6,11 @@ using SalesSystem.Shared.Database.Entities;
 using System.Security.Claims;
 
 namespace SalesSystem.API.Controllers;
-
+/// <summary>
+/// Controller Responsibly to manage Authentication
+/// </summary>
+/// <param name="userManager"></param>
+/// <param name="signInManager"></param>
 [ApiController]
 [Route("[controller]")]
 public class AuthController(

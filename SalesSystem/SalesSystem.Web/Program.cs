@@ -10,7 +10,7 @@ builder.Services.AddTransient<ApiAuthenticationStateProvider>();
 
 builder.Services.AddHttpClient("SSAPI", client =>
 {
-    client.BaseAddress = new Uri(builder.Configuration["SalesSystemApi"]);
+    client.BaseAddress = new Uri(builder.Configuration["SalesSystemApi"] ?? string.Empty);
 })
 .AddHttpMessageHandler<CookieHandler>();
 builder.Services.AddHttpContextAccessor();

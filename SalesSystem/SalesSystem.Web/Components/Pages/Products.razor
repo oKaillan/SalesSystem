@@ -1,9 +1,11 @@
 ﻿@page "/products"
 @inject BaseApiService<GetProductDto> api
+@attribute [Authorize(Roles = Roles.AdminOrEmployee)]
+
 
 <AuthorizeView Roles=@Roles.AdminOrEmployee>
     <Authorized>
-        @if (products is null)
+        @if (_paginationService?.ObjectPaginatedList is null)
         {
             <p>Loading...</p>
         }
@@ -23,7 +25,7 @@
                     </thead>
 
                     <tbody>
-                        @foreach (var product in products)
+                        @foreach (var product in _paginationService.ObjectPaginatedList)
                         {
                             <tr>
                                 <td class="add-field">
@@ -45,18 +47,34 @@
                         }
                     </tbody>
                 </table>
+                <div class="arrow-button-field">
+                    <img id="left-arrow" src="/img/svg/arrow-button.svg"
+                         @onclick="_paginationService.PreviousPage" />
+                    <input id="page-counter" type="number"
+                           value="@_paginationService.PageNumber"
+                           @onchange="_paginationService.GoToPageNumber" />
+                    <img id="right-arrow" src="/img/svg/arrow-button.svg"
+                         @onclick="_paginationService.NextPage" />
+                </div>
+
             </div>
         }
     </Authorized>
     <NotAuthorized>
-        <RedirectToLogin/>
+        <RedirectToLogin />
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    ICollection<GetProductDto>? products { get; set; }
+    int pageSize = 20; // Products per page
+    private ICollection<GetProductDto>? products;
+    private PaginationService<GetProductDto>? _paginationService;
+
     protected override async Task OnInitializedAsync()
     {
         products = await api.GetObjectListAsync("product");
+        _paginationService = new(pageSize, products);
     }
+
+
 }

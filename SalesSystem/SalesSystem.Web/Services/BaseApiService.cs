@@ -16,7 +16,6 @@
                 throw new Exception($"Object not found at route {path}");
 
             return result;
-
         }
     }
 }

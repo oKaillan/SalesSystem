@@ -18,10 +18,7 @@ namespace SalesSystem.Database
         {
         }
 
-        public SalesSystemContext()
-        {
-        }
-
+        public SalesSystemContext() { }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Product>()

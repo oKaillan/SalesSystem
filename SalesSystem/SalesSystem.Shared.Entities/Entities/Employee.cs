@@ -3,25 +3,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SalesSystem.Entities
 {
-    public class Employee
+    public class Employee(string name, string email)
     {
         [Key]
         [Required]
         public int Id { get; private set; }
         [Required]
         [RegularExpression(@"^[a-zA-ZÀ-ÿ\s]+$", ErrorMessage = "Name can only have letters and spaces.")]
-        public string Name { get; private set; }
+        public string Name { get; private set; } = name;
         [Required]
         [EmailAddress]
-        public string Email { get; private set; }
+        public string Email { get; private set; } = email;
         [PasswordPropertyText]
-        public string Password { get; private set; }
-
-        public Employee(string name, string email)
-        {
-            Name = name;
-            Email = email;
-        }
+        public string Password { get; private set; } = string.Empty;
 
         public void ChangeEmployeeName(string name)
         {

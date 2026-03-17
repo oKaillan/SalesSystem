@@ -10,22 +10,20 @@ using SalesSystem.Shared.Database.Entities;
 using BC = BCrypt.Net.BCrypt;
 
 namespace SalesSystem.API.Controllers;
-
+/// <summary>
+/// Controller Responsibly to delivery Employees
+/// </summary>
+/// <param name="mapper"></param>
+/// <param name="empDAL"></param>
+/// <param name="userManager"></param>
 [ApiController]
 [Route("admin/[controller]")]
 [Authorize(Roles = Roles.Admin)]
-public class EmployeeController : ControllerBase
+public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManager<ApplicationUser> userManager) : ControllerBase
 {
-    private readonly IMapper _mapper;
-    private readonly DAL<Employee> _empDAL;
-    private readonly UserManager<ApplicationUser> _userManager;
-
-    public EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManager<ApplicationUser> userManager)
-    {
-        _mapper = mapper;
-        _empDAL = empDAL;
-        _userManager = userManager;
-    }
+    private readonly IMapper _mapper = mapper;
+    private readonly DAL<Employee> _empDAL = empDAL;
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
 
 
     /// <summary>
@@ -103,13 +101,14 @@ public class EmployeeController : ControllerBase
     /// Update an Employee at Database
     /// </summary>
     /// <param name="employeeUpdated">Object with the neccessary fields</param>
+    /// <param name="id">Employee iD</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateEmployeeAsync(int id, [FromBody] EmployeeDto employeeUpdated)
     {
         var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
-        var user = await _userManager.FindByEmailAsync(getEmployee.Email);
+        var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
 
         if (getEmployee is null || user is null)
             return NotFound("Employee not Found.");
@@ -149,6 +148,7 @@ public class EmployeeController : ControllerBase
     /// Update an Employee field at Database
     /// </summary>
     /// <param name="patch">Object with the neccessary fields</param>
+    /// <param name="id">Employee iD</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
     [HttpPatch]
@@ -156,7 +156,7 @@ public class EmployeeController : ControllerBase
         JsonPatchDocument<PatchEmployeeDto> patch)
     {
         var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
-        var user = await _userManager.FindByEmailAsync(getEmployee.Email);
+        var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
         if (getEmployee is null || user is null) 
             return NotFound("Employee not Found.");
 
@@ -209,7 +209,7 @@ public class EmployeeController : ControllerBase
     public async Task<IActionResult> DeleteEmployeeAsync(int id)
     {
         var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
-        var user = await _userManager.FindByEmailAsync(getEmployee.Email);
+        var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
         if (getEmployee is null || user is null)
         {
             return NotFound("Employee not Found.");

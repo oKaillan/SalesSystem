@@ -7,19 +7,20 @@ namespace SalesSystem.Entities
     public class SalesLog
     {
         [Key]
-        public Guid SaleId { get; private set; } = new Guid();
+        public Guid SaleId { get; private set; } = Guid.NewGuid();
 
         public int EmployeeId { get; private set; }
-        public string Employee { get; private set; }
+        public string Employee { get; private set; } = null!;
 
         public int ProductId { get; private set; }
-        public string Product { get; private set; }
+        public string Product { get; private set; } = null!;
 
         public int Quantity { get; private set; }
         public double TotalPrice { get; private set; }
         public DateTime Time { get; private set; }
 
         public SalesLog() { }
+
         public SalesLog(Employee employee, Product product, int quantity, double totalPrice)
         {
             Employee = employee.Name;

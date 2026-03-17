@@ -6,18 +6,16 @@ using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Entities;
 
 namespace SalesSystem.API.Controllers;
-
+/// <summary>
+/// Controller Responsibly to delivery Products Categories
+/// </summary>
+/// <param name="pCategoryDal"></param>
 [ApiController]
 [Route("[controller]")]
 [Authorize(Roles = Roles.AdminOrEmployee)]
-public class ProductCategoryController : ControllerBase
+public class ProductCategoryController(DAL<ProductCategory> pCategoryDal) : ControllerBase
 {
-    private readonly DAL<ProductCategory> _pCategoryDal;
-
-    public ProductCategoryController(DAL<ProductCategory> pCategoryDal)
-    {
-        _pCategoryDal = pCategoryDal;
-    }
+    private readonly DAL<ProductCategory> _pCategoryDal = pCategoryDal;
 
     /// <summary>
     /// Returns all Categories in Database
@@ -57,6 +55,7 @@ public class ProductCategoryController : ControllerBase
     /// Update a Category at Database
     /// </summary>
     /// <param name="pCategory">Object with the neccessary fields</param>
+    /// <param name="id">Category iD</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
     [Authorize(Roles = Roles.Admin)]

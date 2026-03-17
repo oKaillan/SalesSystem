@@ -10,7 +10,7 @@ namespace SalesSystem.Entities
         [Required]
         public int Id { get; private set; }
         [Required(ErrorMessage = "Name can't be null")]
-        public string Name { get; private set; }
+        public string Name { get; private set; } = null!;
         [Range(0, 2200, ErrorMessage = "The minimum quantity is 0.")]
         [Required]
         public int Quantity { get; set; }
@@ -22,6 +22,7 @@ namespace SalesSystem.Entities
         public virtual ICollection<ProductCategory> Categories { get; set; } = new List<ProductCategory>();
 
 
+
         public Product(string name, int quantity, double price, ProductCategory category)
         {
             Name = name;
@@ -30,7 +31,9 @@ namespace SalesSystem.Entities
             Categories.Add(category);
         }
 
-        public Product() { }
+        public Product()
+        {
+        }
 
         public void RemoveStock(int qtd)
         {

@@ -5,7 +5,7 @@ namespace SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 public class PatchProductDto
 {
     [Required(ErrorMessage = "Name can't be null")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     [Range(0, 2200, ErrorMessage = "The minimum quantity is 0.")]
     [Required]
     public int Quantity { get; set; }

@@ -3,9 +3,14 @@ using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 
 namespace SalesSystem.API.Profiles;
-
+/// <summary>
+/// Class responsibly to map Products
+/// </summary>
 public class ProductProfile : Profile
 {
+    /// <summary>
+    /// Maps Product using AutoMapper
+    /// </summary>
     public ProductProfile()
     {
         CreateMap<Product,  ProductDto>();
