@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalesSystem.Entities;
+using SalesSystem.Shared.Database.Responses;
 using System.Linq.Expressions;
 
 namespace SalesSystem.Database
@@ -18,9 +19,41 @@ namespace SalesSystem.Database
             return _context.Set<T>().ToList();
         }
 
-        public List<T> GetAllInRange(int skip, int take)
+        public PagedResult<TResult> GetAllPaged<TResult>(
+            int skip,
+            int take,
+            Func<T, TResult> selector,
+            params Expression<Func<T, object>>[] includes) 
+            where TResult : class
         {
-            return _context.Set<T>().Skip(skip).Take(take).ToList();
+            try
+            {
+
+                IQueryable<T> query = _context.Set<T>();
+
+                if (includes is not null)
+                    foreach (var i in includes)
+                    {
+                        query = query.Include(i);
+                    }
+
+
+                var total = query.Count();
+
+                var data = query
+                    .Skip(skip)
+                    .Take(take)
+                    .Select(selector)
+                    .ToList();
+
+                return new PagedResult<TResult>
+                {
+                    TotalCount = total,
+                    Data = data
+                };
+            }
+            catch (Exception ex) { throw new Exception($"An error has occurred: {ex.Message}"); }
+
         }
 
         /*

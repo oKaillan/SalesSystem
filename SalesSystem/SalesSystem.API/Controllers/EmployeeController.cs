@@ -31,17 +31,17 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
     /// </summary>
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
-    [HttpGet]
-    public IActionResult GetEmployees(int skip = 0, int take = 50)
-    {
-        var getEmployees = _empDAL.GetAllInRange(skip, take);
-        if (getEmployees is null)
-            return NotFound("There's no Employees in database.");
+    //[HttpGet]
+    //public IActionResult GetEmployees(int skip = 0, int take = 50)
+    //{
+    //    var getEmployees = _empDAL.GetAllPaged(skip, take);
+    //    if (getEmployees is null)
+    //        return NotFound("There's no Employees in database.");
 
-        var employees = _mapper.Map<List<GetEmployeeDto>>(getEmployees);
+    //    var employees = _mapper.Map<List<GetEmployeeDto>>(getEmployees);
 
-        return Ok(employees);
-    }
+    //    return Ok(employees);
+    //}
 
     /// <summary>
     /// Returns an Employee by it's iD

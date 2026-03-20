@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using SalesSystem.Database;
 using SalesSystem.Entities;
+using SalesSystem.Shared.Database.Database.Dtos;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 using SalesSystem.Shared.Database.Entities;
 using System.Linq.Expressions;
@@ -30,7 +31,11 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
         Name = p.Name,
         Quantity = p.Quantity,
         Price = p.Price,
-        Categories = p.Categories.Select(p => p.Name).ToList()
+        Categories = p.Categories.Select(c => new CategoryDto
+        {
+            Id = c.Id,
+            Name = c.Name
+        })
     };
 
     /// <summary>
@@ -41,13 +46,16 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     [HttpGet]
     public IActionResult GetProducts(int skip = 0, int take = 50)
     {
-        var getProducts = _prodDAL.GetAllInRange(skip, take)
-            .Select(getProductDto);
-        if (getProducts is null)
+        try
         {
-            return NotFound("There's no Products in database.");
+            var getProducts = _prodDAL.GetAllPaged(skip, take, getProductDto, p => p.Categories);
+            if (getProducts is null)
+            {
+                return NotFound("There's no Products in database.");
+            }
+            return Ok(getProducts);
         }
-        return Ok(getProducts);
+        catch (Exception ex) { throw new Exception($"An exception has occurred: {ex.Message}"); }
     }
 
     /// <summary>
@@ -163,7 +171,7 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
 
         if (checkCategory is null) // If categories was not found, it backs to what it was
             checkCategory = (List<ProductCategory>?)getProduct.Categories;
-        
+
         _mapper.Map(productToUpdate, getProduct);
 
         getProduct.ChangeProductCategories(checkCategory!); // Always changing, to not create a new one
