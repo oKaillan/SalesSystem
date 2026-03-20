@@ -1,4 +1,6 @@
-﻿namespace SalesSystem.Web.Services
+﻿using SalesSystem.Shared.Database.Responses;
+
+namespace SalesSystem.Web.Services
 {
     public class BaseApiService<T> where T : class
     {
@@ -6,16 +8,30 @@
 
         public BaseApiService(IHttpClientFactory factory)
         {
+            try
+            {
             _httpClient = factory.CreateClient("SSAPI");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Something went wrong trying to initialize HttpClient: {ex.Message}");
+            }
         }
 
-        public async Task<ICollection<T>> GetObjectListAsync(string path)
+        public async Task<PagedResult<T>> GetObjectPagedListAsync(string path, int skip, int take)
         {
-            var result = await _httpClient.GetFromJsonAsync<ICollection<T>>(path);
-            if (result is null)
-                throw new Exception($"Object not found at route {path}");
+            try
+            {
+                var result = await _httpClient.GetFromJsonAsync<PagedResult<T>>(
+                    $"{path}?skip={skip}&take={take}"
+                    );
+                if (result is null)
+                    throw new Exception($"Object not found at route {path}");
 
-            return result;
+                return result;
+
+            }
+            catch (Exception ex) { throw new Exception($"An error has occurred trying to request: {ex.Message}"); }
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿@page "/products"
+@using SalesSystem.Shared.Database.Responses
 @inject BaseApiService<GetProductDto> api
 @attribute [Authorize(Roles = Roles.AdminOrEmployee)]
 
 
 <AuthorizeView Roles=@Roles.AdminOrEmployee>
     <Authorized>
-        @if (_paginationService?.ObjectPaginatedList is null)
+        @if (_paginationService?.Data is null)
         {
             <p>Loading...</p>
         }
@@ -25,7 +26,7 @@
                     </thead>
 
                     <tbody>
-                        @foreach (var product in _paginationService.ObjectPaginatedList)
+                        @foreach (var product in _paginationService.Data)
                         {
                             <tr>
                                 <td class="add-field">
@@ -41,7 +42,7 @@
                                 <td class="price-field">@String.Format($"{product.Price:C}")</td>
                                 <td class="category-field">
                                     @*Separates Categories using ,*@
-                                    @string.Join(", ", product.Categories)
+                                    @string.Join(", ", product.Categories.Select(p => p.Name))
                                 </td>
                             </tr>
                         }
@@ -49,12 +50,12 @@
                 </table>
                 <div class="arrow-button-field">
                     <img id="left-arrow" src="/img/svg/arrow-button.svg"
-                         @onclick="_paginationService.PreviousPage" />
+                         @onclick="_paginationService.PreviousPageAsync" />
                     <input id="page-counter" type="number"
                            value="@_paginationService.PageNumber"
-                           @onchange="_paginationService.GoToPageNumber" />
+                           @onchange="_paginationService.GoToPageNumberAsync" />
                     <img id="right-arrow" src="/img/svg/arrow-button.svg"
-                         @onclick="_paginationService.NextPage" />
+                         @onclick="_paginationService.NextPageAsync" />
                 </div>
 
             </div>
@@ -67,13 +68,20 @@
 
 @code {
     int pageSize = 20; // Products per page
-    private ICollection<GetProductDto>? products;
     private PaginationService<GetProductDto>? _paginationService;
 
     protected override async Task OnInitializedAsync()
     {
-        products = await api.GetObjectListAsync("product");
-        _paginationService = new(pageSize, products);
+        try
+        {
+            _paginationService = new(
+              api,
+              "product",
+              pageSize
+            );
+            await _paginationService.Paginate();
+        } 
+        catch (Exception ex) { Console.WriteLine($"An error has occurred: {ex.Message}"); }
     }
 
 
