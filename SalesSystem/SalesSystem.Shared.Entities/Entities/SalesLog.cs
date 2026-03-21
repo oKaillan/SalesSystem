@@ -34,7 +34,10 @@ namespace SalesSystem.Entities
             Time = DateTime.Now;
         }
 
+
+        //Disabled, only works in ConsoleApp
         //Generates/Open and Write the Log File
+        /*
         public void LogFile(SalesLog log)
         {
             string logFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "log");
@@ -58,6 +61,7 @@ namespace SalesSystem.Entities
             catch (Exception ex) { Console.WriteLine(ex.Message); }
 
         }
+        */
 
         public override string ToString()
         {

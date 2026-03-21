@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using SalesSystem.API.Services;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Entities;
@@ -50,6 +51,7 @@ builder.Services.AddTransient<DAL<Employee>>();
 builder.Services.AddTransient<DAL<Product>>();
 builder.Services.AddTransient<DAL<ProductCategory>>();
 builder.Services.AddTransient<DAL<SalesLog>>();
+builder.Services.AddTransient<SalesLogService>();
 builder.Services.AddAutoMapper(cfg =>
 {
 }, typeof(Program).Assembly);

@@ -23,6 +23,12 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
 {
     private readonly IMapper _mapper = mapper;
     private readonly DAL<Employee> _empDAL = empDAL;
+    private readonly Func<Employee, GetEmployeeDto> getEmployeeDto = e => new GetEmployeeDto
+    {
+        Id = e.Id,
+        Name = e.Name,
+        Email = e.Email
+    };
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
 
@@ -31,17 +37,15 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
     /// </summary>
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
-    //[HttpGet]
-    //public IActionResult GetEmployees(int skip = 0, int take = 50)
-    //{
-    //    var getEmployees = _empDAL.GetAllPaged(skip, take);
-    //    if (getEmployees is null)
-    //        return NotFound("There's no Employees in database.");
+    [HttpGet]
+    public IActionResult GetEmployees(int skip = 0, int take = 50)
+    {
+        var getEmployees = _empDAL.GetAllPagedWithSelector(skip, take, getEmployeeDto);
+        if (getEmployees is null)
+            return NotFound("There's no Employees in database.");
 
-    //    var employees = _mapper.Map<List<GetEmployeeDto>>(getEmployees);
-
-    //    return Ok(employees);
-    //}
+        return Ok(getEmployees);
+    }
 
     /// <summary>
     /// Returns an Employee by it's iD
@@ -56,8 +60,8 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
         if (getEmployee is null)
             return NotFound("Employee iD not found.");
 
-        var empMapper = _mapper.Map<GetEmployeeDto>(getEmployee);
-        return Ok(empMapper);
+        var dto = getEmployeeDto(getEmployee);
+        return Ok(dto);
     }
 
     /// <summary>

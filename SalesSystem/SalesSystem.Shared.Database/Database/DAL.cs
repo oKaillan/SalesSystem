@@ -19,11 +19,27 @@ namespace SalesSystem.Database
             return _context.Set<T>().ToList();
         }
 
-        public PagedResult<TResult> GetAllPaged<TResult>(
+        public List<T> GetAllPaged(int skip, int take)
+        {
+            try
+            {
+                var result = _context
+                    .Set<T>()
+                    .Skip(skip)
+                    .Take(take)
+                    .ToList();
+
+                return result;
+            }
+            catch (Exception ex) { throw new Exception($"An error has occurred: {ex.Message}"); }
+
+        }
+
+        public PagedResult<TResult> GetAllPagedWithSelector<TResult>(
             int skip,
             int take,
             Func<T, TResult> selector,
-            params Expression<Func<T, object>>[] includes) 
+            params Expression<Func<T, object>>[] includes)
             where TResult : class
         {
             try

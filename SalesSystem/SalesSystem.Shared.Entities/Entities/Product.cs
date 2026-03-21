@@ -35,9 +35,16 @@ namespace SalesSystem.Entities
         {
         }
 
-        public void RemoveStock(int qtd)
+        public (bool Success, string? Error) TryRemoveStock(int qtd)
         {
+            if (qtd <= 0)
+                return (false, "Quantity can't be equal or less than 0");
+
+            if (qtd > Quantity)
+                return (false, "Specified quantity bigger than Product Quantity");
+
             Quantity -= qtd;
+            return (true, null);
         }
 
         public double GetTotalStockPrice()
@@ -57,12 +64,12 @@ namespace SalesSystem.Entities
         {
             Price = price;
         }
-        
+
         public void ChangeProductCategories(ICollection<ProductCategory> categories)
         {
             Categories = categories;
         }
-        
+
         public override string ToString()
         {
             return "\nProduct Information:\n\n" +

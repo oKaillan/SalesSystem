@@ -48,7 +48,7 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     {
         try
         {
-            var getProducts = _prodDAL.GetAllPaged(skip, take, getProductDto, p => p.Categories);
+            var getProducts = _prodDAL.GetAllPagedWithSelector(skip, take, getProductDto, p => p.Categories);
             if (getProducts is null)
             {
                 return NotFound("There's no Products in database.");
