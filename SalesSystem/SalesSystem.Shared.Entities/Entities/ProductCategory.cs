@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SalesSystem.Shared.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace SalesSystem.Entities
@@ -12,9 +13,16 @@ namespace SalesSystem.Entities
         [JsonIgnore]
         public virtual ICollection<Product> Products { get; set; } = new List<Product>(); 
 
-        public void ChangeCategoryName(string name)
+        public EntitiesResult ChangeCategoryName(string name)
         {
+            if (string.IsNullOrEmpty(name))
+                return (new EntitiesResult(false, "Name can't be null or empty"));
+            
+            if (name == Name)
+                return (new EntitiesResult(false, "Name can't be the same"));
+
             Name = name;
+            return (new EntitiesResult(true, null));
         }
     }
 }

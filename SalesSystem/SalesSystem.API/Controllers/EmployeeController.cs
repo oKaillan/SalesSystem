@@ -88,12 +88,7 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
 
         await _userManager.AddToRoleAsync(user, Roles.Employee);
 
-        var passwordCrypt = BC.HashPassword(employeeDto.Password);
-
         var employee = _mapper.Map<Employee>(employeeDto);
-
-        //Change the Password to encrypted one
-        employee.ChangeEmployeePassword(passwordCrypt);
 
         _empDAL.Create(employee);
         return CreatedAtAction(nameof(GetEmployeeById),
@@ -118,8 +113,14 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
             return NotFound("Employee not Found.");
 
         //Changes Employee in Database
-        getEmployee.ChangeEmployeeName(employeeUpdated.Name);
-        getEmployee.ChangeEmployeeEmail(employeeUpdated.Email);
+       var nameValidator = getEmployee.TryChangeEmployeeName(employeeUpdated.Name);
+        var emailValidator = getEmployee.TryChangeEmployeeEmail(employeeUpdated.Email);
+
+        if (!nameValidator.Success)
+            return BadRequest(nameValidator.Error);
+
+        if (!emailValidator.Success)
+            return BadRequest(emailValidator.Error);
 
         //Changes Employee User in IdentityDB
         user.UserName = employeeUpdated.Email;
@@ -128,10 +129,6 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
         //Change Password
         if (!string.IsNullOrEmpty(employeeUpdated.Password))
         {
-            //Change Password in Employee Database
-            var passwordCrypt = BC.HashPassword(employeeUpdated.Password);
-            getEmployee.ChangeEmployeePassword(passwordCrypt);
-
             //Change Password in IdentityDB
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
@@ -194,9 +191,6 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
 
             if (!tryPasswordChange.Succeeded)
                 return BadRequest(tryPasswordChange.Errors);
-
-            var passwordCrypt = BC.HashPassword(empToUpdate.Password);
-            getEmployee.ChangeEmployeePassword(passwordCrypt);
         }
 
 

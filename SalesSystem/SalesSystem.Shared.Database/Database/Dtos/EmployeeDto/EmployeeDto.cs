@@ -13,7 +13,7 @@ namespace SalesSystem.Shared.Database.Database.Dtos.EmployeeDto
         public string Email { get; private set; }
         [Required]
         [PasswordPropertyText]
-        public string Password { get; private set; }
+        public string Password { get; set; }
 
         public EmployeeDto(string name, string email, string password)
         {

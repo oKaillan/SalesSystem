@@ -1,0 +1,41 @@
+[33m178e7ce[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mSalesSystem.Web[m[33m, [m[1;31morigin/SalesSystem.Web[m[33m)[m Added XML comments and fixed nullable warning at entire project. DATABASE: Created ProductSeed Migration to populate database. WEB: Created PaginationService, Added Pagination to Products page.
+[33mdaaf10c[m Added Background color, changed Fonts, created Products table, created Not Authorized page and configured Routes, Created LoginForm Layout
+[33mfd4ffe8[m Injected and configured API,Created CookieHandler and AuthenticationStateProvider, Created working Login Form, fixed class name of ChangeCategoryName, Created method to return authentication user in AuthController
+[33m06d9982[m[33m ([m[1;31morigin/SalesSystem.API[m[33m, [m[1;32mSalesSystem.API[m[33m)[m Update README.md
+[33m8b4eb40[m Added Logout option and XML comments to AuthController, turned PUTProductCategory to only Admins
+[33mf93b232[m Changed entire EmployeeController to Update in IdentityDB, changed some Routes prefix to admin”
+[33m0e3a1a9[m Added Password with Bcrypt to Employee, Added AuthenticationController(now it’s only avaible Login), Changed GETEmployees to don’t show password
+[33m8ce3235[m Added Authorize attribute to Controllers, Created AdminOrEmployee Role
+[33me63c60e[m Added Identity and Admin User
+[33m9d59ae6[m Removed Mapper from ProductCategoryController
+[33mf02cda4[m Merge branch 'SalesSystem.API' of https://github.com/oKaillan/SalesSystem into SalesSystem.API
+[33md94be29[m Merge branch 'SalesSystem.API' of https://github.com/oKaillan/SalesSystem into SalesSystem.API
+[33mde2fe10[m Merge branch 'SalesSystem.API' of https://github.com/oKaillan/SalesSystem into SalesSystem.API
+[33m822cb36[m Moved DB ConnectionString to API appsettings.json
+[33m6623e23[m Update README.md
+[33md65b73c[m Added better checking in Category at HttpPut Products
+[33me3e8b8d[m Added VIRTUAL to referenced objects, Created Products→Categories Relation, Created GetProductDto, Updated Product Patch, Post and Put, Implemented Range to Products Get Request
+[33m58587d1[m Implemented Range in HTTPGet from Controllers(Products needs to be implemented), Created Get Log by Year
+[33m14d25fc[m Created SalesLogController
+[33m1bdd81e[m Created CategoriesController, fixed Product PATCH and Created private PCategory DAL in Products to code reuse.
+[33m0ab0b49[m Added iD Key to Product Categories and Created Product HttpPatch
+[33m72a5f00[m Added Product Annotations and Controllers, deleted Requests/Responses, added some changes to Product CRUD code
+[33ma54971e[m From Employee: Finished Controller, Created PatchDTO and Patch function, Improved clean code and applied better Dependency Injection
+[33m896cf8f[m Added Annotations to Entity Employee and Created it's DTO
+[33m92965f0[m Changed EmployeeExtensions to EmployeeController to match REST patterns
+[33mc8759c8[m Created SalesLogExtensions
+[33ma6780c9[m Created ProductCategoryExtension, UPDATE/PUT needs to be implemented later
+[33md6a230d[m Created Employee/Product Extensions, ProductRequest and some changes in Entities
+[33md428026[m Applying corrections to API
+[33mbda1e36[m Creating base API solution and sharing Database + Entities
+[33mf8a1925[m Renaming main branch to ConsoleApp and creating API branch
+[33m8a9edf1[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mConsoleApp[m[33m)[m Changing Sales iD from INT to GUID
+[33m0ced41e[m Merge remote-tracking branch 'origin/main'
+[33ma2f268d[m Fixed Names not displaying in Database and upgrading Sales Register security check
+[33mdd93407[m Update README.md
+[33mb08c462[m DeletingLogFile
+[33mec4decd[m Merge branch 'main' of https://github.com/oKaillan/SalesSystem
+[33me68bb71[m AddingConsoleApplication
+[33m5b472e9[m ConsoleApplication
+[33mcdf21f6[m Update README.md
+[33mb0631ec[m Initial commit

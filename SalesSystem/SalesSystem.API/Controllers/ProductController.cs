@@ -141,7 +141,7 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
         //
 
         _mapper.Map(productDto, getProduct);
-        getProduct.ChangeProductCategories(categoryCheck);
+        getProduct.TryChangeProductCategories(categoryCheck);
         _prodDAL.Update(getProduct);
         return NoContent();
     }
@@ -174,7 +174,7 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
 
         _mapper.Map(productToUpdate, getProduct);
 
-        getProduct.ChangeProductCategories(checkCategory!); // Always changing, to not create a new one
+        getProduct.TryChangeProductCategories(checkCategory!); // Always changing, to not create a new one
 
         _prodDAL.Update(getProduct);
         return NoContent();
