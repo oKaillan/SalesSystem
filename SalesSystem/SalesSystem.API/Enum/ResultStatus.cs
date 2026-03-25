@@ -3,7 +3,7 @@
 /// <summary>
 /// Return status codes for API's (200, 204...)
 /// </summary>
-public enum ResultStatus
+internal enum ResultStatus
 {
     /// <summary>
     /// Indicates Ok (200)

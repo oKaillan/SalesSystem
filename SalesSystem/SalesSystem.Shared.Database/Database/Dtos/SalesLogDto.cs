@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace SalesSystem.Shared.Database.Database.Dtos;
+﻿namespace SalesSystem.Shared.Database.Database.Dtos;
 
 //public record SalesLogDto(int employeeiD, 
 //    string employeeName, 

@@ -25,18 +25,17 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     private readonly DAL<Product> _prodDAL = prodDAL;
     private readonly DAL<ProductCategory> _pCategoryDAL = pCategoryDAL;
     //This is the Product GET Model, used in Get all Products and Get by iD
-    private readonly Func<Product, GetProductDto> getProductDto = p => new GetProductDto
-    {
-        Id = p.Id,
-        Name = p.Name,
-        Quantity = p.Quantity,
-        Price = p.Price,
-        Categories = p.Categories.Select(c => new CategoryDto
+    private readonly Func<Product, GetProductDto> getProductDto = p => new GetProductDto(
+        p.Id,
+        p.Name,
+        p.Quantity,
+        p.Price,
+        p.Categories.Select(c => new CategoryDto
         {
             Id = c.Id,
             Name = c.Name
         })
-    };
+        );
 
     /// <summary>
     /// Returns all Products in Database

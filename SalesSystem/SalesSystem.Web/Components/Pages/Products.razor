@@ -36,13 +36,13 @@
                                         </svg>
                                     </a>
                                 </td>
-                                <td class="id-field">@product.Id</td>
-                                <td class="name-field">@product.Name</td>
-                                <td class="qtd-field">@product.Quantity</td>
-                                <td class="price-field">@String.Format($"{product.Price:C}")</td>
+                                <td class="id-field">@product.iD</td>
+                                <td class="name-field">@product.name</td>
+                                <td class="qtd-field">@product.quantity</td>
+                                <td class="price-field">@String.Format($"{product.price:C}")</td>
                                 <td class="category-field">
                                     @*Separates Categories using ,*@
-                                    @string.Join(", ", product.Categories.Select(p => p.Name))
+                                    @string.Join(", ", product.categories!.Select(p => p.Name))
                                 </td>
                             </tr>
                         }

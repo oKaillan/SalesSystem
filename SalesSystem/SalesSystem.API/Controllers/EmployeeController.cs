@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
 using Microsoft.AspNetCore.Authorization;
 using SalesSystem.Shared.Database.Entities;
-using BC = BCrypt.Net.BCrypt;
 
 namespace SalesSystem.API.Controllers;
 /// <summary>
@@ -23,12 +22,11 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
 {
     private readonly IMapper _mapper = mapper;
     private readonly DAL<Employee> _empDAL = empDAL;
-    private readonly Func<Employee, GetEmployeeDto> getEmployeeDto = e => new GetEmployeeDto
-    {
-        Id = e.Id,
-        Name = e.Name,
-        Email = e.Email
-    };
+    private readonly Func<Employee, GetEmployeeDto> getEmployeeDto = e => new GetEmployeeDto(
+        e.Id, 
+        e.Name, 
+        e.Email
+        );
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
 

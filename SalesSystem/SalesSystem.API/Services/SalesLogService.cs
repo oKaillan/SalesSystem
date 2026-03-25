@@ -22,34 +22,34 @@ public class SalesLogService(DAL<Employee> empDal, DAL<Product> prodDal, DAL<Sal
     /// </summary>
     /// <param name="dto"></param>
     /// <returns></returns>
-    public Result<SalesLog> Create(SalesLogDto dto)
+    internal ResultService<SalesLog> Create(SalesLogDto dto)
     {
         var employee = _empDal.GetBy(e => e.Id == dto.employeeId);
         if (employee is null)
-            return Result<SalesLog>.Fail("Employee not found in Database", ResultStatus.NotFound);
+            return ResultService<SalesLog>.Fail("Employee not found in Database", ResultStatus.NotFound);
 
         var product = _prodDal.GetBy(p => p.Id == dto.productId);
         if (product is null)
-            return Result<SalesLog>.Fail("Product not found in Database", ResultStatus.NotFound);
+            return ResultService<SalesLog>.Fail("Product not found in Database", ResultStatus.NotFound);
 
         if (dto.quantity <= 0)
-            return Result<SalesLog>.Fail("Quantity not acceptable", ResultStatus.BadRequest);
+            return ResultService<SalesLog>.Fail("Quantity not acceptable", ResultStatus.BadRequest);
 
         if (dto.quantity > product.Quantity)
-            return Result<SalesLog>.Fail($"There's no specified quantity of {product.Name}", ResultStatus.BadRequest);
+            return ResultService<SalesLog>.Fail($"There's no specified quantity of {product.Name}", ResultStatus.BadRequest);
 
         var totalPrice = dto.quantity * product.Price;
 
         var log = new SalesLog(employee, product, dto.quantity, totalPrice);
         if (log is null)
-            return Result<SalesLog>.Fail("Something went wrong trying to create SalesLog", ResultStatus.BadRequest);
+            return ResultService<SalesLog>.Fail("Something went wrong trying to create SalesLog", ResultStatus.BadRequest);
 
         var result = product.TryRemoveStock(dto.quantity);
         if (!result.Success)
-            return Result<SalesLog>.Fail("Was not possible to update this Product quantity", ResultStatus.BadRequest);
+            return ResultService<SalesLog>.Fail("Was not possible to update this Product quantity", ResultStatus.BadRequest);
 
         _prodDal.Update(product);
         _slogDal.Create(log);
-        return Result<SalesLog>.Ok(log, ResultStatus.Success);
+        return ResultService<SalesLog>.Ok(log, ResultStatus.Success);
     }
 }

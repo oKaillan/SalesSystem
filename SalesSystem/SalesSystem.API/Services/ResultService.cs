@@ -7,7 +7,7 @@ namespace SalesSystem.API.Services;
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class Result<T>
+internal class ResultService<T>
 {
     /// <summary>
     /// Indicates if action was Success or not
@@ -32,28 +32,28 @@ public class Result<T>
     /// <param name="data"></param>
     /// <param name="resultStatus"></param>
     /// <returns></returns>
-    public static Result<T> Ok(T data, ResultStatus resultStatus) =>
-        new Result<T> { Success = true, Data = data , Status = resultStatus};
+    public static ResultService<T> Ok(T data, ResultStatus resultStatus) =>
+        new ResultService<T> { Success = true, Data = data , Status = resultStatus};
     /// <summary>
     /// Returns Fail errors
     /// </summary>
     /// <param name="error"></param>
     /// <param name="resultStatus"></param>
     /// <returns></returns>
-    public static Result<T> Fail(string error, ResultStatus resultStatus) =>
-        new Result<T> { Success = false, Error = error, Status = resultStatus };
+    public static ResultService<T> Fail(string error, ResultStatus resultStatus) =>
+        new ResultService<T> { Success = false, Error = error, Status = resultStatus };
 
 }
 
 /// <summary>
 /// Converts Result Status response to IActionResult
 /// </summary>
-public static class ResultExtensions
+internal static class ResultExtensions
 {
     /// <summary>
     /// Converts Result Status response to IActionResult
     /// </summary>
-    public static IActionResult ToActionResult<T>(this Result<T> result)
+    public static IActionResult ToActionResult<T>(this ResultService<T> result)
     {
         return result.Status switch
         {
