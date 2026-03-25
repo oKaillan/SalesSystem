@@ -2,6 +2,7 @@
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos;
+using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
 
 namespace SalesSystem.API.Services;
 
@@ -22,7 +23,7 @@ public class SalesLogService(DAL<Employee> empDal, DAL<Product> prodDal, DAL<Sal
         var getLog = _slogDal.GetAllPaged(skip, take);
         if (getLog is null || getLog.Count == 0)
         {
-            return ResultService<ICollection<SalesLog>>.Fail("SalesLog not found!", ResultStatus.NotFound);
+            return ResultService<ICollection<SalesLog>>.Fail("SalesLog not found!", ResultStatus.NoContent);
         }
         return ResultService<ICollection<SalesLog>>.Ok(getLog, ResultStatus.Success);
     }
@@ -85,7 +86,6 @@ public class SalesLogService(DAL<Employee> empDal, DAL<Product> prodDal, DAL<Sal
 
         _prodDal.Update(product);
         _slogDal.Create(log);
-        return ResultService<SalesLog>.Ok(log, ResultStatus.Success);
+        return ResultService<SalesLog>.Ok(log, ResultStatus.Created);
     }
-
 }

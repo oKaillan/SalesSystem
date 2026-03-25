@@ -10,19 +10,24 @@ internal enum ResultStatus
     /// </summary>
     Success,
     /// <summary>
-    /// Indicates NotFound(404)
+    /// Indicates Created (201)
+    /// </summary>
+    Created,
+    /// <summary>
+    /// Indicates Not Found (404)
     /// </summary>
     NotFound,
     /// <summary>
-    /// Indicates BadRequest(400)
+    /// Indicates Bad Request (400)
     /// </summary>
     BadRequest,
     /// <summary>
-    /// Indicates NoContent (204)
+    /// Indicates No Content (204)
     /// </summary>
     NoContent,
     /// <summary>
-    /// Shows all errors
+    /// Indicates Conflict (409)
     /// </summary>
+    Conflict,
     Error
 }

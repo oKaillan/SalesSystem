@@ -11,9 +11,5 @@ namespace SalesSystem.Shared.Database.Database.Dtos.EmployeeDto
         [Required]
         [EmailAddress]
         public string Email { get; set; } = null!;
-        [Required]
-        [PasswordPropertyText]
-        public string Password { get; set; } = null!;
-
     }
 }

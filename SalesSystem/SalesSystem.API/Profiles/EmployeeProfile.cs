@@ -16,6 +16,8 @@ public class EmployeeProfile : Profile
         CreateMap<GetEmployeeDto, Employee>();
         CreateMap<Employee, GetEmployeeDto>();
         CreateMap<PatchEmployeeDto, Employee>();
+        CreateMap<PatchEmployeeDto, GetEmployeeDto>();
+        CreateMap<GetEmployeeDto, PatchEmployeeDto>();
         CreateMap<Employee, PatchEmployeeDto>();
         CreateMap<EmployeeDto,  Employee>();
     }

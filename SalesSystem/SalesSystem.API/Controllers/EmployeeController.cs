@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
 using Microsoft.AspNetCore.Authorization;
 using SalesSystem.Shared.Database.Entities;
+using SalesSystem.API.Services;
 
 namespace SalesSystem.API.Controllers;
 /// <summary>
@@ -18,13 +19,14 @@ namespace SalesSystem.API.Controllers;
 [ApiController]
 [Route("admin/[controller]")]
 [Authorize(Roles = Roles.Admin)]
-public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManager<ApplicationUser> userManager) : ControllerBase
+public class EmployeeController(EmployeeService empService, IMapper mapper, DAL<Employee> empDAL, UserManager<ApplicationUser> userManager) : ControllerBase
 {
+    private readonly EmployeeService _empService = empService;
     private readonly IMapper _mapper = mapper;
     private readonly DAL<Employee> _empDAL = empDAL;
     private readonly Func<Employee, GetEmployeeDto> getEmployeeDto = e => new GetEmployeeDto(
-        e.Id, 
-        e.Name, 
+        e.Id,
+        e.Name,
         e.Email
         );
     private readonly UserManager<ApplicationUser> _userManager = userManager;
@@ -35,14 +37,11 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
     /// </summary>
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
+    /// <response code="204">If there are no content</response>
     [HttpGet]
     public IActionResult GetEmployees(int skip = 0, int take = 50)
     {
-        var getEmployees = _empDAL.GetAllPagedWithSelector(skip, take, getEmployeeDto);
-        if (getEmployees is null)
-            return NotFound("There's no Employees in database.");
-
-        return Ok(getEmployees);
+        return _empService.GetAll(skip, take).ToActionResult();
     }
 
     /// <summary>
@@ -51,15 +50,11 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
     /// <param name="id">Object with the neccessary fields</param>
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Employee was found</response>
+    /// <response code="404">If the Employee was not found</response>
     [HttpGet("{id}")]
     public IActionResult GetEmployeeById(int id)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Id == id);
-        if (getEmployee is null)
-            return NotFound("Employee iD not found.");
-
-        var dto = getEmployeeDto(getEmployee);
-        return Ok(dto);
+        return _empService.GetById(id).ToActionResult();
     }
 
     /// <summary>
@@ -67,31 +62,20 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
     /// </summary>
     /// <returns>IActionResult</returns>
     /// <response code="201">If the creation was successful</response>
+    /// <response code="409">If Employee email is already in use</response>
     [HttpPost]
     public async Task<IActionResult> CreateEmployeeAsync([FromBody] EmployeeDto employeeDto)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Email == employeeDto.Email);
-        if (getEmployee is not null)
-            return Conflict("Employee with this email already exists.");
-
-        var user = new ApplicationUser
+        var result = await _empService.CreateAsync(employeeDto);
+        if (result.Status == Enum.ResultStatus.Created)
         {
-            UserName = employeeDto.Email,
-            Email = employeeDto.Email
-        };
-
-        var result = await _userManager.CreateAsync(user, employeeDto.Password);
-        if (!result.Succeeded)
-            return BadRequest(result.Errors);
-
-        await _userManager.AddToRoleAsync(user, Roles.Employee);
-
-        var employee = _mapper.Map<Employee>(employeeDto);
-
-        _empDAL.Create(employee);
-        return CreatedAtAction(nameof(GetEmployeeById),
-        new { id = employee.Id },
-        employee);
+            return CreatedAtAction(
+                nameof(GetEmployeeById),
+                new { id = result.Data!.iD },
+                result.Data
+                );
+        }
+        return result.ToActionResult();
     }
 
     /// <summary>
@@ -101,46 +85,12 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
     /// <param name="id">Employee iD</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
+    /// <response code="404">If Employee was not found</response>
+    /// <response code="400">If Email, Name or Password is not valid</response>
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateEmployeeAsync(int id, [FromBody] EmployeeDto employeeUpdated)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
-        var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
-
-        if (getEmployee is null || user is null)
-            return NotFound("Employee not Found.");
-
-        //Changes Employee in Database
-       var nameValidator = getEmployee.TryChangeEmployeeName(employeeUpdated.Name);
-        var emailValidator = getEmployee.TryChangeEmployeeEmail(employeeUpdated.Email);
-
-        if (!nameValidator.Success)
-            return BadRequest(nameValidator.Error);
-
-        if (!emailValidator.Success)
-            return BadRequest(emailValidator.Error);
-
-        //Changes Employee User in IdentityDB
-        user.UserName = employeeUpdated.Email;
-        user.Email = employeeUpdated.Email;
-        await _userManager.UpdateAsync(user);
-        //Change Password
-        if (!string.IsNullOrEmpty(employeeUpdated.Password))
-        {
-            //Change Password in IdentityDB
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            var tryPasswordChange = await _userManager.ResetPasswordAsync(
-                user, 
-                token, 
-                employeeUpdated.Password);
-
-            if (!tryPasswordChange.Succeeded)
-                return BadRequest(tryPasswordChange.Errors);
-        }
-
-        _empDAL.Update(getEmployee);
-        return NoContent();
+        return (await _empService.UpdateAsync(id, employeeUpdated)).ToActionResult();
     }
 
     /// <summary>
@@ -154,46 +104,35 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
     public async Task<IActionResult> PatchEmployeeAsync(int id,
         JsonPatchDocument<PatchEmployeeDto> patch)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
-        var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
-        if (getEmployee is null || user is null) 
-            return NotFound("Employee not Found.");
+        var getEmployee = _empService.GetById(id);
 
-        var empToUpdate = _mapper.Map<PatchEmployeeDto>(getEmployee);
-        patch.ApplyTo(empToUpdate, ModelState);
-        if (!TryValidateModel(empToUpdate)) return ValidationProblem(ModelState);
+        if (getEmployee.Status == Enum.ResultStatus.NotFound)
+            return getEmployee.ToActionResult();
 
-        _mapper.Map(empToUpdate, getEmployee);
+        var getDto = getEmployee.Data;
+        var patchDto = _mapper.Map<PatchEmployeeDto>(getDto);
+        patch.ApplyTo(patchDto, ModelState);
+        if (!TryValidateModel(patchDto))
+            return ValidationProblem(ModelState);
 
-        // Updates Identity if Email's changed
-        if (user.Email != empToUpdate.Email)
-        {
-            user.Email = empToUpdate.Email;
-            user.UserName = empToUpdate.Email;
+        var result = await _empService.PatchAsync(id, patchDto);
 
-            var result = await _userManager.UpdateAsync(user);
+        return result.ToActionResult();
+    }
 
-            if (!result.Succeeded)
-                return BadRequest(result.Errors);
-        }
-
-        // Updates Identity if Password's changed
-        if (!string.IsNullOrEmpty(empToUpdate.Password))
-        {
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-
-            var tryPasswordChange = await _userManager.ResetPasswordAsync(
-                user,
-                token,
-                empToUpdate.Password);
-
-            if (!tryPasswordChange.Succeeded)
-                return BadRequest(tryPasswordChange.Errors);
-        }
-
-
-        _empDAL.Update(getEmployee);
-        return NoContent();
+    /// <summary>
+    /// Changes Employee Password
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="dto"></param>
+    /// <returns>IActionResult</returns>
+    /// <response code="204">If the update was successful</response>
+    /// <response code="404">If Employee was not found</response>
+    /// <response code="400">If Password is null or empty</response>
+    [HttpPatch("{id}/password")]
+    public async Task<IActionResult> ChangeEmployeePassword(int id, [FromBody] ChangePasswordDto dto)
+    {
+        return (await _empService.ChangePassword(id, dto)).ToActionResult();
     }
 
     /// <summary>
@@ -201,17 +140,11 @@ public class EmployeeController(IMapper mapper, DAL<Employee> empDAL, UserManage
     /// </summary>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the delete was successful</response>
+    /// <response code="404">If Employee was not found</response>
+    /// <response code="400">If something went wrong trying to delete Employee</response>
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployeeAsync(int id)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
-        var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
-        if (getEmployee is null || user is null)
-        {
-            return NotFound("Employee not Found.");
-        }
-        _empDAL.Delete(getEmployee);
-        await _userManager.DeleteAsync(user);
-        return NoContent();
+        return (await _empService.Delete(id)).ToActionResult();
     }
 }

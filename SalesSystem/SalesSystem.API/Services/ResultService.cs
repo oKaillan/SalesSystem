@@ -57,10 +57,12 @@ internal static class ResultExtensions
     {
         return result.Status switch
         {
+            ResultStatus.Created => new CreatedResult(),
             ResultStatus.Success => new OkObjectResult(result.Data),
             ResultStatus.NoContent => new NoContentResult(),
             ResultStatus.NotFound => new NotFoundObjectResult(result.Error),
             ResultStatus.BadRequest => new BadRequestObjectResult(result.Error),
+            ResultStatus.Conflict => new ConflictObjectResult(result.Error),
             _ => new ObjectResult(result.Error) { StatusCode = 500 }
         };
     }
