@@ -17,11 +17,46 @@ public class SalesLogService(DAL<Employee> empDal, DAL<Product> prodDal, DAL<Sal
     private readonly DAL<Product> _prodDal = prodDal;
     private readonly DAL<SalesLog> _slogDal = logDal;
 
-    /// <summary>
-    /// Tries to create a new SalesLog
-    /// </summary>
-    /// <param name="dto"></param>
-    /// <returns></returns>
+    internal ResultService<ICollection<SalesLog>> GetAll(int skip, int take)
+    {
+        var getLog = _slogDal.GetAllPaged(skip, take);
+        if (getLog is null || getLog.Count == 0)
+        {
+            return ResultService<ICollection<SalesLog>>.Fail("SalesLog not found!", ResultStatus.NotFound);
+        }
+        return ResultService<ICollection<SalesLog>>.Ok(getLog, ResultStatus.Success);
+    }
+    internal ResultService<SalesLog> GetById(Guid id)
+    {
+        var getLog = _slogDal.GetBy(s => s.SaleId == id);
+        if (getLog is null)
+        {
+            return ResultService<SalesLog>.Fail("Log iD not found!", ResultStatus.NotFound);
+        }
+
+        return ResultService<SalesLog>.Ok(getLog, ResultStatus.Success);
+    }
+    internal ResultService<ICollection<SalesLog>> GetByEmployeeId(int employeeId)
+    {
+        var getEmployee = _empDal.GetBy(e => e.Id == employeeId);
+        if (getEmployee is null)
+            return ResultService<ICollection<SalesLog>>.Fail("Employee not found.", ResultStatus.NotFound);
+
+        var getLog = _slogDal.GetAllBy(l => l.EmployeeId == employeeId);
+        if (getLog is null || getLog.Count == 0)
+            return ResultService<ICollection<SalesLog>>.Fail("Employee hasn't sales.", ResultStatus.NotFound);
+
+        return ResultService<ICollection<SalesLog>>.Ok(getLog, ResultStatus.Success);
+    }
+    internal ResultService<ICollection<SalesLog>> GetByDate(int startYear, int finalYear)
+    {
+        var getLog = _slogDal.GetAllBy(s => s.Time.Year >= startYear && s.Time.Year <= finalYear);
+        if (getLog is null || getLog.Count == 0)
+        {
+            return ResultService<ICollection<SalesLog>>.Fail("Total of 0 Logs found!", ResultStatus.NotFound);
+        }
+        return ResultService<ICollection<SalesLog>>.Ok(getLog, ResultStatus.Success);
+    }
     internal ResultService<SalesLog> Create(SalesLogDto dto)
     {
         var employee = _empDal.GetBy(e => e.Id == dto.employeeId);
@@ -52,4 +87,5 @@ public class SalesLogService(DAL<Employee> empDal, DAL<Product> prodDal, DAL<Sal
         _slogDal.Create(log);
         return ResultService<SalesLog>.Ok(log, ResultStatus.Success);
     }
+
 }
