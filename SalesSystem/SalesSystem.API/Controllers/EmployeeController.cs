@@ -39,9 +39,9 @@ public class EmployeeController(EmployeeService empService, IMapper mapper, DAL<
     /// <response code="200">If the Search was successful</response>
     /// <response code="204">If there are no content</response>
     [HttpGet]
-    public IActionResult GetEmployees(int skip = 0, int take = 50)
+    public async Task<IActionResult> GetEmployeesAsync(int skip = 0, int take = 50)
     {
-        return _empService.GetAll(skip, take).ToActionResult();
+        return (await _empService.GetAllAsync(skip, take)).ToActionResult();
     }
 
     /// <summary>
@@ -52,9 +52,9 @@ public class EmployeeController(EmployeeService empService, IMapper mapper, DAL<
     /// <response code="200">If the Employee was found</response>
     /// <response code="404">If the Employee was not found</response>
     [HttpGet("{id}")]
-    public IActionResult GetEmployeeById(int id)
+    public async Task<IActionResult> GetEmployeeByIdAsync(int id)
     {
-        return _empService.GetById(id).ToActionResult();
+        return (await _empService.GetByIdAsync(id)).ToActionResult();
     }
 
     /// <summary>
@@ -70,7 +70,7 @@ public class EmployeeController(EmployeeService empService, IMapper mapper, DAL<
         if (result.Status == Enum.ResultStatus.Created)
         {
             return CreatedAtAction(
-                nameof(GetEmployeeById),
+                nameof(GetEmployeeByIdAsync),
                 new { id = result.Data!.iD },
                 result.Data
                 );
@@ -104,7 +104,7 @@ public class EmployeeController(EmployeeService empService, IMapper mapper, DAL<
     public async Task<IActionResult> PatchEmployeeAsync(int id,
         JsonPatchDocument<PatchEmployeeDto> patch)
     {
-        var getEmployee = _empService.GetById(id);
+        var getEmployee = await _empService.GetByIdAsync(id);
 
         if (getEmployee.Status == Enum.ResultStatus.NotFound)
             return getEmployee.ToActionResult();

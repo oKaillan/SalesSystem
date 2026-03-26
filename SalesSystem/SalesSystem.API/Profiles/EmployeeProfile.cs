@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
+using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.API.Profiles;
 /// <summary>
@@ -15,6 +16,7 @@ public class EmployeeProfile : Profile
     {
         CreateMap<GetEmployeeDto, Employee>();
         CreateMap<Employee, GetEmployeeDto>();
+        CreateMap<PagedResult<Employee>, PagedResult<GetEmployeeDto>>();
         CreateMap<PatchEmployeeDto, Employee>();
         CreateMap<PatchEmployeeDto, GetEmployeeDto>();
         CreateMap<GetEmployeeDto, PatchEmployeeDto>();

@@ -3,6 +3,7 @@ using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos;
 using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
+using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.API.Services;
 
@@ -18,18 +19,18 @@ public class SalesLogService(DAL<Employee> empDal, DAL<Product> prodDal, DAL<Sal
     private readonly DAL<Product> _prodDal = prodDal;
     private readonly DAL<SalesLog> _slogDal = logDal;
 
-    internal ResultService<ICollection<SalesLog>> GetAll(int skip, int take)
+    internal async Task<ResultService<PagedResult<SalesLog>>> GetAllAsync(int skip, int take)
     {
-        var getLog = _slogDal.GetAllPaged(skip, take);
-        if (getLog is null || getLog.Count == 0)
+        var getLog = await _slogDal.GetAllPagedAsync(skip, take);
+        if (getLog is null || getLog.Data.Count == 0)
         {
-            return ResultService<ICollection<SalesLog>>.Fail("SalesLog not found!", ResultStatus.NoContent);
+            return ResultService<PagedResult<SalesLog>>.Fail("SalesLog not found!", ResultStatus.NoContent);
         }
-        return ResultService<ICollection<SalesLog>>.Ok(getLog, ResultStatus.Success);
+        return ResultService<PagedResult<SalesLog>>.Ok(getLog, ResultStatus.Success);
     }
-    internal ResultService<SalesLog> GetById(Guid id)
+    internal async Task<ResultService<SalesLog>> GetByIdAsync(Guid id)
     {
-        var getLog = _slogDal.GetBy(s => s.SaleId == id);
+        var getLog = await _slogDal.GetByAsync(s => s.SaleId == id);
         if (getLog is null)
         {
             return ResultService<SalesLog>.Fail("Log iD not found!", ResultStatus.NotFound);
@@ -37,34 +38,43 @@ public class SalesLogService(DAL<Employee> empDal, DAL<Product> prodDal, DAL<Sal
 
         return ResultService<SalesLog>.Ok(getLog, ResultStatus.Success);
     }
-    internal ResultService<ICollection<SalesLog>> GetByEmployeeId(int employeeId)
+    internal async Task<ResultService<PagedResult<SalesLog>>> GetByEmployeeIdAsync(int employeeId, 
+        int skip = 0, 
+        int take = 50)
     {
-        var getEmployee = _empDal.GetBy(e => e.Id == employeeId);
+        var getEmployee = await _empDal.GetByAsync(e => e.Id == employeeId);
         if (getEmployee is null)
-            return ResultService<ICollection<SalesLog>>.Fail("Employee not found.", ResultStatus.NotFound);
+            return ResultService<PagedResult<SalesLog>>.Fail("Employee not found.", ResultStatus.NotFound);
 
-        var getLog = _slogDal.GetAllBy(l => l.EmployeeId == employeeId);
-        if (getLog is null || getLog.Count == 0)
-            return ResultService<ICollection<SalesLog>>.Fail("Employee hasn't sales.", ResultStatus.NotFound);
+        var getLog = await _slogDal.GetAllByPagedAsync(skip, take, l => l.EmployeeId == employeeId);
+        if (getLog is null || getLog.Data.Count == 0)
+            return ResultService<PagedResult<SalesLog>>.Fail("Employee hasn't sales.", ResultStatus.NotFound);
 
-        return ResultService<ICollection<SalesLog>>.Ok(getLog, ResultStatus.Success);
+        return ResultService<PagedResult<SalesLog>>.Ok(getLog, ResultStatus.Success);
     }
-    internal ResultService<ICollection<SalesLog>> GetByDate(int startYear, int finalYear)
+    internal async Task<ResultService<PagedResult<SalesLog>>> GetByDateAsync(int startYear, 
+        int finalYear, 
+        int skip = 0, 
+        int take = 50)
     {
-        var getLog = _slogDal.GetAllBy(s => s.Time.Year >= startYear && s.Time.Year <= finalYear);
-        if (getLog is null || getLog.Count == 0)
+        var getLog = await _slogDal.GetAllByPagedAsync(
+            skip, 
+            take, 
+            s => s.Time.Year >= startYear && s.Time.Year <= finalYear
+            );
+        if (getLog is null || getLog.Data.Count == 0)
         {
-            return ResultService<ICollection<SalesLog>>.Fail("Total of 0 Logs found!", ResultStatus.NotFound);
+            return ResultService<PagedResult<SalesLog>>.Fail("Total of 0 Logs found!", ResultStatus.NotFound);
         }
-        return ResultService<ICollection<SalesLog>>.Ok(getLog, ResultStatus.Success);
+        return ResultService<PagedResult<SalesLog>>.Ok(getLog, ResultStatus.Success);
     }
-    internal ResultService<SalesLog> Create(SalesLogDto dto)
+    internal async Task<ResultService<SalesLog>> CreateAsync(SalesLogDto dto)
     {
-        var employee = _empDal.GetBy(e => e.Id == dto.employeeId);
+        var employee = await _empDal.GetByAsync(e => e.Id == dto.employeeId);
         if (employee is null)
             return ResultService<SalesLog>.Fail("Employee not found in Database", ResultStatus.NotFound);
 
-        var product = _prodDal.GetBy(p => p.Id == dto.productId);
+        var product = await _prodDal.GetByAsync(p => p.Id == dto.productId);
         if (product is null)
             return ResultService<SalesLog>.Fail("Product not found in Database", ResultStatus.NotFound);
 
@@ -85,7 +95,7 @@ public class SalesLogService(DAL<Employee> empDal, DAL<Product> prodDal, DAL<Sal
             return ResultService<SalesLog>.Fail("Was not possible to update this Product quantity", ResultStatus.BadRequest);
 
         _prodDal.Update(product);
-        _slogDal.Create(log);
+        await _slogDal.CreateAsync(log);
         return ResultService<SalesLog>.Ok(log, ResultStatus.Created);
     }
 }

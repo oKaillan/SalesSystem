@@ -14,31 +14,33 @@ namespace SalesSystem.Database
             this._context = _context;
         }
 
-        public List<T> GetAll()
+        public async Task<List<T>> GetAllAsync()
         {
-            return _context.Set<T>().ToList();
+            return await _context.Set<T>().ToListAsync();
         }
 
-        public List<T> GetAllPaged(int skip, int take)
+        public async Task<PagedResult<T>> GetAllPagedAsync(int skip, int take)
         {
-            try
+            var query = _context.Set<T>();
+
+            var count = await query.CountAsync();
+
+            var data = await query
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+
+            return new PagedResult<T>
             {
-                var result = _context
-                    .Set<T>()
-                    .Skip(skip)
-                    .Take(take)
-                    .ToList();
-
-                return result;
-            }
-            catch (Exception ex) { throw new Exception($"An error has occurred: {ex.Message}"); }
-
+                Data = data,
+                TotalCount = count
+            };
         }
 
-        public PagedResult<TResult> GetAllPagedWithSelector<TResult>(
+        public async Task<PagedResult<TResult>> GetAllPagedWithSelectorAsync<TResult>(
             int skip,
             int take,
-            Func<T, TResult> selector,
+            Expression<Func<T, TResult>> selector,
             params Expression<Func<T, object>>[] includes)
             where TResult : class
         {
@@ -54,13 +56,13 @@ namespace SalesSystem.Database
                     }
 
 
-                var total = query.Count();
+                var total = await query.CountAsync();
 
-                var data = query
+                var data = await query
                     .Skip(skip)
                     .Take(take)
                     .Select(selector)
-                    .ToList();
+                    .ToListAsync();
 
                 return new PagedResult<TResult>
                 {
@@ -72,36 +74,37 @@ namespace SalesSystem.Database
 
         }
 
-        /*
-        public List<Product> GetProductsWithInclude()
+        public async Task<List<T>> GetAllByAsync(Expression<Func<T, bool>> funcPredicate)
         {
-            return _context.Set<Product>()
-                .Include(p => p.Category)
-                .ToList();
-        }
-        */
-        public List<T> GetAllBy(Func<T, bool> funcPredicate)
-        {
-            return _context.Set<T>().Where(funcPredicate).ToList();
+            return await _context.Set<T>().Where(funcPredicate).ToListAsync();
         }
 
-        public T? GetBy(Func<T, bool> functionPredicate)
+        public async Task<PagedResult<T>> GetAllByPagedAsync(int skip, int take, Expression<Func<T, bool>> functionPredicate)
         {
-            return _context.Set<T>().FirstOrDefault(functionPredicate);
+            IQueryable<T> query = _context.Set<T>();
+
+            var data = await query
+                .Where(functionPredicate)
+                .ToListAsync();
+
+            var count = await query.CountAsync();
+
+            return new PagedResult<T>
+            {
+                Data = data,
+                TotalCount = count
+            };
         }
 
-        /*
-        public Product GetProductWithInclude(Func<Product, bool> functionPredicate)
+        public async Task<T?> GetByAsync(Expression<Func<T, bool>> functionPredicate)
         {
-            return _context.Set<Product>()
-                .Include(p => p.Category)
-                .FirstOrDefault(functionPredicate);
+            return await _context.Set<T>().FirstOrDefaultAsync(functionPredicate);
         }
-        */
-        public void Create(T member)
+
+        public async Task CreateAsync(T member)
         {
-            _context.Add(member);
-            _context.SaveChanges();
+            await _context.AddAsync(member);
+            await _context.SaveChangesAsync();
         }
 
         public void Update(T member)

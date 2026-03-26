@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesSystem.API.Services;
-using SalesSystem.Database;
-using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos;
 using SalesSystem.Shared.Database.Entities;
 
@@ -11,9 +9,6 @@ namespace SalesSystem.API.Controllers;
 /// <summary>
 /// Responsible Controller for Sales Logs
 /// </summary>
-/// <param name="slogDal"></param>
-/// <param name="empDal"></param>
-/// <param name="prodDal"></param>
 /// <param name="logService"></param>
 [ApiController]
 [Route("admin/[controller]")]
@@ -28,9 +23,9 @@ public class SalesLogController(SalesLogService logService) : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
-    public IActionResult GetLogs(int skip = 0, int take = 50)
+    public async Task<IActionResult> GetLogsAsync(int skip = 0, int take = 50)
     {
-        return _logService.GetAll(skip, take).ToActionResult();
+        return (await _logService.GetAllAsync(skip, take)).ToActionResult();
     }
 
     /// <summary>
@@ -40,9 +35,9 @@ public class SalesLogController(SalesLogService logService) : ControllerBase
     /// <response code="200">If the Search was successful</response>
     /// <response code="204">If the Log was not found</response>
     [HttpGet("{id:guid}")]
-    public IActionResult GetLogByiD(Guid id)
+    public async Task<IActionResult> GetLogByiDAsync(Guid id)
     {
-        return _logService.GetById(id).ToActionResult();
+        return (await _logService.GetByIdAsync(id)).ToActionResult();
     }
 
     /// <summary>
@@ -52,9 +47,9 @@ public class SalesLogController(SalesLogService logService) : ControllerBase
     /// <response code="200">If the Search was successful</response>
     /// <response code="204">If the Log was not found</response>
     [HttpGet("{employeeId:int}")]
-    public IActionResult GetLogByEmployeeiD(int employeeId)
+    public async Task<IActionResult> GetLogByEmployeeiDAsync(int employeeId)
     {
-        return _logService.GetByEmployeeId(employeeId).ToActionResult();
+        return (await _logService.GetByEmployeeIdAsync(employeeId)).ToActionResult();
     }
 
     /// <summary>
@@ -64,9 +59,9 @@ public class SalesLogController(SalesLogService logService) : ControllerBase
     /// <response code="200">If the Search was successful</response>
     /// <response code="204">If the Log was not found</response>
     [HttpGet("{startYear:int}-{finalYear:int}")]
-    public IActionResult GetLogByDate(int startYear, int finalYear)
+    public async Task<IActionResult> GetLogByDateAsync(int startYear, int finalYear)
     {
-        return _logService.GetByDate(startYear, finalYear).ToActionResult();
+        return (await _logService.GetByDateAsync(startYear, finalYear)).ToActionResult();
     }
 
     /// <summary>
@@ -75,8 +70,8 @@ public class SalesLogController(SalesLogService logService) : ControllerBase
     /// <param name="dto"></param>
     /// <returns></returns>
     [HttpPost]
-    public IActionResult CreateLog(SalesLogDto dto)
+    public async Task<IActionResult> CreateLogAsync(SalesLogDto dto)
     {
-        return _logService.Create(dto).ToActionResult();
+        return (await _logService.CreateAsync(dto)).ToActionResult();
     }
 }

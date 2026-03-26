@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Humanizer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.JsonPatch;
 using SalesSystem.API.Enum;
 using SalesSystem.Database;
 using SalesSystem.Entities;
@@ -10,38 +8,40 @@ using SalesSystem.Shared.Database.Entities;
 using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.API.Services;
-
+/// <summary>
+/// Service responsible to manage Employee Controller
+/// </summary>
+/// <param name="mapper"></param>
+/// <param name="empDAL"></param>
+/// <param name="userManager"></param>
 public class EmployeeService(IMapper mapper, DAL<Employee> empDAL, UserManager<ApplicationUser> userManager)
 {
     private readonly IMapper _mapper = mapper;
     private readonly DAL<Employee> _empDAL = empDAL;
-    private readonly Func<Employee, GetEmployeeDto> getEmployeeDto = e => new GetEmployeeDto(
-        e.Id,
-        e.Name,
-        e.Email
-        );
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    internal ResultService<PagedResult<GetEmployeeDto>> GetAll(int skip, int take)
+    internal async Task<ResultService<PagedResult<GetEmployeeDto>>> GetAllAsync(int skip, int take)
     {
-        var getEmployees = _empDAL.GetAllPagedWithSelector(skip, take, getEmployeeDto);
+        var getEmployees = await _empDAL.GetAllPagedAsync(skip, take);
         if (getEmployees.Data is null || getEmployees.Data.Count == 0)
             return ResultService<PagedResult<GetEmployeeDto>>.Fail("There's no Employees in database.", ResultStatus.NoContent);
 
-        return ResultService<PagedResult<GetEmployeeDto>>.Ok(getEmployees, ResultStatus.Success);
+        var dto = _mapper.Map<PagedResult<GetEmployeeDto>>(getEmployees);
+
+        return ResultService<PagedResult<GetEmployeeDto>>.Ok(dto, ResultStatus.Success);
     }
-    internal ResultService<GetEmployeeDto> GetById(int id)
+    internal async Task<ResultService<GetEmployeeDto>> GetByIdAsync(int id)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Id == id);
+        var getEmployee = await _empDAL.GetByAsync(e => e.Id == id);
         if (getEmployee is null)
             return ResultService<GetEmployeeDto>.Fail("Employee not found.", ResultStatus.NotFound);
 
-        var dto = getEmployeeDto(getEmployee);
+        var dto = _mapper.Map<GetEmployeeDto>(getEmployee);
         return ResultService<GetEmployeeDto>.Ok(dto, ResultStatus.Success);
     }
     internal async Task<ResultService<GetEmployeeDto>> CreateAsync(EmployeeDto empDto)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Email == empDto.Email);
+        var getEmployee = await _empDAL.GetByAsync(e => e.Email == empDto.Email);
         if (getEmployee is not null)
             return ResultService<GetEmployeeDto>.Fail("Employee with this email already exists.", ResultStatus.Conflict);
 
@@ -59,14 +59,14 @@ public class EmployeeService(IMapper mapper, DAL<Employee> empDAL, UserManager<A
 
         var employee = _mapper.Map<Employee>(empDto);
 
-        _empDAL.Create(employee);
+        await _empDAL.CreateAsync(employee);
 
         var getDto = _mapper.Map<GetEmployeeDto>(employee);
         return ResultService<GetEmployeeDto>.Ok(getDto, ResultStatus.Created);
     }
     internal async Task<ResultService<GetEmployeeDto>> UpdateAsync(int id, EmployeeDto employeeUpdated)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
+        var getEmployee = await _empDAL.GetByAsync(e => e.Id.Equals(id));
         var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
 
         if (getEmployee is null || user is null)
@@ -106,7 +106,7 @@ public class EmployeeService(IMapper mapper, DAL<Employee> empDAL, UserManager<A
     }
     internal async Task<ResultService<PatchEmployeeDto>> PatchAsync(int id, PatchEmployeeDto empToUpdate)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
+        var getEmployee = await _empDAL.GetByAsync(e => e.Id.Equals(id));
         var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
         if (getEmployee is null || user is null)
             return ResultService<PatchEmployeeDto>.Fail("Employee not Found.", ResultStatus.NotFound);
@@ -130,7 +130,7 @@ public class EmployeeService(IMapper mapper, DAL<Employee> empDAL, UserManager<A
     }
     internal async Task<ResultService<PatchEmployeeDto>> ChangePassword(int id, ChangePasswordDto empDto)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Id == id);
+        var getEmployee = await _empDAL.GetByAsync(e => e.Id == id);
         var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
 
         if (getEmployee is null || user is null)
@@ -152,7 +152,7 @@ public class EmployeeService(IMapper mapper, DAL<Employee> empDAL, UserManager<A
     }
     internal async Task<ResultService<EmployeeDto>> Delete(int id)
     {
-        var getEmployee = _empDAL.GetBy(e => e.Id.Equals(id));
+        var getEmployee = await _empDAL.GetByAsync(e => e.Id.Equals(id));
         var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);
         if (getEmployee is null || user is null)
         {

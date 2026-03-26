@@ -25,7 +25,7 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     private readonly DAL<Product> _prodDAL = prodDAL;
     private readonly DAL<ProductCategory> _pCategoryDAL = pCategoryDAL;
     //This is the Product GET Model, used in Get all Products and Get by iD
-    private readonly Func<Product, GetProductDto> getProductDto = p => new GetProductDto(
+    private readonly Expression<Func<Product, GetProductDto>> getProductDto = p => new GetProductDto(
         p.Id,
         p.Name,
         p.Quantity,
@@ -43,18 +43,14 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
-    public IActionResult GetProducts(int skip = 0, int take = 50)
+    public async Task<IActionResult> GetProductsAsync(int skip = 0, int take = 50)
     {
-        try
-        {
-            var getProducts = _prodDAL.GetAllPagedWithSelector(skip, take, getProductDto, p => p.Categories);
+            var getProducts = await _prodDAL.GetAllPagedWithSelectorAsync(skip, take, getProductDto, p => p.Categories);
             if (getProducts is null)
             {
                 return NotFound("There's no Products in database.");
             }
             return Ok(getProducts);
-        }
-        catch (Exception ex) { throw new Exception($"An exception has occurred: {ex.Message}"); }
     }
 
     /// <summary>
@@ -64,16 +60,16 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Product was found</response>
     [HttpGet("{id}")]
-    public IActionResult GetProductById(int id)
+    public async Task<IActionResult> GetProductByIdAsync(int id)
     {
-        var getProduct = _prodDAL.GetBy(e => e.Id == id);
+        var getProduct = await _prodDAL.GetByAsync(e => e.Id == id);
         if (getProduct is null)
         {
             return NotFound("Product iD not found.");
         }
 
-        var product = getProductDto(getProduct);
-        return Ok(product);
+        var dto = _mapper.Map<GetProductDto>(getProduct);
+        return Ok(dto);
     }
 
     /// <summary>
@@ -82,9 +78,9 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     /// <returns>IActionResult</returns>
     /// <response code="201">If the creation was successful</response>
     [HttpPost]
-    public IActionResult PostProduct([FromBody] ProductDto productDto)
+    public async Task<IActionResult> PostProductAsync([FromBody] ProductDto productDto)
     {
-        var getProduct = _prodDAL.GetBy(e => e.Name.ToLower() == productDto.Name.ToLower());
+        var getProduct = await _prodDAL.GetByAsync(e => e.Name.ToLower() == productDto.Name.ToLower());
         if (getProduct is not null)
         {
             return Conflict("Product with this Name already exists.");
@@ -95,7 +91,7 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
             return BadRequest("At least one category must be provided.");
 
         //Checks if category exists in Database
-        var existingCategories = _pCategoryDAL.GetAllBy(c => productDto.CategoryIds.Contains(c.Id));
+        var existingCategories = await _pCategoryDAL.GetAllByAsync(c => productDto.CategoryIds.Contains(c.Id));
 
         if (existingCategories.Count != productDto.CategoryIds.Count)
         {
@@ -107,8 +103,8 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
         var product = _mapper.Map<Product>(productDto);
         product.Categories = existingCategories;
 
-        _prodDAL.Create(product);
-        return CreatedAtAction(nameof(GetProductById),
+        await _prodDAL.CreateAsync(product);
+        return CreatedAtAction(nameof(GetProductByIdAsync),
             new { id = product.Id }, product);
     }
 
@@ -122,17 +118,17 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     /// <response code="204">If the update was successful</response>
     [Authorize(Roles = Roles.Admin)]
     [HttpPut("admin/{id}")]
-    public IActionResult UpdateProduct([FromBody] ProductDto productDto,
+    public async Task<IActionResult> UpdateProductAsync([FromBody] ProductDto productDto,
         int id)
     {
-        var getProduct = _prodDAL.GetBy(e => e.Id.Equals(id));
+        var getProduct = await _prodDAL.GetByAsync(e => e.Id.Equals(id));
         if (getProduct is null)
         {
             return NotFound("Product iD not Found.");
         }
 
         //Check if Category exists in database
-        var categoryCheck = _pCategoryDAL.GetAllBy(c => productDto.CategoryIds.Contains(c.Id));
+        var categoryCheck = await _pCategoryDAL.GetAllByAsync(c => productDto.CategoryIds.Contains(c.Id));
         if (categoryCheck is null || categoryCheck.Count == 0)
         {
             return NotFound("One or more Categories not found in database.");
@@ -155,10 +151,10 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     /// <response code="204">If the update was successful</response>
     [Authorize(Roles = Roles.Admin)]
     [HttpPatch("admin")]
-    public IActionResult PatchProduct(int id,
+    public async Task<IActionResult> PatchProductAsync(int id,
         JsonPatchDocument<PatchProductDto> patch)
     {
-        var getProduct = _prodDAL.GetBy(e => e.Id == id);
+        var getProduct = await _prodDAL.GetByAsync(e => e.Id == id);
         if (getProduct is null)
             return NotFound("Product iD not Found.");
 
@@ -166,7 +162,7 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
         patch.ApplyTo(productToUpdate, ModelState);
         if (!TryValidateModel(productToUpdate)) return ValidationProblem(ModelState);
 
-        var checkCategory = _pCategoryDAL.GetAllBy(c => productToUpdate.CategoriesIds!.Contains(c.Id));
+        var checkCategory = await _pCategoryDAL.GetAllByAsync(c => productToUpdate.CategoriesIds!.Contains(c.Id));
 
         if (checkCategory is null) // If categories was not found, it backs to what it was
             checkCategory = (List<ProductCategory>?)getProduct.Categories;
@@ -186,9 +182,9 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     /// <response code="204">If the delete was successful</response>
     [Authorize(Roles = Roles.Admin)]
     [HttpDelete("admin/{id}")]
-    public IActionResult DeleteProduct([FromServices] DAL<Product> _prodDAL, int id)
+    public async Task<IActionResult> DeleteProductAsync([FromServices] DAL<Product> _prodDAL, int id)
     {
-        var getProduct = _prodDAL.GetBy(e => e.Id.Equals(id));
+        var getProduct = await _prodDAL.GetByAsync(e => e.Id.Equals(id));
         if (getProduct is null)
         {
             return NotFound("Product iD not Found.");
