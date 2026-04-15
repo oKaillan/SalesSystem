@@ -14,24 +14,14 @@ namespace SalesSystem.API.Controllers;
 /// Controller Responsibly to delivery Employees
 /// </summary>
 /// <param name="mapper"></param>
-/// <param name="empDAL"></param>
-/// <param name="userManager"></param>
+/// <param name="empService"></param>
 [ApiController]
 [Route("admin/[controller]")]
 [Authorize(Roles = Roles.Admin)]
-public class EmployeeController(EmployeeService empService, IMapper mapper, DAL<Employee> empDAL, UserManager<ApplicationUser> userManager) : ControllerBase
+public class EmployeeController(EmployeeService empService, IMapper mapper) : ControllerBase
 {
     private readonly EmployeeService _empService = empService;
     private readonly IMapper _mapper = mapper;
-    private readonly DAL<Employee> _empDAL = empDAL;
-    private readonly Func<Employee, GetEmployeeDto> getEmployeeDto = e => new GetEmployeeDto(
-        e.Id,
-        e.Name,
-        e.Email
-        );
-    private readonly UserManager<ApplicationUser> _userManager = userManager;
-
-
     /// <summary>
     /// Returns all Employees in Database
     /// </summary>
