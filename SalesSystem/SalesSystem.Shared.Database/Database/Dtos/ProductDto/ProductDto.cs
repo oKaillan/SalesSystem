@@ -5,8 +5,6 @@ namespace SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 
 public class ProductDto
 {
-
-
     [Required(ErrorMessage = "Name can't be null")]
     public string Name { get; set; } = null!;
     [Range(0, 2200, ErrorMessage = "The minimum quantity is 0.")]

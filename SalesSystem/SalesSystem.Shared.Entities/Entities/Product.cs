@@ -84,7 +84,11 @@ public class Product
         if (categories is null || categories.Count == 0)
             return (false, "Categories can't be null or empty");
 
-        Categories = categories;
+        Categories.Clear();
+
+        foreach (var category in categories)
+            Categories.Add(category);
+
         return (true, null);
     }
 

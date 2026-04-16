@@ -51,8 +51,9 @@ builder.Services.AddTransient<DAL<Employee>>();
 builder.Services.AddTransient<DAL<Product>>();
 builder.Services.AddTransient<DAL<ProductCategory>>();
 builder.Services.AddTransient<DAL<SalesLog>>();
-builder.Services.AddTransient<SalesLogService>();
 builder.Services.AddTransient<EmployeeService>();
+builder.Services.AddTransient<ProductService>();
+builder.Services.AddTransient<SalesLogService>();
 builder.Services.AddAutoMapper(cfg =>
 {
 }, typeof(Program).Assembly);

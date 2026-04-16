@@ -150,7 +150,7 @@ public class EmployeeService(IMapper mapper, DAL<Employee> empDAL, UserManager<A
 
         return ResultService<PatchEmployeeDto>.Ok(null!, ResultStatus.NoContent);
     }
-    internal async Task<ResultService<EmployeeDto>> Delete(int id)
+    internal async Task<ResultService<EmployeeDto>> DeleteAsync(int id)
     {
         var getEmployee = await _empDAL.GetByAsync(e => e.Id.Equals(id));
         var user = await _userManager.FindByEmailAsync(getEmployee?.Email!);

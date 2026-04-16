@@ -5,7 +5,7 @@ using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.API.Profiles;
 /// <summary>
-/// Controller Responsibly to map Employees using AutoMapper
+/// Class responsible to map Employees using AutoMapper
 /// </summary>
 public class EmployeeProfile : Profile
 {

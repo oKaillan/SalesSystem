@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using SalesSystem.API.Services;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos;
@@ -11,32 +12,15 @@ using System.Linq.Expressions;
 
 namespace SalesSystem.API.Controllers;
 /// <summary>
-/// Controller Responsibly to delivery Products
+/// Controller Responsible to delivery Products
 /// </summary>
-/// <param name="mapper"></param>
-/// <param name="prodDAL"></param>
-/// <param name="pCategoryDAL"></param>
+/// <param name="prodService"></param>
 [ApiController]
 [Route("[controller]")]
 [Authorize(Roles = Roles.AdminOrEmployee)]
-public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCategory> pCategoryDAL) : ControllerBase
+public class ProductController(ProductService prodService) : ControllerBase
 {
-    private readonly IMapper _mapper = mapper;
-    private readonly DAL<Product> _prodDAL = prodDAL;
-    private readonly DAL<ProductCategory> _pCategoryDAL = pCategoryDAL;
-    //This is the Product GET Model, used in Get all Products and Get by iD
-    private readonly Expression<Func<Product, GetProductDto>> getProductDto = p => new GetProductDto(
-        p.Id,
-        p.Name,
-        p.Quantity,
-        p.Price,
-        p.Categories.Select(c => new CategoryDto
-        {
-            Id = c.Id,
-            Name = c.Name
-        })
-        );
-
+    private readonly ProductService _prodService = prodService;
     /// <summary>
     /// Returns all Products in Database
     /// </summary>
@@ -45,12 +29,7 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     [HttpGet]
     public async Task<IActionResult> GetProductsAsync(int skip = 0, int take = 50)
     {
-            var getProducts = await _prodDAL.GetAllPagedWithSelectorAsync(skip, take, getProductDto, p => p.Categories);
-            if (getProducts is null)
-            {
-                return NotFound("There's no Products in database.");
-            }
-            return Ok(getProducts);
+        return (await _prodService.GetAllAsync(skip, take)).ToActionResult();
     }
 
     /// <summary>
@@ -60,16 +39,10 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Product was found</response>
     [HttpGet("{id}")]
+    [ActionName(nameof(GetProductByIdAsync))] // Necessary to return product when created.
     public async Task<IActionResult> GetProductByIdAsync(int id)
     {
-        var getProduct = await _prodDAL.GetByAsync(e => e.Id == id);
-        if (getProduct is null)
-        {
-            return NotFound("Product iD not found.");
-        }
-
-        var dto = _mapper.Map<GetProductDto>(getProduct);
-        return Ok(dto);
+        return (await _prodService.GetByIdAsync(id)).ToActionResult();
     }
 
     /// <summary>
@@ -80,32 +53,15 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     [HttpPost]
     public async Task<IActionResult> PostProductAsync([FromBody] ProductDto productDto)
     {
-        var getProduct = await _prodDAL.GetByAsync(e => e.Name.ToLower() == productDto.Name.ToLower());
-        if (getProduct is not null)
+        var product = await _prodService.CreateAsync(productDto);
+        if (product.Status == Enum.ResultStatus.Created)
         {
-            return Conflict("Product with this Name already exists.");
+            return CreatedAtAction(
+                nameof(GetProductByIdAsync),
+                new {id = product.Data!.iD}, 
+                product.Data);
         }
-
-        //Checks if atleast one category was informed
-        if (productDto.CategoryIds is null || !productDto.CategoryIds.Any())
-            return BadRequest("At least one category must be provided.");
-
-        //Checks if category exists in Database
-        var existingCategories = await _pCategoryDAL.GetAllByAsync(c => productDto.CategoryIds.Contains(c.Id));
-
-        if (existingCategories.Count != productDto.CategoryIds.Count)
-        {
-            var missingIds = productDto.CategoryIds.Except(existingCategories.Select(c => c.Id));
-            return NotFound($"Categories not found in database: {string.Join(", ", missingIds)}");
-        }
-
-        //Creates Product
-        var product = _mapper.Map<Product>(productDto);
-        product.Categories = existingCategories;
-
-        await _prodDAL.CreateAsync(product);
-        return CreatedAtAction(nameof(GetProductByIdAsync),
-            new { id = product.Id }, product);
+        return product.ToActionResult();
     }
 
 
@@ -121,30 +77,13 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     public async Task<IActionResult> UpdateProductAsync([FromBody] ProductDto productDto,
         int id)
     {
-        var getProduct = await _prodDAL.GetByAsync(e => e.Id.Equals(id));
-        if (getProduct is null)
-        {
-            return NotFound("Product iD not Found.");
-        }
-
-        //Check if Category exists in database
-        var categoryCheck = await _pCategoryDAL.GetAllByAsync(c => productDto.CategoryIds.Contains(c.Id));
-        if (categoryCheck is null || categoryCheck.Count == 0)
-        {
-            return NotFound("One or more Categories not found in database.");
-        }
-        //
-
-        _mapper.Map(productDto, getProduct);
-        getProduct.TryChangeProductCategories(categoryCheck);
-        _prodDAL.Update(getProduct);
-        return NoContent();
+        return (await _prodService.UpdateAsync(productDto, id)).ToActionResult();
     }
 
     /// <summary>
     /// Update a Product field at Database
     /// </summary>
-    /// <remarks>If Category was not selected or was invalid, it backs to what it was.</remarks>
+    /// <remarks>If Category was not selected or was invalid, it backs to the last one.</remarks>
     /// <param name="patch">Object with the neccessary fields</param>
     /// <param name="id">Product id</param>
     /// <returns>IActionResult</returns>
@@ -154,25 +93,13 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     public async Task<IActionResult> PatchProductAsync(int id,
         JsonPatchDocument<PatchProductDto> patch)
     {
-        var getProduct = await _prodDAL.GetByAsync(e => e.Id == id);
-        if (getProduct is null)
-            return NotFound("Product iD not Found.");
-
-        var productToUpdate = _mapper.Map<PatchProductDto>(getProduct);
-        patch.ApplyTo(productToUpdate, ModelState);
-        if (!TryValidateModel(productToUpdate)) return ValidationProblem(ModelState);
-
-        var checkCategory = await _pCategoryDAL.GetAllByAsync(c => productToUpdate.CategoriesIds!.Contains(c.Id));
-
-        if (checkCategory is null) // If categories was not found, it backs to what it was
-            checkCategory = (List<ProductCategory>?)getProduct.Categories;
-
-        _mapper.Map(productToUpdate, getProduct);
-
-        getProduct.TryChangeProductCategories(checkCategory!); // Always changing, to not create a new one
-
-        _prodDAL.Update(getProduct);
-        return NoContent();
+        var result = await _prodService.PatchAsync(id, patch);
+        if (!result.Success)
+        {
+            ModelState.AddModelError(string.Empty, result.Error!);
+            return ValidationProblem(ModelState);
+        }
+        return result.ToActionResult();
     }
 
     /// <summary>
@@ -182,15 +109,9 @@ public class ProductController(IMapper mapper, DAL<Product> prodDAL, DAL<Product
     /// <response code="204">If the delete was successful</response>
     [Authorize(Roles = Roles.Admin)]
     [HttpDelete("admin/{id}")]
-    public async Task<IActionResult> DeleteProductAsync([FromServices] DAL<Product> _prodDAL, int id)
+    public async Task<IActionResult> DeleteProductAsync(int id)
     {
-        var getProduct = await _prodDAL.GetByAsync(e => e.Id.Equals(id));
-        if (getProduct is null)
-        {
-            return NotFound("Product iD not Found.");
-        }
-        _prodDAL.Delete(getProduct);
-        return NoContent();
+        return (await _prodService.DeleteAsync(id)).ToActionResult();
     }
 
 }

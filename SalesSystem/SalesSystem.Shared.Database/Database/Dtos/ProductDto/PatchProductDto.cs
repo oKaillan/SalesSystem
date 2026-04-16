@@ -12,5 +12,5 @@ public class PatchProductDto
     [Required]
     [Range(4.00, Double.PositiveInfinity, ErrorMessage = "The minimum price is 4.00")]
     public double Price { get; set; }
-    public List<int>? CategoriesIds { get; set; }
+    public List<int>? Categories { get; set; }
 }

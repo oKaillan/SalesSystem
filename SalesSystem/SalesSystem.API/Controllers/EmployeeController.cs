@@ -135,6 +135,6 @@ public class EmployeeController(EmployeeService empService, IMapper mapper) : Co
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteEmployeeAsync(int id)
     {
-        return (await _empService.Delete(id)).ToActionResult();
+        return (await _empService.DeleteAsync(id)).ToActionResult();
     }
 }
