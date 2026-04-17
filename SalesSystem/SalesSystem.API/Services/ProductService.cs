@@ -5,6 +5,7 @@ using SalesSystem.API.Enum;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos;
+using SalesSystem.Shared.Database.Database.Dtos.ProductCategoryDto;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 using SalesSystem.Shared.Database.Responses;
 using System.ComponentModel.DataAnnotations;
@@ -29,11 +30,7 @@ public class ProductService(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCat
         p.Name,
         p.Quantity,
         p.Price,
-        p.Categories.Select(c => new CategoryDto
-        {
-            Id = c.Id,
-            Name = c.Name
-        })
+        p.Categories.Select(c => new GetCategoryDto(c.Id, c.Name))
         );
 
     internal async Task<ResultService<PagedResult<GetProductDto>>> GetAllAsync(int skip, int take)

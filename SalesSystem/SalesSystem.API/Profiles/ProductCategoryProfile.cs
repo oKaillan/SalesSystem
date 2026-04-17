@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SalesSystem.Entities;
-using SalesSystem.Shared.Database.Database.Dtos;
+using SalesSystem.Shared.Database.Database.Dtos.ProductCategoryDto;
+using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.API.Profiles;
 /// <summary>
@@ -13,6 +14,11 @@ public class ProductCategoryProfile : Profile
 /// </summary>
     public ProductCategoryProfile()
     {
-        CreateMap<ProductCategory, CategoryDto>();
+        CreateMap<ProductCategory, GetCategoryDto>();
+        CreateMap<ProductCategory, CreateCategoryDto>();
+        CreateMap<CreateCategoryDto, ProductCategory>();
+        CreateMap<CreateCategoryDto, GetCategoryDto>();
+        CreateMap<PagedResult<ProductCategory>, PagedResult<GetCategoryDto>>();
+        CreateMap<PagedResult<GetCategoryDto>, PagedResult<ProductCategory>>();
     }
 }

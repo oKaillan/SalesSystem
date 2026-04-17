@@ -1,22 +1,23 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SalesSystem.API.Services;
 using SalesSystem.Database;
 using SalesSystem.Entities;
+using SalesSystem.Shared.Database.Database.Dtos.ProductCategoryDto;
 using SalesSystem.Shared.Database.Entities;
 
 namespace SalesSystem.API.Controllers;
 /// <summary>
 /// Controller Responsibly to delivery Products Categories
 /// </summary>
-/// <param name="pCategoryDal"></param>
+/// <param name="catService"></param>
 [ApiController]
 [Route("[controller]")]
 [Authorize(Roles = Roles.AdminOrEmployee)]
-public class ProductCategoryController(DAL<ProductCategory> pCategoryDal) : ControllerBase
+public class ProductCategoryController(ProductCategoryService catService) : ControllerBase
 {
-    private readonly DAL<ProductCategory> _pCategoryDal = pCategoryDal;
-
+    private readonly ProductCategoryService _catService = catService;
     /// <summary>
     /// Returns all Categories in Database
     /// </summary>
@@ -25,8 +26,20 @@ public class ProductCategoryController(DAL<ProductCategory> pCategoryDal) : Cont
     [HttpGet]
     public async Task<IActionResult> GetCategoriesAsync(int skip = 0, int take = 50)
     {
-        var categories = await _pCategoryDal.GetAllPagedWithSelectorAsync(skip, take, c => new { c.Id, c.Name } );
-        return Ok(categories);
+        return (await _catService.GetAllAsync(skip, take)).ToActionResult();
+    }
+
+    /// <summary>
+    /// Return Category by it's id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>IActionResult</returns>
+    /// <response code="200">If the Search was successful</response>
+    [HttpGet("{id}")]
+    [ActionName(nameof(GetCategoryByIdAsync))]
+    public async Task<IActionResult> GetCategoryByIdAsync(int id)
+    {
+        return (await _catService.GetByAsync(id)).ToActionResult();
     }
 
     /// <summary>
@@ -35,21 +48,19 @@ public class ProductCategoryController(DAL<ProductCategory> pCategoryDal) : Cont
     /// <returns>IActionResult</returns>
     /// <response code="201">If the creation was successful</response>
     [HttpPost]
-    public async Task<IActionResult> CreateCategoryAsync([FromBody] ProductCategory pCategory)
+    public async Task<IActionResult> CreateCategoryAsync([FromBody] CreateCategoryDto pCategory)
     {
-        var categoryCheck = _pCategoryDal.GetByAsync(c => c.Name == pCategory.Name); // Checks if Category already exists
-        if (categoryCheck is not null)
+        var result = await _catService.CreateAsync(pCategory);
+        if (result.Status == Enum.ResultStatus.Created)
         {
-            return Conflict("Category already exist.");
+            return CreatedAtAction(
+                nameof(GetCategoryByIdAsync),
+                new { id = result.Data!.id },
+                result.Data
+                );
         }
-
-        await _pCategoryDal.CreateAsync(pCategory);
-
-        return Created($"/ProductCategory/{pCategory.Id}", pCategory);
+        return BadRequest();
     }
-
-
-
 
     /// <summary>
     /// Update a Category at Database
@@ -60,20 +71,12 @@ public class ProductCategoryController(DAL<ProductCategory> pCategoryDal) : Cont
     /// <response code="204">If the update was successful</response>
     [Authorize(Roles = Roles.Admin)]
     [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategoryAsync([FromBody] ProductCategory pCategory, 
+    public async Task<IActionResult> UpdateCategoryAsync(
+        [FromBody] CreateCategoryDto pCategory,
         int id)
-        {
-            var getCategory = await _pCategoryDal.GetByAsync(c => c.Id == id);
-            if (getCategory is null)
-            {
-                return NotFound("Category does not exist.");
-            }
-
-            getCategory.ChangeCategoryName(pCategory.Name);
-            _pCategoryDal.Update(getCategory);
-            return NoContent();
-        }
-
+    {
+        return (await _catService.UpdateAsync(pCategory, id)).ToActionResult();
+    }
 
     /// <summary>
     /// Delete a Category at Database
@@ -84,14 +87,6 @@ public class ProductCategoryController(DAL<ProductCategory> pCategoryDal) : Cont
     [HttpDelete("admin/{id}")]
     public async Task<IActionResult> DeleteCategoryAsync(int id)
     {
-        var categoryCheck = await _pCategoryDal.GetByAsync(p => p.Id == id);
-        if (categoryCheck is null)
-        {
-            return NotFound("Category does not exist.");
-        }
-
-        _pCategoryDal.Delete(categoryCheck);
-        return NoContent();
+        return (await _catService.DeleteAsync(id)).ToActionResult();
     }
-
 }

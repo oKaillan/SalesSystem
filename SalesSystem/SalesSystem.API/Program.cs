@@ -53,6 +53,7 @@ builder.Services.AddTransient<DAL<ProductCategory>>();
 builder.Services.AddTransient<DAL<SalesLog>>();
 builder.Services.AddTransient<EmployeeService>();
 builder.Services.AddTransient<ProductService>();
+builder.Services.AddTransient<ProductCategoryService>();
 builder.Services.AddTransient<SalesLogService>();
 builder.Services.AddAutoMapper(cfg =>
 {
