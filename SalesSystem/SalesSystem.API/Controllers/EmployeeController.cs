@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using SalesSystem.API.Services;
 using SalesSystem.Database;
 using SalesSystem.Entities;
-using Microsoft.AspNetCore.Identity;
 using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
-using Microsoft.AspNetCore.Authorization;
+using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 using SalesSystem.Shared.Database.Entities;
-using SalesSystem.API.Services;
+using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.API.Controllers;
 /// <summary>
@@ -29,6 +31,7 @@ public class EmployeeController(EmployeeService empService, IMapper mapper) : Co
     /// <response code="200">If the Search was successful</response>
     /// <response code="204">If there are no content</response>
     [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<GetEmployeeDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployeesAsync(int skip = 0, int take = 50)
     {
         return (await _empService.GetAllAsync(skip, take)).ToActionResult();
@@ -42,6 +45,7 @@ public class EmployeeController(EmployeeService empService, IMapper mapper) : Co
     /// <response code="200">If the Employee was found</response>
     /// <response code="404">If the Employee was not found</response>
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(GetEmployeeDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetEmployeeByIdAsync(int id)
     {
         return (await _empService.GetByIdAsync(id)).ToActionResult();

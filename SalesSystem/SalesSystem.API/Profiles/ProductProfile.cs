@@ -18,6 +18,9 @@ public class ProductProfile : Profile
         CreateMap<Product, GetProductDto>();
         CreateMap<GetProductDto, Product>();
         CreateMap<PatchProductDto, Product>();
-        CreateMap<Product, PatchProductDto>();
+        CreateMap<Product, PatchProductDto>()
+            .ForMember(dest => dest.Categories,
+        opt => opt.MapFrom(src => src.Categories.Select(pc => pc.Id))); // Config to enable PATCH func to use
+                                                                        // Category Id to change Categories
     }
 }

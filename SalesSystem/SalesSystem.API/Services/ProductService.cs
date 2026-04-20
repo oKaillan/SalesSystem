@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SalesSystem.API.Enum;
 using SalesSystem.Database;
@@ -72,7 +73,7 @@ public class ProductService(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCat
         {
             var missingIds = productDto.CategoryIds.Except(existingCategories.Select(c => c.Id));
             return ResultService<GetProductDto>.Fail(
-                $"Categories not found in database: {string.Join(", ", missingIds)}", 
+                $"Categories not found in database: {string.Join(", ", missingIds)}",
                 ResultStatus.NotFound
                 );
         }
@@ -97,7 +98,7 @@ public class ProductService(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCat
 
         //Check if Category exists in database
         var categoryCheck = await _pCategoryDAL.GetAllByAsync(c => productDto.CategoryIds.Contains(c.Id));
-        if (categoryCheck is null || categoryCheck.Count == 0)
+        if (!categoryCheck.Any() || categoryCheck.Count == 0)
         {
             return ResultService<GetProductDto>.Fail("One or more Categories not found in database.", ResultStatus.NotFound);
         }
@@ -119,7 +120,6 @@ public class ProductService(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCat
         patch.ApplyTo(productToUpdate);
         var context = new ValidationContext(productToUpdate);
         var results = new List<ValidationResult>();
-
         if (!Validator.TryValidateObject(productToUpdate, context, results, true))
             return ResultService<GetProductDto>.Fail(results.ToString()!, ResultStatus.Error);
 

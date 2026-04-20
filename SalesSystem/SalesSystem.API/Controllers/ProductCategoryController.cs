@@ -5,7 +5,9 @@ using SalesSystem.API.Services;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos.ProductCategoryDto;
+using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 using SalesSystem.Shared.Database.Entities;
+using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.API.Controllers;
 /// <summary>
@@ -24,6 +26,7 @@ public class ProductCategoryController(ProductCategoryService catService) : Cont
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<GetCategoryDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCategoriesAsync(int skip = 0, int take = 50)
     {
         return (await _catService.GetAllAsync(skip, take)).ToActionResult();
@@ -36,6 +39,7 @@ public class ProductCategoryController(ProductCategoryService catService) : Cont
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(GetCategoryDto), StatusCodes.Status200OK)]
     [ActionName(nameof(GetCategoryByIdAsync))]
     public async Task<IActionResult> GetCategoryByIdAsync(int id)
     {

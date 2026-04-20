@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SalesSystem.API.Services;
+using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos;
+using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 using SalesSystem.Shared.Database.Entities;
+using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.API.Controllers;
 
@@ -23,6 +26,7 @@ public class SalesLogController(SalesLogService logService) : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<SalesLog>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetLogsAsync(int skip = 0, int take = 50)
     {
         return (await _logService.GetAllAsync(skip, take)).ToActionResult();
@@ -35,6 +39,7 @@ public class SalesLogController(SalesLogService logService) : ControllerBase
     /// <response code="200">If the Search was successful</response>
     /// <response code="204">If the Log was not found</response>
     [HttpGet("{id:guid}")]
+    [ProducesResponseType(typeof(SalesLog), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetLogByiDAsync(Guid id)
     {
         return (await _logService.GetByIdAsync(id)).ToActionResult();
@@ -47,6 +52,7 @@ public class SalesLogController(SalesLogService logService) : ControllerBase
     /// <response code="200">If the Search was successful</response>
     /// <response code="204">If the Log was not found</response>
     [HttpGet("{employeeId:int}")]
+    [ProducesResponseType(typeof(PagedResult<SalesLog>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetLogByEmployeeiDAsync(int employeeId)
     {
         return (await _logService.GetByEmployeeIdAsync(employeeId)).ToActionResult();
@@ -59,6 +65,7 @@ public class SalesLogController(SalesLogService logService) : ControllerBase
     /// <response code="200">If the Search was successful</response>
     /// <response code="204">If the Log was not found</response>
     [HttpGet("{startYear:int}-{finalYear:int}")]
+    [ProducesResponseType(typeof(PagedResult<SalesLog>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetLogByDateAsync(int startYear, int finalYear)
     {
         return (await _logService.GetByDateAsync(startYear, finalYear)).ToActionResult();

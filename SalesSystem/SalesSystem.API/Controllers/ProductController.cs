@@ -8,6 +8,7 @@ using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 using SalesSystem.Shared.Database.Entities;
+using SalesSystem.Shared.Database.Responses;
 using System.Linq.Expressions;
 
 namespace SalesSystem.API.Controllers;
@@ -27,6 +28,7 @@ public class ProductController(ProductService prodService) : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
+    [ProducesResponseType(typeof(PagedResult<GetProductDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProductsAsync(int skip = 0, int take = 50)
     {
         return (await _prodService.GetAllAsync(skip, take)).ToActionResult();
@@ -39,6 +41,7 @@ public class ProductController(ProductService prodService) : ControllerBase
     /// <returns>IActionResult</returns>
     /// <response code="200">If the Product was found</response>
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(GetProductDto), StatusCodes.Status200OK)]
     [ActionName(nameof(GetProductByIdAsync))] // Necessary to return product when created.
     public async Task<IActionResult> GetProductByIdAsync(int id)
     {
@@ -83,9 +86,11 @@ public class ProductController(ProductService prodService) : ControllerBase
     /// <summary>
     /// Update a Product field at Database
     /// </summary>
-    /// <remarks>If Category was not selected or was invalid, it backs to the last one.</remarks>
+    /// <remarks>If Category was not selected or was invalid, it backs to the previous value.<br/>
+    /// To update categories, use the <c>/categories</c> path with a list of categories Ids.
+    /// </remarks>
     /// <param name="patch">Object with the neccessary fields</param>
-    /// <param name="id">Product id</param>
+    /// <param name="id">Product iD</param>
     /// <returns>IActionResult</returns>
     /// <response code="204">If the update was successful</response>
     [Authorize(Roles = Roles.Admin)]
