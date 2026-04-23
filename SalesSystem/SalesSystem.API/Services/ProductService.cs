@@ -34,9 +34,14 @@ public class ProductService(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCat
         p.Categories.Select(c => new GetCategoryDto(c.Id, c.Name))
         );
 
-    internal async Task<ResultService<PagedResult<GetProductDto>>> GetAllAsync(int skip, int take)
+    internal async Task<ResultService<PagedResult<GetProductDto>>> GetAllAsync(int skip, int take, string? search)
     {
-        var getProducts = await _prodDAL.GetAllPagedWithSelectorAsync(skip, take, getProductDto, p => p.Categories);
+        Expression<Func<Product, bool>>? filter = null;
+
+        if (!string.IsNullOrEmpty(search))
+            filter = p => p.Name.ToLower().Contains(search.ToLower());
+
+        var getProducts = await _prodDAL.GetAllPagedWithSelectorAsync(skip, take, filter, getProductDto, p => p.Categories);
         if (getProducts is null)
         {
             return ResultService<PagedResult<GetProductDto>>.Fail("There's no Products in database.", ResultStatus.NoContent);

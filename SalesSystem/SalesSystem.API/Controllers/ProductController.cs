@@ -29,9 +29,9 @@ public class ProductController(ProductService prodService) : ControllerBase
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
     [ProducesResponseType(typeof(PagedResult<GetProductDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProductsAsync(int skip = 0, int take = 50)
+    public async Task<IActionResult> GetProductsAsync(int skip = 0, int take = 50, string? filter = null)
     {
-        return (await _prodService.GetAllAsync(skip, take)).ToActionResult();
+        return (await _prodService.GetAllAsync(skip, take, filter)).ToActionResult();
     }
 
     /// <summary>

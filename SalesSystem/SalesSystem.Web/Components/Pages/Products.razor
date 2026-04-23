@@ -1,6 +1,6 @@
 ﻿@page "/products"
-@using SalesSystem.Shared.Database.Responses
-@inject BaseApiService<GetProductDto> api
+@inject BaseApiService<GetProductDto> productApi
+@inject BaseApiService<GetCategoryDto> categoryApi
 @attribute [Authorize(Roles = Roles.AdminOrEmployee)]
 
 
@@ -13,6 +13,20 @@
         else
         {
             <div class="table-container">
+                <div class="search-div">
+                    <input class="search-input search-border-radius" 
+                        type="search" name="search"
+                        @onchange="p => ProductSearch(p.Value?.ToString())"
+                        placeholder="Insert Product Name" 
+                        />
+                    <select class="search-border-radius" name="categories">
+                        <option class="search-border-radius">Select Category</option>
+                        @foreach (var category in _categories.Data)
+                        {
+                            <option class="search-border-radius">@category.name</option>
+                        }
+                    </select>
+                </div>
                 <table>
                     <thead>
                         <tr>
@@ -42,7 +56,7 @@
                                 <td class="price-field">@String.Format($"{product.price:C}")</td>
                                 <td class="category-field">
                                     @*Separates Categories using ,*@
-                                    @string.Join(", ", product.categories!.Select(p => p.Name))
+                                    @string.Join(", ", product.categories!.Select(p => p.name))
                                 </td>
                             </tr>
                         }
@@ -69,20 +83,34 @@
 @code {
     int pageSize = 20; // Products per page
     private PaginationService<GetProductDto>? _paginationService;
+    private List<GetProductDto>? _filteredProducts;
+    private PagedResult<GetCategoryDto> _categories = null!;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _paginationService = new(
-              api,
+            _categories = await categoryApi.GetObjectPagedListAsync
+            (
+                "productcategory",
+                0, 
+                50
+            );
+
+            _paginationService = new
+            (
+              productApi,
               "product",
               pageSize
             );
             await _paginationService.Paginate();
+            _filteredProducts = _paginationService.Data;
         } 
         catch (Exception ex) { Console.WriteLine($"An error has occurred: {ex.Message}"); }
     }
 
-
+    private async Task ProductSearch(string productName)
+    {
+        await _paginationService!.Paginate(productName);
+    }
 }

@@ -6,6 +6,17 @@
     min-height: calc(100vh - 3.5rem);
 }
 
+.search-border-radius {
+    border-radius: 5px;
+    padding: 5px;
+    height: 100%;
+    border: 0;
+}
+
+    .search-border-radius:focus {
+        outline: none;
+    }
+
 table {
     width: 80%; /*When changing here, needs to change in #arrow-button-field*/
     /*    max-width: 800px;*/
@@ -96,9 +107,10 @@ th:not(:last-child), td:not(:last-child) {
     border: none;
     margin: 0 5px 0 5px;
 }
-#page-counter:focus-visible {
-    outline: none;
-}
+
+    #page-counter:focus-visible {
+        outline: none;
+    }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

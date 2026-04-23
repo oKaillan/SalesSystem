@@ -23,12 +23,16 @@ public class PaginationService<T> where T : class
     public int Skip => (PageNumber - 1) * ObjectsPerPage;
     public int TotalPages => (int)Math.Ceiling((double)TotalCount / ObjectsPerPage);
 
-    public async Task Paginate()
+    public async Task Paginate(string? filter = null)
     {
+        if (filter != null)
+            PageNumber = 1;
+
         var result = await _api.GetObjectPagedListAsync(
             _path,
             Skip,
-            ObjectsPerPage
+            ObjectsPerPage,
+            filter
             );
 
         Data = result.Data;
