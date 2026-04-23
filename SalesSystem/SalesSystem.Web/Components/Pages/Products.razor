@@ -1,7 +1,6 @@
 ﻿@page "/products"
 @inject BaseApiService<GetProductDto> productApi
 @inject BaseApiService<GetCategoryDto> categoryApi
-@using Shared.Database.Database.Dtos.FilterDto
 @attribute [Authorize(Roles = Roles.AdminOrEmployee)]
 
 
@@ -14,7 +13,7 @@
         else
         {
             <div class="table-container">
-                <div class="search-div">
+                @* <div class="search-div">
                     <input class="search-input search-border-radius"
                            type="search" name="search"
                            @onchange="e => OnNameChanged(e.Value?.ToString())"
@@ -29,9 +28,30 @@
                                     class="search-border-radius">@category.name</option>
                         }
                     </select>
-                </div>
+                </div> *@
                 <table>
                     <thead>
+                        <tr id="test">
+                            <th></th>
+                            <th></th>
+                            <th>
+                                <input class="search-input"
+                                       type="search"
+                                       @onchange="e => OnNameChanged(e.Value?.ToString())"
+                                       placeholder="Insert Product Name" />
+                            </th>
+                            <th></th>
+                            <th></th>
+                            <th>
+                                <select @onchange="OnCategoryChanged">
+                                    <option value="">Select Category</option>
+                                    @foreach (var category in _categories.Data)
+                                    {
+                                        <option value="@category.id">@category.name</option>
+                                    }
+                                </select>
+                            </th>
+                        </tr>
                         <tr>
                             <th class="add-field"></th>
                             <th class="id-field">iD</th>
