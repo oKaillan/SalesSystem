@@ -1,4 +1,5 @@
-﻿using SalesSystem.Shared.Database.Responses;
+﻿using SalesSystem.Shared.Database.Database.Dtos.FilterDto;
+using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.Web.Services
 {
@@ -18,14 +19,16 @@ namespace SalesSystem.Web.Services
             }
         }
 
-        public async Task<PagedResult<T>> GetObjectPagedListAsync(string path, int skip, int take, string? filter = null)
+        public async Task<PagedResult<T>> GetObjectPagedListAsync(string path, int skip, int take, ProductFilterDto? filter = null)
         {
             try
             {
                 var url = $"{path}?skip={skip}&take={take}";
-                if (!string.IsNullOrEmpty(filter))
-                    url += $"&filter={filter}";
+                if (!string.IsNullOrEmpty(filter?.Name))
+                    url += $"&name={filter.Name}";
 
+                if (filter?.CategoryId != null)
+                    url += $"&categoryId={filter.CategoryId}";
 
                 var result = await _httpClient.GetFromJsonAsync<PagedResult<T>>(url);
                 if (result is null)

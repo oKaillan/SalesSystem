@@ -6,6 +6,7 @@ using SalesSystem.API.Services;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos;
+using SalesSystem.Shared.Database.Database.Dtos.FilterDto;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 using SalesSystem.Shared.Database.Entities;
 using SalesSystem.Shared.Database.Responses;
@@ -29,8 +30,9 @@ public class ProductController(ProductService prodService) : ControllerBase
     /// <response code="200">If the Search was successful</response>
     [HttpGet]
     [ProducesResponseType(typeof(PagedResult<GetProductDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProductsAsync(int skip = 0, int take = 50, string? filter = null)
+    public async Task<IActionResult> GetProductsAsync(string? name, int? categoryId, int skip = 0, int take = 50)
     {
+        var filter = new ProductFilterDto(name, categoryId);
         return (await _prodService.GetAllAsync(skip, take, filter)).ToActionResult();
     }
 
@@ -61,7 +63,7 @@ public class ProductController(ProductService prodService) : ControllerBase
         {
             return CreatedAtAction(
                 nameof(GetProductByIdAsync),
-                new {id = product.Data!.iD}, 
+                new { id = product.Data!.iD },
                 product.Data);
         }
         return product.ToActionResult();

@@ -6,6 +6,7 @@ using SalesSystem.API.Enum;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos;
+using SalesSystem.Shared.Database.Database.Dtos.FilterDto;
 using SalesSystem.Shared.Database.Database.Dtos.ProductCategoryDto;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 using SalesSystem.Shared.Database.Responses;
@@ -34,12 +35,19 @@ public class ProductService(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCat
         p.Categories.Select(c => new GetCategoryDto(c.Id, c.Name))
         );
 
-    internal async Task<ResultService<PagedResult<GetProductDto>>> GetAllAsync(int skip, int take, string? search)
+    internal async Task<ResultService<PagedResult<GetProductDto>>> GetAllAsync(int skip, int take, ProductFilterDto? search)
     {
         Expression<Func<Product, bool>>? filter = null;
 
-        if (!string.IsNullOrEmpty(search))
-            filter = p => p.Name.ToLower().Contains(search.ToLower());
+        if (search is not null)
+        {
+            filter = p =>
+            (string.IsNullOrEmpty(search.Name) || p.Name.ToLower().Contains(search.Name.ToLower())) &&
+            (!search.CategoryId.HasValue || p.Categories.Any(c => c.Id == search.CategoryId));
+        }
+
+        Console.WriteLine($"Name: {search.Name}");
+        Console.WriteLine($"Category: {search.CategoryId}");
 
         var getProducts = await _prodDAL.GetAllPagedWithSelectorAsync(skip, take, filter, getProductDto, p => p.Categories);
         if (getProducts is null)

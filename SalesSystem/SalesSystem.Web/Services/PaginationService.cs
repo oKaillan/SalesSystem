@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using SalesSystem.Shared.Database.Database.Dtos.FilterDto;
 
 namespace SalesSystem.Web.Services;
 
@@ -23,7 +24,7 @@ public class PaginationService<T> where T : class
     public int Skip => (PageNumber - 1) * ObjectsPerPage;
     public int TotalPages => (int)Math.Ceiling((double)TotalCount / ObjectsPerPage);
 
-    public async Task Paginate(string? filter = null)
+    public async Task Paginate(ProductFilterDto? filter = null)
     {
         if (filter != null)
             PageNumber = 1;

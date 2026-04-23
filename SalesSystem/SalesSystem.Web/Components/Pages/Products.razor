@@ -1,6 +1,7 @@
 ﻿@page "/products"
 @inject BaseApiService<GetProductDto> productApi
 @inject BaseApiService<GetCategoryDto> categoryApi
+@using Shared.Database.Database.Dtos.FilterDto
 @attribute [Authorize(Roles = Roles.AdminOrEmployee)]
 
 
@@ -14,16 +15,18 @@
         {
             <div class="table-container">
                 <div class="search-div">
-                    <input class="search-input search-border-radius" 
-                        type="search" name="search"
-                        @onchange="p => ProductSearch(p.Value?.ToString())"
-                        placeholder="Insert Product Name" 
-                        />
-                    <select class="search-border-radius" name="categories">
-                        <option class="search-border-radius">Select Category</option>
+                    <input class="search-input search-border-radius"
+                           type="search" name="search"
+                           @onchange="e => OnNameChanged(e.Value?.ToString())"
+                           placeholder="Insert Product Name" />
+                    <select @onchange="OnCategoryChanged"
+                        class="search-border-radius" name="categories">
+                        <option value="" 
+                            class="search-border-radius">Select Category</option>
                         @foreach (var category in _categories.Data)
                         {
-                            <option class="search-border-radius">@category.name</option>
+                            <option value="@category.id"
+                                    class="search-border-radius">@category.name</option>
                         }
                     </select>
                 </div>
@@ -83,8 +86,8 @@
 @code {
     int pageSize = 20; // Products per page
     private PaginationService<GetProductDto>? _paginationService;
-    private List<GetProductDto>? _filteredProducts;
     private PagedResult<GetCategoryDto> _categories = null!;
+    private ProductFilterDto _filter = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -93,7 +96,7 @@
             _categories = await categoryApi.GetObjectPagedListAsync
             (
                 "productcategory",
-                0, 
+                0,
                 50
             );
 
@@ -104,13 +107,23 @@
               pageSize
             );
             await _paginationService.Paginate();
-            _filteredProducts = _paginationService.Data;
-        } 
+        }
         catch (Exception ex) { Console.WriteLine($"An error has occurred: {ex.Message}"); }
     }
 
-    private async Task ProductSearch(string productName)
+    private async Task OnNameChanged(string? name)
     {
-        await _paginationService!.Paginate(productName);
+        _filter.Name = name;
+        await _paginationService!.Paginate(_filter);
+    }
+
+    private async Task OnCategoryChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int id))
+            _filter.CategoryId = id;
+        else
+            _filter.CategoryId = null;
+
+        await _paginationService!.Paginate(_filter);
     }
 }
