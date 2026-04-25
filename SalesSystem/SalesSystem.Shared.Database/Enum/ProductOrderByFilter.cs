@@ -4,5 +4,7 @@ public enum ProductOrderByFilter
 {
     id,
     name,
-    price
+    quantity,
+    price,
+    category
 }

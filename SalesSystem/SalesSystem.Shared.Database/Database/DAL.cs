@@ -80,41 +80,6 @@ namespace SalesSystem.Database
             }
             catch (Exception ex) { throw new Exception($"An error has occurred: {ex.Message}"); }
         }
-        //public async Task<PagedResult<TResult>> GetAllPagedWithSelectorAsync<TResult>(
-        //    int skip,
-        //    int take,
-        //    Expression<Func<T, TResult>> selector,
-        //    params Expression<Func<T, object>>[] includes)
-        //    where TResult : class
-        //{
-        //    try
-        //    {
-
-        //        IQueryable<T> query = _context.Set<T>();
-
-        //        if (includes is not null)
-        //            foreach (var i in includes)
-        //            {
-        //                query = query.Include(i);
-        //            }
-
-
-        //        var total = await query.CountAsync();
-
-        //        var data = await query
-        //            .Skip(skip)
-        //            .Take(take)
-        //            .Select(selector)
-        //            .ToListAsync();
-
-        //        return new PagedResult<TResult>
-        //        {
-        //            TotalCount = total,
-        //            Data = data
-        //        };
-        //    }
-        //    catch (Exception ex) { throw new Exception($"An error has occurred: {ex.Message}"); }
-        //}
 
         public async Task<List<T>> GetAllByAsync(Expression<Func<T, bool>> funcPredicate)
         {

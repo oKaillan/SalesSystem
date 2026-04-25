@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol;
 using SalesSystem.API.Enum;
 using SalesSystem.Database;
@@ -65,9 +66,18 @@ public class ProductService(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCat
                 ? q => q.OrderByDescending(p => p.Name)
                 : q => q.OrderBy(p => p.Name),
 
+                ProductOrderByFilter.quantity => search.Desc
+                ? q => q.OrderByDescending(p => p.Quantity)
+                : q => q.OrderBy(p => p.Quantity),
+
                 ProductOrderByFilter.price => search.Desc
                 ? q => q.OrderByDescending(p => p.Price)
                 : q => q.OrderBy(p => p.Price),
+
+
+                ProductOrderByFilter.category => search.Desc
+                ? q => q.OrderByDescending(p => p.Categories.FirstOrDefault()!.Name)
+                : q => q.OrderBy(p => p.Categories.FirstOrDefault()!.Name),
 
                 _ => null
             };

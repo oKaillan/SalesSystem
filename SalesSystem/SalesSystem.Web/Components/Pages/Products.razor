@@ -43,7 +43,9 @@
                                 <div class="th-content">
                                     <span>
                                         iD
-                                        <a @onclick="IdFilter"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                        <a @onclick="() => Filtering(ProductOrderByFilter.id)">
+                                            <img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" />
+                                        </a>
                                     </span>
                                 </div>
                             </th>
@@ -53,7 +55,9 @@
                                 <div class="th-content">
                                     <span>
                                         Name
-                                        <a @onclick="NameFilter"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                        <a @onclick="() => Filtering(ProductOrderByFilter.name)">
+                                            <img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" />
+                                        </a>
                                     </span>
                                 </div>
                             </th>
@@ -63,7 +67,9 @@
                                 <div class="th-content">
                                     <span>
                                         Quantity
-                                        <a href="#"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                        <a @onclick="() => Filtering(ProductOrderByFilter.quantity)">
+                                            <img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" />
+                                        </a>
                                     </span>
                                 </div>
                             </th>
@@ -73,7 +79,9 @@
                                 <div class="th-content">
                                     <span>
                                         Price
-                                        <a @onclick="PriceFilter"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                        <a @onclick="() => Filtering(ProductOrderByFilter.price)">
+                                            <img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" />
+                                        </a>
                                     </span>
                                 </div>
                             </th>
@@ -83,7 +91,9 @@
                                 <div class="th-content">
                                     <span>
                                         Categories
-                                        <a href="#"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                        <a @onclick="() => Filtering(ProductOrderByFilter.category)">
+                                            <img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" />
+                                        </a>
                                     </span>
                                 </div>
                             </th>
@@ -175,38 +185,15 @@
         await _paginationService!.Paginate(_filter);
     }
 
-    private async Task IdFilter()
+    private async Task Filtering(ProductOrderByFilter orderBy)
     {
-        _filter.OrderBy = ProductOrderByFilter.id;
-
-        if (_filter.Desc)
-            _filter.Desc = false;
+        if (_filter.OrderBy == orderBy)
+            _filter.Desc = !_filter.Desc;
         else
+        {
+            _filter.OrderBy = orderBy;
             _filter.Desc = true;
-
-        await _paginationService!.Paginate(_filter);
-    }
-
-    private async Task NameFilter()
-    {
-        _filter.OrderBy = ProductOrderByFilter.name;
-
-        if (_filter.Desc)
-            _filter.Desc = false;
-        else
-            _filter.Desc = true;
-
-        await _paginationService!.Paginate(_filter);
-    }
-
-    private async Task PriceFilter()
-    {
-        _filter.OrderBy = ProductOrderByFilter.price;
-
-        if (_filter.Desc)
-            _filter.Desc = false;
-        else
-            _filter.Desc = true;
+        }
 
         await _paginationService!.Paginate(_filter);
     }
