@@ -53,7 +53,7 @@
                                 <div class="th-content">
                                     <span>
                                         Name
-                                        <a href="#"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                        <a @onclick="NameFilter"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
                                     </span>
                                 </div>
                             </th>
@@ -73,7 +73,7 @@
                                 <div class="th-content">
                                     <span>
                                         Price
-                                        <a href="#"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                        <a @onclick="PriceFilter"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
                                     </span>
                                 </div>
                             </th>
@@ -178,6 +178,30 @@
     private async Task IdFilter()
     {
         _filter.OrderBy = ProductOrderByFilter.id;
+
+        if (_filter.Desc)
+            _filter.Desc = false;
+        else
+            _filter.Desc = true;
+
+        await _paginationService!.Paginate(_filter);
+    }
+
+    private async Task NameFilter()
+    {
+        _filter.OrderBy = ProductOrderByFilter.name;
+
+        if (_filter.Desc)
+            _filter.Desc = false;
+        else
+            _filter.Desc = true;
+
+        await _paginationService!.Paginate(_filter);
+    }
+
+    private async Task PriceFilter()
+    {
+        _filter.OrderBy = ProductOrderByFilter.price;
 
         if (_filter.Desc)
             _filter.Desc = false;
