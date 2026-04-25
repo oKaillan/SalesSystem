@@ -19,7 +19,11 @@ namespace SalesSystem.Web.Services
             }
         }
 
-        public async Task<PagedResult<T>> GetObjectPagedListAsync(string path, int skip, int take, ProductFilterDto? filter = null)
+        public async Task<PagedResult<T>> GetObjectPagedListAsync(
+            string path, 
+            int skip, 
+            int take, 
+            ProductFilterDto? filter = null)
         {
             try
             {

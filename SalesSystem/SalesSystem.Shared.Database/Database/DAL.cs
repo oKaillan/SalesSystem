@@ -40,6 +40,7 @@ namespace SalesSystem.Database
     int skip,
     int take,
     Expression<Func<T, bool>>? filter,
+    Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy,
     Expression<Func<T, TResult>> selector,
     params Expression<Func<T, object>>[] includes)
     where TResult : class
@@ -48,7 +49,7 @@ namespace SalesSystem.Database
             {
                 IQueryable<T> query = _context.Set<T>();
 
-                if (filter != null)
+                if (filter is not null)
                     query = query.Where(filter);
 
                 if (includes is not null)
@@ -56,6 +57,11 @@ namespace SalesSystem.Database
                     {
                         query = query.Include(i);
                     }
+
+                if (orderBy is not null)
+                {
+                    query = orderBy(query);
+                }
 
 
                 var total = await query.CountAsync();

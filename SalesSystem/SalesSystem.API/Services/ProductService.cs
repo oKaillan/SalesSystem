@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using NuGet.Protocol;
 using SalesSystem.API.Enum;
 using SalesSystem.Database;
 using SalesSystem.Entities;
@@ -9,6 +10,7 @@ using SalesSystem.Shared.Database.Database.Dtos;
 using SalesSystem.Shared.Database.Database.Dtos.FilterDto;
 using SalesSystem.Shared.Database.Database.Dtos.ProductCategoryDto;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
+using SalesSystem.Shared.Database.Enum;
 using SalesSystem.Shared.Database.Responses;
 using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
@@ -35,7 +37,12 @@ public class ProductService(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCat
         p.Categories.Select(c => new GetCategoryDto(c.Id, c.Name))
         );
 
-    internal async Task<ResultService<PagedResult<GetProductDto>>> GetAllAsync(int skip, int take, ProductFilterDto? search)
+    internal async Task<ResultService<PagedResult<GetProductDto>>> GetAllAsync(
+        int skip,
+        int take,
+        ProductFilterDto? search,
+        Func<IQueryable<Product>, IOrderedQueryable<Product>>? orderBy = null
+        )
     {
         Expression<Func<Product, bool>>? filter = null;
 
@@ -46,10 +53,27 @@ public class ProductService(IMapper mapper, DAL<Product> prodDAL, DAL<ProductCat
             (!search.CategoryId.HasValue || p.Categories.Any(c => c.Id == search.CategoryId));
         }
 
-        Console.WriteLine($"Name: {search.Name}");
-        Console.WriteLine($"Category: {search.CategoryId}");
+        if (search?.OrderBy is not null)
+        {
+            orderBy = search.OrderBy switch
+            {
+                ProductOrderByFilter.id => search.Desc
+                ? q => q.OrderByDescending(p => p.Id)
+                : q => q.OrderBy(p => p.Id),
 
-        var getProducts = await _prodDAL.GetAllPagedWithSelectorAsync(skip, take, filter, getProductDto, p => p.Categories);
+                ProductOrderByFilter.name => search.Desc
+                ? q => q.OrderByDescending(p => p.Name)
+                : q => q.OrderBy(p => p.Name),
+
+                ProductOrderByFilter.price => search.Desc
+                ? q => q.OrderByDescending(p => p.Price)
+                : q => q.OrderBy(p => p.Price),
+
+                _ => null
+            };
+        }
+
+        var getProducts = await _prodDAL.GetAllPagedWithSelectorAsync(skip, take, filter,orderBy, getProductDto, p => p.Categories);
         if (getProducts is null)
         {
             return ResultService<PagedResult<GetProductDto>>.Fail("There's no Products in database.", ResultStatus.NoContent);

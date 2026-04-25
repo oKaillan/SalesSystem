@@ -7,6 +7,7 @@ using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Entities;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +20,13 @@ builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddCookie();
 
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers()
+    .AddNewtonsoftJson()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter()); // Converts Product enums to String
+    });
 
 builder.Services.AddCors(options =>
 {

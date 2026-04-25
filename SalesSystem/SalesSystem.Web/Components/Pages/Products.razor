@@ -13,22 +13,6 @@
         else
         {
             <div class="table-container">
-                @* <div class="search-div">
-                    <input class="search-input search-border-radius"
-                           type="search" name="search"
-                           @onchange="e => OnNameChanged(e.Value?.ToString())"
-                           placeholder="Insert Product Name" />
-                    <select @onchange="OnCategoryChanged"
-                        class="search-border-radius" name="categories">
-                        <option value="" 
-                            class="search-border-radius">Select Category</option>
-                        @foreach (var category in _categories.Data)
-                        {
-                            <option value="@category.id"
-                                    class="search-border-radius">@category.name</option>
-                        }
-                    </select>
-                </div> *@
                 <table>
                     <thead>
                         <tr id="test">
@@ -54,11 +38,54 @@
                         </tr>
                         <tr>
                             <th class="add-field"></th>
-                            <th class="id-field">iD</th>
-                            <th class="name-field">Name</th>
-                            <th class="qtd-field">Quantity</th>
-                            <th class="price-field">Price</th>
-                            <th class="category-field">Categories</th>
+                            @*ID FIELD*@
+                            <th class="id-field">
+                                <div class="th-content">
+                                    <span>iD
+                                        <a @onclick="IdFilter"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                    </span>
+                                </div>
+                            </th>
+
+                            @*NAME FIELD*@
+                            <th class="name-field">
+                                <div class="th-content">
+                                    <span>
+                                        Name
+                                        <a href="#"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                    </span>
+                                </div>
+                            </th>
+
+                            @*QUANTITY FIELD*@
+                            <th class="qtd-field">
+                                <div class="th-content">
+                                    <span>
+                                        Quantity
+                                        <a href="#"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                    </span>
+                                </div>
+                            </th>
+
+                            @*PRICE FIELD*@
+                            <th class="price-field">
+                                <div class="th-content">
+                                    <span>
+                                        Price
+                                        <a href="#"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                    </span>
+                                </div>
+                            </th>
+
+                            @*CATEGORY FIELD*@
+                            <th class="category-field">
+                                <div class="th-content">
+                                    <span>
+                                        Categories
+                                        <a href="#"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
+                                    </span>
+                                </div>
+                            </th>
                         </tr>
                     </thead>
 
@@ -106,6 +133,7 @@
 @code {
     int pageSize = 20; // Products per page
     private PaginationService<GetProductDto>? _paginationService;
+    private List<GetProductDto>? _updatedProduct;
     private PagedResult<GetCategoryDto> _categories = null!;
     private ProductFilterDto _filter = new();
 
