@@ -23,9 +23,12 @@ public class PaginationService<T> where T : class
 
     public int Skip => (PageNumber - 1) * ObjectsPerPage;
     public int TotalPages => (int)Math.Ceiling((double)TotalCount / ObjectsPerPage);
+    private ProductFilterDto? _currentFilter;
 
     public async Task Paginate(ProductFilterDto? filter = null)
     {
+        _currentFilter = filter ?? _currentFilter;
+
         if (filter != null)
             PageNumber = 1;
 
@@ -33,7 +36,7 @@ public class PaginationService<T> where T : class
             _path,
             Skip,
             ObjectsPerPage,
-            filter
+            _currentFilter
             );
 
         Data = result.Data;

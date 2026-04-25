@@ -41,7 +41,8 @@
                             @*ID FIELD*@
                             <th class="id-field">
                                 <div class="th-content">
-                                    <span>iD
+                                    <span>
+                                        iD
                                         <a @onclick="IdFilter"><img src="/img/svg/angle-down-solid-full.svg" alt="arrow-down" /></a>
                                     </span>
                                 </div>
@@ -133,7 +134,6 @@
 @code {
     int pageSize = 20; // Products per page
     private PaginationService<GetProductDto>? _paginationService;
-    private List<GetProductDto>? _updatedProduct;
     private PagedResult<GetCategoryDto> _categories = null!;
     private ProductFilterDto _filter = new();
 
@@ -171,6 +171,18 @@
             _filter.CategoryId = id;
         else
             _filter.CategoryId = null;
+
+        await _paginationService!.Paginate(_filter);
+    }
+
+    private async Task IdFilter()
+    {
+        _filter.OrderBy = ProductOrderByFilter.id;
+
+        if (_filter.Desc)
+            _filter.Desc = false;
+        else
+            _filter.Desc = true;
 
         await _paginationService!.Paginate(_filter);
     }

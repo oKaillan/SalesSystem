@@ -28,11 +28,21 @@ namespace SalesSystem.Web.Services
             try
             {
                 var url = $"{path}?skip={skip}&take={take}";
+
+                if (filter is null)
+                    url += "&descending=false";
+                else
+                    url += $"&descending={filter!.Desc.ToString()}";
+
+                if (filter?.OrderBy != null)
+                    url += $"&orderBy={filter.OrderBy.ToString()}";
+
                 if (!string.IsNullOrEmpty(filter?.Name))
                     url += $"&name={filter.Name}";
 
                 if (filter?.CategoryId != null)
                     url += $"&categoryId={filter.CategoryId}";
+
 
                 var result = await _httpClient.GetFromJsonAsync<PagedResult<T>>(url);
                 if (result is null)
