@@ -1,21 +1,37 @@
 ﻿@inject ApiAuthenticationStateProvider user
+@inject ApiAuthenticationStateProvider auth
+@inject NavigationManager nav
 @inherits LayoutComponentBase
 <div class="page">
     <AuthorizeView>
         <Authorized>
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+            <div class="sidebar">
+                <NavMenu />
+            </div>
         </Authorized>
     </AuthorizeView>
 
     <main>
         <AuthorizeView>
             <Authorized Context="user">
-        <div class="top-row px-4">
-            <p>Welcome, @user.User.Identity!.Name</p>
-        </div>
+                <div class="top-row px-4">
+                    <div class="top-content">
+                        <p>
+                            Welcome, @user.User.Identity!.Name
+                            <div @onclick="ChangeActive"
+                                 class="burger-logout rotate @(isActive ? "active" : "notactive")">
+                                <img class="user-arrow"
+                                     src="/img/svg/angle-down-solid-full.svg"
+                                     alt="Down Arrow" />
+                                <p @onclick="LogoutUser">Logout</p>
+                            </div>
+                        </p>
+                    </div>
+                </div>
             </Authorized>
+            <NotAuthorized>
+                <RedirectToLogin/>
+            </NotAuthorized>
         </AuthorizeView>
 
         <article class="content px-4">
@@ -29,3 +45,23 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    private bool isActive;
+    private string? errors;
+
+    private void ChangeActive()
+    {
+        isActive = !isActive;
+    }
+
+    private async void LogoutUser()
+    {
+        var response = await auth.LogoutAsync();
+        if (!response.Success)
+        {
+        errors = response.Errors.FirstOrDefault();
+        }
+        else nav.NavigateTo(nav.Uri, forceLoad: true);
+    }
+}

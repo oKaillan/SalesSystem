@@ -1,3 +1,29 @@
+.rotate img {
+    transition: transform 0.3s ease;
+}
+
+.rotate.active img {
+    transform: rotate(360deg);
+}
+
+.rotate.notactive img {
+    transform: rotate(270deg);
+}
+
+.rotate p {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.rotate.active p {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.rotate.notactive p {
+    transform: translateY(-35%);
+    opacity: 0;
+}
+
 .page {
     position: relative;
     display: flex;
@@ -19,23 +45,52 @@ main {
     height: 3.5rem;
     display: flex;
     align-items: center;
+    background-color: #383838;
 }
 
-    .top-row p {
+.top-content {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    justify-content: end;
+}
+
+    .top-content p {
+        display: flex;
         margin: 0;
         color: #3b82f6;
         font-size: 18px;
         font-weight: 600;
     }
 
+    .top-content img {
+        height: 100%;
+        width: 20px;
+        margin-left: 5px;
+        object-fit: fill;
+        align-self: center;
+        cursor: pointer;
+    }
+
+.burger-logout p {
+    color: #3b82f6;
+    top: 50px;
+    right: 5px;
+    position: absolute;
+    background-color: #515050;
+    padding: 4px;
+    cursor: pointer;
+}
+
 @media (max-width: 640.98px) {
     .top-row {
         justify-content: space-between;
     }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        margin-left: 0;
-    }
+        .top-row ::deep a, .top-row ::deep .btn-link {
+            margin-left: 0;
+        }
 }
 
 @media (min-width: 641px) {
@@ -56,11 +111,11 @@ main {
         z-index: 1;
     }
 
-    .top-row.auth ::deep a:first-child {
-        flex: 1;
-        text-align: right;
-        width: 0;
-    }
+        .top-row.auth ::deep a:first-child {
+            flex: 1;
+            text-align: right;
+            width: 0;
+        }
 
     .top-row, article {
         padding-left: 2rem !important;

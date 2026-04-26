@@ -44,7 +44,7 @@ public class ApiAuthenticationStateProvider(IHttpClientFactory factory) : Authen
         }
     }
 
-    public async Task<AuthReponse> LoginAsync(string email, string password)
+    public async Task<AuthResponse> LoginAsync(string email, string password)
     {
         var response = await _httpClient.PostAsJsonAsync("auth/login", new
         {
@@ -55,9 +55,25 @@ public class ApiAuthenticationStateProvider(IHttpClientFactory factory) : Authen
         if (response.IsSuccessStatusCode)
         {
             NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
-            return new AuthReponse { Success = true };
+            return new AuthResponse { Success = true };
         }
 
-        return new AuthReponse { Success = false, Errors = ["Wrong Email or Password"] };
+        return new AuthResponse { Success = false, Errors = ["Wrong Email or Password"] };
+    }
+
+    public async Task<AuthResponse> LogoutAsync()
+    {
+        var response = await _httpClient.PostAsJsonAsync("auth/logout", new
+        {
+
+        });
+
+        if (response.IsSuccessStatusCode)
+        {
+            NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
+            return new AuthResponse { Success = true };
+        }
+
+        return new AuthResponse { Success = false, Errors = ["Was not possible to Logout user"] };
     }
 }
