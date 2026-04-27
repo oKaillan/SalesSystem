@@ -17,8 +17,26 @@
                         <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
                     </NavLink>
                     <NavLink class="nav-link" href="/products" Match="NavLinkMatch.All">
-                        <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Products
+                        <i class="fa-solid fa-box bi-icon" style="color: #ffffff;"></i> 
+                        Products
                     </NavLink>
+                    <AuthorizeView Roles=@Roles.Admin Context="adm">
+                        <Authorized>
+                            <h4 id="adm-h4">Admin</h4>
+                            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                                <i class="fa-solid fa-circle-user bi-icon" style="color: #ffffff;"></i> 
+                                Employees
+                            </NavLink>
+                            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                                <i class="fa-solid fa-c bi-icon" style="color: #ffffff;"></i> 
+                                Categories
+                            </NavLink>
+                            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                                <i class="fa-solid fa-calendar bi-icon" style="color: #ffffff;"></i>
+                                SalesLog
+                            </NavLink>
+                        </Authorized>
+                    </AuthorizeView>
                 </div>
             </nav>
         </div>
