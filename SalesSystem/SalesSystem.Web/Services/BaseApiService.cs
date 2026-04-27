@@ -6,12 +6,14 @@ namespace SalesSystem.Web.Services
     public class BaseApiService<T> where T : class
     {
         private readonly HttpClient _httpClient;
+        private readonly ILogger<BaseApiService<T>> _logger;
 
-        public BaseApiService(IHttpClientFactory factory)
+        public BaseApiService(IHttpClientFactory factory, ILogger<BaseApiService<T>> logger)
         {
             try
             {
             _httpClient = factory.CreateClient("SSAPI");
+            _logger = logger;
             }
             catch (Exception ex)
             {
@@ -27,6 +29,7 @@ namespace SalesSystem.Web.Services
         {
             try
             {
+                //Creating URL
                 var url = $"{path}?skip={skip}&take={take}";
 
                 if (filter is null)
@@ -42,16 +45,34 @@ namespace SalesSystem.Web.Services
 
                 if (filter?.CategoryId != null)
                     url += $"&categoryId={filter.CategoryId}";
+                //
 
+                _logger.LogInformation($"Loading {path}");
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError($"Request failed: {response.StatusCode} at {path}");
+                    throw new HttpRequestException($"Request failed with status {response.StatusCode}");
+                }    
 
                 var result = await _httpClient.GetFromJsonAsync<PagedResult<T>>(url);
-                if (result is null)
-                    throw new Exception($"Object not found at route {path}");
 
+                if (result is null || result.TotalCount == 0)
+                {
+                    _logger.LogError($"No data found at path {path}");
+                    throw new InvalidOperationException("Response body was null");
+                }
+
+                _logger.LogInformation($"{result!.TotalCount} {path} loaded");
                 return result;
-
             }
-            catch (Exception ex) { throw new Exception($"An error has occurred trying to request: {ex.Message}"); }
+            catch (Exception ex) 
+            {
+                _logger.LogError($"An error has occurred trying to request API: {ex.Message}");
+                throw; 
+            }
         }
     }
 }
