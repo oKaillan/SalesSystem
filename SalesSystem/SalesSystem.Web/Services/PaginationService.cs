@@ -43,6 +43,26 @@ public class PaginationService<T> where T : class
         TotalCount = result.TotalCount;
     }
 
+    public void SetSingleItem(T item)
+    {
+        if (item is null)
+        {
+            Data = new List<T>();
+            TotalCount = 0;
+            PageNumber = 1;
+            return;
+        }
+        Data = new List<T> { item };
+        TotalCount = 1;
+        PageNumber = 1;
+    }
+
+    public async Task ResetAsync()
+    {
+        PageNumber = 1;
+        await Paginate();
+    }
+
     public async Task GoToPageNumberAsync(ChangeEventArgs e)
     {
         //Convert input value to int and saves in number var

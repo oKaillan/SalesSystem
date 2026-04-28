@@ -12,8 +12,8 @@ namespace SalesSystem.Web.Services
         {
             try
             {
-            _httpClient = factory.CreateClient("SSAPI");
-            _logger = logger;
+                _httpClient = factory.CreateClient("SSAPI");
+                _logger = logger;
             }
             catch (Exception ex)
             {
@@ -22,9 +22,9 @@ namespace SalesSystem.Web.Services
         }
 
         public async Task<PagedResult<T>> GetObjectPagedListAsync(
-            string path, 
-            int skip, 
-            int take, 
+            string path,
+            int skip,
+            int take,
             ProductFilterDto? filter = null)
         {
             try
@@ -54,25 +54,43 @@ namespace SalesSystem.Web.Services
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError($"Request failed: {response.StatusCode} at {path}");
-                    throw new HttpRequestException($"Request failed with status {response.StatusCode}");
-                }    
-
-                var result = await _httpClient.GetFromJsonAsync<PagedResult<T>>(url);
-
-                if (result is null || result.TotalCount == 0)
+                }
+                else
                 {
-                    _logger.LogError($"No data found at path {path}");
-                    throw new InvalidOperationException("Response body was null");
+                    var result = await _httpClient.GetFromJsonAsync<PagedResult<T>>(url);
+                    _logger.LogInformation($"{result!.TotalCount} {path} loaded");
+                    return result;
                 }
 
-                _logger.LogInformation($"{result!.TotalCount} {path} loaded");
-                return result;
+                return null!;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 _logger.LogError($"An error has occurred trying to request API: {ex.Message}");
-                throw; 
+                throw;
             }
+        }
+
+        public async Task<T> GetObjectById(string path, int id)
+        {
+            var url = $"{path}/{id}";
+
+            _logger.LogInformation($"Loading {path}");
+            var response = await _httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogError($"Request failed: {response.StatusCode} at {path}");
+            }
+            else
+            {
+                var result = await _httpClient.GetFromJsonAsync<T>($"{path}/{id}");
+
+                _logger.LogInformation($"{result} {path} loaded");
+                return result!;
+            }
+
+            return null!;
         }
     }
 }
