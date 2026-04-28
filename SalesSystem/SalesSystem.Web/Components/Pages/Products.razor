@@ -12,143 +12,9 @@
         }
         else
         {
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr id="test">
-                            <th></th>
-                            <th></th>
-                            <th>
-                                <input class="search-input"
-                                       type="search"
-                                       @onchange="e => OnNameChanged(e.Value?.ToString())"
-                                       placeholder="Insert Product Name" />
-                            </th>
-                            <th></th>
-                            <th></th>
-                            <th>
-                                <select @onchange="OnCategoryChanged">
-                                    <option value="">Select Category</option>
-                                    @foreach (var category in _categories.Data)
-                                    {
-                                        <option value="@category.id">@category.name</option>
-                                    }
-                                </select>
-                            </th>
-                        </tr>
-                        <tr>
-                            <th class="add-field"></th>
-                            @*ID FIELD*@
-                            <th class="id-field">
-                                <div class="th-content">
-                                    <span>
-                                        iD
-                                        <a @onclick="() => Filtering(ProductOrderByFilter.id)">
-                                            <img @onclick="ToggleRotate" 
-                                                class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.id
-                                                    ? (_filter.Desc ? "desc" : "asc"): "" )" 
-                                                src="/img/svg/angle-down-solid-full.svg" 
-                                                alt="arrow-down" />
-                                        </a>
-                                    </span>
-                                </div>
-                            </th>
-
-                            @*NAME FIELD*@
-                            <th class="name-field">
-                                <div class="th-content">
-                                    <span>
-                                        Name
-                                        <a @onclick="() => Filtering(ProductOrderByFilter.name)">
-                                            <img @onclick="ToggleRotate" 
-                                                 class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.name ? (_filter.Desc ? "desc" : "asc") : "")"
-                                                 src="/img/svg/angle-down-solid-full.svg" 
-                                                 alt="arrow-down" />
-                                        </a>
-                                    </span>
-                                </div>
-                            </th>
-
-                            @*QUANTITY FIELD*@
-                            <th class="qtd-field">
-                                <div class="th-content">
-                                    <span>
-                                        Quantity
-                                        <a @onclick="() => Filtering(ProductOrderByFilter.quantity)">
-                                            <img @onclick="ToggleRotate" 
-                                                 class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.quantity ? (_filter.Desc ? "desc" : "asc") : "")"
-                                                src="/img/svg/angle-down-solid-full.svg" 
-                                                alt="arrow-down" />
-                                        </a>
-                                    </span>
-                                </div>
-                            </th>
-
-                            @*PRICE FIELD*@
-                            <th class="price-field">
-                                <div class="th-content">
-                                    <span>
-                                        Price
-                                        <a @onclick="() => Filtering(ProductOrderByFilter.price)">
-                                            <img @onclick="ToggleRotate" 
-                                                 class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.price ? (_filter.Desc ? "desc" : "asc") : "")"
-                                                src="/img/svg/angle-down-solid-full.svg" 
-                                                alt="arrow-down" />
-                                        </a>
-                                    </span>
-                                </div>
-                            </th>
-
-                            @*CATEGORY FIELD*@
-                            <th class="category-field">
-                                <div class="th-content">
-                                    <span>
-                                        Categories
-                                        <a @onclick="() => Filtering(ProductOrderByFilter.category)">
-                                            <img @onclick="ToggleRotate" class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.category ? (_filter.Desc ? "desc" : "asc") : "")" 
-                                            src="/img/svg/angle-down-solid-full.svg" 
-                                            alt="arrow-down" />
-                                        </a>
-                                    </span>
-                                </div>
-                            </th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach (var product in _paginationService.Data)
-                        {
-                            <tr>
-                                <td class="add-field">
-                                    <a class="add-button" href="/">
-                                        <svg class="add-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
-                                            <path d="M352 128C352 110.3 337.7 96 320 96C302.3 96 288 110.3 288 128L288 288L128 288C110.3 288 96 302.3 96 320C96 337.7 110.3 352 128 352L288 352L288 512C288 529.7 302.3 544 320 544C337.7 544 352 529.7 352 512L352 352L512 352C529.7 352 544 337.7 544 320C544 302.3 529.7 288 512 288L352 288L352 128z" />
-                                        </svg>
-                                    </a>
-                                </td>
-                                <td class="id-field">@product.iD</td>
-                                <td class="name-field">@product.name</td>
-                                <td class="qtd-field">@product.quantity</td>
-                                <td class="price-field">@String.Format($"{product.price:C}")</td>
-                                <td class="category-field">
-                                    @*Separates Categories using ,*@
-                                    @string.Join(", ", product.categories!.Select(p => p.name))
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <div class="arrow-button-field">
-                    <img id="left-arrow" src="/img/svg/arrow-button.svg"
-                         @onclick="_paginationService.PreviousPageAsync" />
-                    <input id="page-counter" type="number"
-                           value="@_paginationService.PageNumber"
-                           @onchange="_paginationService.GoToPageNumberAsync" />
-                    <img id="right-arrow" src="/img/svg/arrow-button.svg"
-                         @onclick="_paginationService.NextPageAsync" />
-                </div>
-
-            </div>
+            <ProductsTable 
+                Product="_paginationService"
+                Category="_categories"/>
         }
     </Authorized>
     <NotAuthorized>
@@ -160,8 +26,6 @@
     int pageSize = 20; // Products per page
     private PaginationService<GetProductDto>? _paginationService;
     private PagedResult<GetCategoryDto> _categories = null!;
-    private ProductFilterDto _filter = new();
-    private bool isRotated;
 
     protected override async Task OnInitializedAsync()
     {
@@ -183,39 +47,5 @@
             await _paginationService.Paginate();
         }
         catch (Exception ex) { Console.WriteLine($"An error has occurred: {ex.Message}"); }
-    }
-
-    private async Task OnNameChanged(string? name)
-    {
-        _filter.Name = name;
-        await _paginationService!.Paginate(_filter);
-    }
-
-    private async Task OnCategoryChanged(ChangeEventArgs e)
-    {
-        if (int.TryParse(e.Value?.ToString(), out int id))
-            _filter.CategoryId = id;
-        else
-            _filter.CategoryId = null;
-
-        await _paginationService!.Paginate(_filter);
-    }
-
-    private async Task Filtering(ProductOrderByFilter orderBy)
-    {
-        if (_filter.OrderBy == orderBy)
-            _filter.Desc = !_filter.Desc;
-        else
-        {
-            _filter.OrderBy = orderBy;
-            _filter.Desc = true;
-        }
-
-        await _paginationService!.Paginate(_filter);
-    }
-
-    private void ToggleRotate()
-    {
-        isRotated = !isRotated;
     }
 }
