@@ -1,0 +1,160 @@
+﻿@inject BaseApiService<GetEmployeeDto> empApi
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    <input class="search-input"
+                           type="search"
+                           @onchange="OnIdChanged"
+                           placeholder="iD" />
+                </th>
+                <th>
+                    <input class="search-input"
+                           type="search"
+                           @onchange="e => OnNameChanged(e.Value?.ToString())"
+                           placeholder="Insert Employee Name or Email" />
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+                @*ID FIELD*@
+                <th class="id-field">
+                    <div class="th-content">
+                        <span>
+                            iD
+                            <a @onclick="() => Filtering(ProductOrderByFilter.id)">
+                                <img @onclick="ToggleRotate"
+                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.id ?
+                                        (_filter.Desc? "desc" : "asc") : "" )"
+                                     src="/img/svg/angle-down-solid-full.svg"
+                                     alt="arrow-down" />
+                            </a>
+                        </span>
+                    </div>
+                </th>
+
+                @*NAME FIELD*@
+                <th class="name-field">
+                    <div class="th-content">
+                        <span>
+                            Name
+                            <a @onclick="() => Filtering(ProductOrderByFilter.name)">
+                                <img @onclick="ToggleRotate"
+                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.name ? (_filter.Desc ? "desc" : "asc") : "")"
+                                     src="/img/svg/angle-down-solid-full.svg"
+                                     alt="arrow-down" />
+                            </a>
+                        </span>
+                    </div>
+                </th>
+
+                @*EMAIL FIELD*@
+                <th class="mail-field">
+                    <div class="th-content">
+                        <span>
+                            Email
+                            <a @onclick="() => Filtering(ProductOrderByFilter.quantity)">
+                                <img @onclick="ToggleRotate"
+                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.quantity ? (_filter.Desc ? "desc" : "asc") : "")"
+                                     src="/img/svg/angle-down-solid-full.svg"
+                                     alt="arrow-down" />
+                            </a>
+                        </span>
+                    </div>
+                </th>
+                <th></th> @*ACTIONS FIELD*@
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Employee?.Data.Count == 0)
+            {
+                <tr>
+                    <td colspan="4">
+                        @*Columns quantity *@
+                        <h1 style="text-align: center">Employee not Found</h1>
+                    </td>
+                </tr>
+            }
+            else
+            {
+
+                @foreach (var employee in Employee!.Data)
+                {
+                    <tr>
+                        <td class="id-field">@employee.iD</td>
+                        <td class="name-field">@employee.name</td>
+                        <td class="mail-field">@employee.email</td>
+                        <td class="actions-field">
+                            <div class="actions-container">
+                                <button id="edit-button">Edit</button>
+                                <button id="delete-button">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <div class="arrow-button-field">
+        <img id="left-arrow" src="/img/svg/arrow-button.svg"
+             @onclick="Employee.PreviousPageAsync" />
+        <input id="page-counter" type="number"
+               value="@Employee.PageNumber"
+               @onchange="Employee.GoToPageNumberAsync" />
+        <img id="right-arrow" src="/img/svg/arrow-button.svg"
+             @onclick="Employee.NextPageAsync" />
+    </div>
+
+</div>
+
+@code {
+    [Parameter]
+    public PaginationService<GetEmployeeDto>? Employee { get; set; }
+    private ProductFilterDto _filter = new();
+    private bool isRotated;
+
+    private async Task OnIdChanged(ChangeEventArgs e)
+    {
+        var value = e.Value?.ToString();
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            await Employee!.ResetAsync();
+            return;
+        }
+
+        if (int.TryParse(value, out int id))
+        {
+            var result = await empApi.GetObjectById("admin/employee", id);
+            Employee!.SetSingleItem(result);
+        }
+    }
+
+    private async Task OnNameChanged(string? name)
+    {
+        _filter.Name = name;
+        await Employee!.Paginate(_filter);
+    }
+
+    private async Task Filtering(ProductOrderByFilter orderBy)
+    {
+        if (_filter.OrderBy == orderBy)
+            _filter.Desc = !_filter.Desc;
+        else
+        {
+            _filter.OrderBy = orderBy;
+            _filter.Desc = true;
+        }
+
+        await Employee!.Paginate(_filter);
+    }
+
+    private void ToggleRotate()
+    {
+        isRotated = !isRotated;
+    }
+}

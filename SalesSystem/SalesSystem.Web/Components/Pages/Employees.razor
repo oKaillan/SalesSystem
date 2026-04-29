@@ -1,0 +1,29 @@
+﻿@page "/employees"
+@inject BaseApiService<GetEmployeeDto> api
+@if (_paginationService?.Data is null || _paginationService.Data.Count == 0)
+{
+    <p>Loading</p>
+}
+else
+{
+
+    <EmployeesTable 
+        Employee="_paginationService" 
+        />
+}
+
+@code {
+    private int pageSize = 20;
+    private PaginationService<GetEmployeeDto>? _paginationService;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _paginationService = new
+        (
+        api,
+        "admin/employee",
+        pageSize
+        );
+        await _paginationService.Paginate();
+    }
+}

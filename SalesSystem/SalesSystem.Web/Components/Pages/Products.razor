@@ -6,7 +6,7 @@
 
 <AuthorizeView Roles=@Roles.AdminOrEmployee>
     <Authorized>
-        @if (_paginationService?.Data is null)
+        @if (_paginationService?.Data is null || _paginationService.Data.Count == 0)
         {
             <p>Loading...</p>
         }
