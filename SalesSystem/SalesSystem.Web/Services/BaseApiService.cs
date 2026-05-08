@@ -1,5 +1,6 @@
-﻿using SalesSystem.Shared.Database.Database.Dtos.FilterDto;
+﻿using SalesSystem.Shared.Database.Interfaces;
 using SalesSystem.Shared.Database.Responses;
+using System.Reflection;
 
 namespace SalesSystem.Web.Services
 {
@@ -21,31 +22,42 @@ namespace SalesSystem.Web.Services
             }
         }
 
-        public async Task<PagedResult<T>> GetObjectPagedListAsync(
+        public async Task<PagedResult<T>> GetObjectPagedListAsync<TOrderBy>(
             string path,
             int skip,
             int take,
-            ProductFilterDto? filter = null)
+            IFilterDto<TOrderBy>? filter = null)
+            where TOrderBy : struct
         {
             try
             {
                 //Creating URL
                 var url = $"{path}?skip={skip}&take={take}";
 
-                if (filter is null)
-                    url += "&descending=false";
-                else
-                    url += $"&descending={filter!.Desc.ToString()}";
+                if (filter is not null)
+                {
+                    //creates custom URL depending of Entity
+                    var properties = filter.GetType().GetProperties();
 
-                if (filter?.OrderBy != null)
-                    url += $"&orderBy={filter.OrderBy.ToString()}";
+                    foreach (var prop in properties)
+                    {
+                        var value = prop.GetValue(filter);
 
-                if (!string.IsNullOrEmpty(filter?.Name))
-                    url += $"&name={filter.Name}";
+                        if (value == null)
+                            continue;
 
-                if (filter?.CategoryId != null)
-                    url += $"&categoryId={filter.CategoryId}";
-                //
+                        var stringValue = value.ToString();
+
+                        if (string.IsNullOrWhiteSpace(stringValue))
+                            continue;
+
+                        //Transform URL to LowerCase to match API request
+                        var propertyName =
+                            char.ToLowerInvariant(prop.Name[0]) + prop.Name.Substring(1);
+
+                        url += $"&{propertyName}={Uri.EscapeDataString(stringValue)}";
+                    }
+                }
 
                 _logger.LogInformation($"Loading {path}");
 

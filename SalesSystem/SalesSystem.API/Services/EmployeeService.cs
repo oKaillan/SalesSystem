@@ -45,11 +45,11 @@ public class EmployeeService(IMapper mapper, DAL<Employee> empDAL, UserManager<A
         {
             orderBy = search.OrderBy switch
             {
-                EmployeeOrderByFilter.NameOrEmail => search.Desc
+                EmployeeOrderByFilter.NameOrEmail => search.Descending
                 ? q => q.OrderByDescending(e => e.Name)
                 : q => q.OrderBy(e => e.Name),
 
-                EmployeeOrderByFilter.Id => search.Desc
+                EmployeeOrderByFilter.Id => search.Descending
                 ? q => q.OrderByDescending(e => e.Id)
                 : q => q.OrderBy(e => e.Id),
                 _ => null

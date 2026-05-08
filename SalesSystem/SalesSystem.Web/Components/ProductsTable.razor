@@ -39,7 +39,7 @@
                             <a @onclick="() => Filtering(ProductOrderByFilter.id)">
                                 <img @onclick="ToggleRotate"
                                      class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.id
-                                        ? (_filter.Desc ? "desc" : "asc") : "" )"
+                                                                             ? (_filter.Descending ? "desc" : "asc") : "" )"
                                      src="/img/svg/angle-down-solid-full.svg"
                                      alt="arrow-down" />
                             </a>
@@ -54,7 +54,7 @@
                             Name
                             <a @onclick="() => Filtering(ProductOrderByFilter.name)">
                                 <img @onclick="ToggleRotate"
-                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.name ? (_filter.Desc ? "desc" : "asc") : "")"
+                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.name ? (_filter.Descending ? "desc" : "asc") : "")"
                                      src="/img/svg/angle-down-solid-full.svg"
                                      alt="arrow-down" />
                             </a>
@@ -69,7 +69,7 @@
                             Quantity
                             <a @onclick="() => Filtering(ProductOrderByFilter.quantity)">
                                 <img @onclick="ToggleRotate"
-                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.quantity ? (_filter.Desc ? "desc" : "asc") : "")"
+                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.quantity ? (_filter.Descending ? "desc" : "asc") : "")"
                                      src="/img/svg/angle-down-solid-full.svg"
                                      alt="arrow-down" />
                             </a>
@@ -84,7 +84,7 @@
                             Price
                             <a @onclick="() => Filtering(ProductOrderByFilter.price)">
                                 <img @onclick="ToggleRotate"
-                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.price ? (_filter.Desc ? "desc" : "asc") : "")"
+                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.price ? (_filter.Descending ? "desc" : "asc") : "")"
                                      src="/img/svg/angle-down-solid-full.svg"
                                      alt="arrow-down" />
                             </a>
@@ -98,7 +98,7 @@
                         <span>
                             Categories
                             <a @onclick="() => Filtering(ProductOrderByFilter.category)">
-                                <img @onclick="ToggleRotate" class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.category ? (_filter.Desc ? "desc" : "asc") : "")"
+                                <img @onclick="ToggleRotate" class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.category ? (_filter.Descending ? "desc" : "asc") : "")"
                                      src="/img/svg/angle-down-solid-full.svg"
                                      alt="arrow-down" />
                             </a>
@@ -157,7 +157,7 @@
 
 @code {
     [Parameter]
-    public PaginationService<GetProductDto>? Product { get; set; }
+    public PaginationService<GetProductDto, ProductOrderByFilter>? Product { get; set; }
     [Parameter]
     public PagedResult<GetCategoryDto>? Category { get; set; }
     private ProductFilterDto _filter = new();
@@ -199,11 +199,11 @@
     private async Task Filtering(ProductOrderByFilter orderBy)
     {
         if (_filter.OrderBy == orderBy)
-            _filter.Desc = !_filter.Desc;
+            _filter.Descending = !_filter.Descending;
         else
         {
             _filter.OrderBy = orderBy;
-            _filter.Desc = true;
+            _filter.Descending = true;
         }
 
         await Product!.Paginate(_filter);

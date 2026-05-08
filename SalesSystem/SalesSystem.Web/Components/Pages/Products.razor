@@ -24,14 +24,14 @@
 
 @code {
     int pageSize = 20; // Products per page
-    private PaginationService<GetProductDto>? _paginationService;
+    private PaginationService<GetProductDto, ProductOrderByFilter>? _paginationService;
     private PagedResult<GetCategoryDto> _categories = null!;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _categories = await categoryApi.GetObjectPagedListAsync
+            _categories = await categoryApi.GetObjectPagedListAsync<ProductOrderByFilter>
             (
                 "productcategory",
                 0,

@@ -14,7 +14,7 @@ else
 
 @code {
     private int pageSize = 20;
-    private PaginationService<GetEmployeeDto>? _paginationService;
+    private PaginationService<GetEmployeeDto, EmployeeOrderByFilter>? _paginationService;
 
     protected override async Task OnInitializedAsync()
     {

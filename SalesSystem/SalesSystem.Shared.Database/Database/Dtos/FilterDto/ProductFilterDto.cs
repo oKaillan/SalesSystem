@@ -1,14 +1,15 @@
 ﻿using SalesSystem.Shared.Database.Enum;
+using SalesSystem.Shared.Database.Interfaces;
 
 namespace SalesSystem.Shared.Database.Database.Dtos.FilterDto;
 
-public class ProductFilterDto
+public class ProductFilterDto : IFilterDto<ProductOrderByFilter>
 {
 
     public string? Name { get; set; }
     public int? CategoryId { get; set; }
     public ProductOrderByFilter? OrderBy { get; set; }
-    public bool Desc { get; set; } = false;
+    public bool Descending { get; set; } = false;
 
     public ProductFilterDto() { }
 
@@ -17,6 +18,6 @@ public class ProductFilterDto
         Name = productName;
         CategoryId = categoryId;
         OrderBy = orderBy;
-        Desc = desc;
+        Descending = desc;
     }
 };

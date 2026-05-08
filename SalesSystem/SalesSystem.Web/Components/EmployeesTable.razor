@@ -12,7 +12,7 @@
                 <th>
                     <input class="search-input"
                            type="search"
-                           @onchange="e => OnNameChanged(e.Value?.ToString())"
+                           @onchange="e => OnNameOrEmailChanged(e.Value?.ToString())"
                            placeholder="Insert Employee Name or Email" />
                 </th>
                 <th></th>
@@ -24,10 +24,10 @@
                     <div class="th-content">
                         <span>
                             iD
-                            <a @onclick="() => Filtering(ProductOrderByFilter.id)">
+                            <a @onclick="() => Filtering(EmployeeOrderByFilter.Id)">
                                 <img @onclick="ToggleRotate"
-                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.id ?
-                                        (_filter.Desc? "desc" : "asc") : "" )"
+                                     class="arrow-down rotate @(_filter.OrderBy == EmployeeOrderByFilter.Id ?
+                                                                             (_filter.Descending ? "desc" : "asc") : "" )"
                                      src="/img/svg/angle-down-solid-full.svg"
                                      alt="arrow-down" />
                             </a>
@@ -40,9 +40,9 @@
                     <div class="th-content">
                         <span>
                             Name
-                            <a @onclick="() => Filtering(ProductOrderByFilter.name)">
+                            <a @onclick="() => Filtering(EmployeeOrderByFilter.NameOrEmail)">
                                 <img @onclick="ToggleRotate"
-                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.name ? (_filter.Desc ? "desc" : "asc") : "")"
+                                     class="arrow-down rotate @(_filter.OrderBy == EmployeeOrderByFilter.NameOrEmail ? (_filter.Descending ? "desc" : "asc") : "")"
                                      src="/img/svg/angle-down-solid-full.svg"
                                      alt="arrow-down" />
                             </a>
@@ -55,9 +55,9 @@
                     <div class="th-content">
                         <span>
                             Email
-                            <a @onclick="() => Filtering(ProductOrderByFilter.quantity)">
+                            <a @onclick="() => Filtering(EmployeeOrderByFilter.NameOrEmail)">
                                 <img @onclick="ToggleRotate"
-                                     class="arrow-down rotate @(_filter.OrderBy == ProductOrderByFilter.quantity ? (_filter.Desc ? "desc" : "asc") : "")"
+                                     class="arrow-down rotate @(_filter.OrderBy == EmployeeOrderByFilter.NameOrEmail ? (_filter.Descending ? "desc" : "asc") : "")"
                                      src="/img/svg/angle-down-solid-full.svg"
                                      alt="arrow-down" />
                             </a>
@@ -113,8 +113,8 @@
 
 @code {
     [Parameter]
-    public PaginationService<GetEmployeeDto>? Employee { get; set; }
-    private ProductFilterDto _filter = new();
+    public PaginationService<GetEmployeeDto, EmployeeOrderByFilter>? Employee { get; set; }
+    private EmployeeFilterDto _filter = new();
     private bool isRotated;
 
     private async Task OnIdChanged(ChangeEventArgs e)
@@ -134,20 +134,20 @@
         }
     }
 
-    private async Task OnNameChanged(string? name)
+    private async Task OnNameOrEmailChanged(string? nameOrEmail)
     {
-        _filter.Name = name;
+        _filter.NameOrEmail = nameOrEmail;
         await Employee!.Paginate(_filter);
     }
 
-    private async Task Filtering(ProductOrderByFilter orderBy)
+    private async Task Filtering(EmployeeOrderByFilter orderBy)
     {
         if (_filter.OrderBy == orderBy)
-            _filter.Desc = !_filter.Desc;
+            _filter.Descending = !_filter.Descending;
         else
         {
             _filter.OrderBy = orderBy;
-            _filter.Desc = true;
+            _filter.Descending = true;
         }
 
         await Employee!.Paginate(_filter);
