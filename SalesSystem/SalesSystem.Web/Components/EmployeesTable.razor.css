@@ -1,88 +1,90 @@
 ﻿.rotate {
-transition: transform 0.3s ease;
-}
-.rotate.asc {
-transform: rotate(360deg);
-}
-.rotate.desc {
-transform: rotate(180deg);
+    transition: transform 0.3s ease;
 }
 
+    .rotate.asc {
+        transform: rotate(360deg);
+    }
+
+    .rotate.desc {
+        transform: rotate(180deg);
+    }
+
 .table-container {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-min-height: calc(100vh - 3.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 3.5rem);
 }
 
 .search-div {
-display: flex;
-width: 80%;
-justify-content: space-evenly;
+    display: flex;
+    width: 80%;
+    justify-content: space-evenly;
 }
 
 .search-input {
-width: 100%;
+    width: 100%;
 }
 
-.search-input::-webkit-search-cancel-button {
-appearance: none;
-}
+    .search-input::-webkit-search-cancel-button {
+        appearance: none;
+    }
 
-.search-input,
-.search-input::placeholder,
-select {
-background-color: transparent;
-color: white;
-border: none;
-outline: none;
-}
+    .search-input,
+    .search-input::placeholder,
+    select {
+        background-color: transparent;
+        color: white;
+        border: none;
+        outline: none;
+    }
 
 option {
-background-color: var(--table-background-color);
+    background-color: var(--table-background-color);
 }
 
 .search-border-radius {
-border-radius: 5px;
-padding: 5px;
-height: 100%;
-border: 0;
+    border-radius: 5px;
+    padding: 5px;
+    height: 100%;
+    border: 0;
 }
 
-.search-border-radius:focus {
-outline: none;
-}
+    .search-border-radius:focus {
+        outline: none;
+    }
 
-.search-border-radius:hover {
-background-color: #d7d4d4;
-}
+    .search-border-radius:hover {
+        background-color: #d7d4d4;
+    }
 
 table {
-width: 80%; /*When changing here, needs to change in #arrow-button-field*/
-/*    max-width: 800px;*/
-min-height: 80vh;
-border-collapse: collapse;
-background-color: var(--table-background-color);
-color: white;
-border-radius: 15px;
+    width: 80%; /*When changing here, needs to change in #arrow-button-field*/
+    /*    max-width: 800px;*/
+    min-height: 80vh;
+    border-collapse: collapse;
+    background-color: var(--table-background-color);
+    color: white;
+    border-radius: 15px;
 }
 
 th {
-padding: 8px 12px 8px 12px;
-text-align: left;
+    padding: 8px 12px 8px 12px;
+    text-align: left;
 }
 
 td, th {
-border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 tbody tr:last-child td {
-border-bottom: none;
+    border-bottom: none;
 }
 
 th:not(:last-child), td:not(:last-child) {
-border-right: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
 }
 
 .th-content,
@@ -92,81 +94,100 @@ border-right: 1px solid var(--border-color);
     display: flex;
 }
 
-.th-content a {
-height: 18px;
-margin: auto;
-cursor: pointer;
-}
+    .th-content a {
+        height: 18px;
+        margin: auto;
+        cursor: pointer;
+    }
 
-.th-content img:focus {
-height: 100%;
-animation: spin180deg 2s linear infinite;
-}
+    .th-content img:focus {
+        height: 100%;
+        animation: spin180deg 2s linear infinite;
+    }
 
 .id-field {
-width: 30px;
-text-align: center;
+    width: 30px;
+    text-align: center;
 }
+
 .actions-field {
     width: 150px
 }
+
 .actions-container {
     justify-content: center;
 }
+
     .actions-container button {
         margin: auto;
         color: #fff;
         padding: 3px 7px;
-    }
-    #edit-button {
-        background-color: grey;
-    }
-    #delete-button {
-        background-color: red;
+        border: 0;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.6);
     }
 
-    .arrow-button-field {
-        display: flex;
-        align-self: end;
-        margin-top: 5px;
-        width: 20%; /*When changing here, needs to change in .table*/
+        .actions-container button:hover {
+            box-shadow: 0 16px 32px 0 rgba(0,0,0,0.6);
+        }
+
+        #edit-button {
+            background-color: #878787;
+        }
+
+    #edit-button:hover {
+        background-color: #C7C7C7;
     }
 
-.arrow-button-field img,
-#page-counter {
-height: 30px;
-width: 30px;
-text-align: center;
-user-select: none;
+#delete-button {
+    background-color: #B51616;
 }
 
-.arrow-button-field img {
-height: 30px;
-width: 30px;
-cursor: pointer;
+    #delete-button:hover {
+        background-color: #D17979;
+    }
+
+.arrow-button-field {
+    display: flex;
+    align-self: end;
+    margin-top: 5px;
+    width: 20%; /*When changing here, needs to change in .table*/
 }
+
+    .arrow-button-field img,
+    #page-counter {
+        height: 30px;
+        width: 30px;
+        text-align: center;
+        user-select: none;
+    }
+
+    .arrow-button-field img {
+        height: 30px;
+        width: 30px;
+        cursor: pointer;
+    }
 
 #left-arrow {
-transform: rotate(180deg);
+    transform: rotate(180deg);
 }
 
 #page-counter {
-background-color: var(--table-background-color);
-border-radius: 50%;
-color: #fff;
-border: none;
-margin: 0 5px 0 5px;
+    background-color: var(--table-background-color);
+    border-radius: 50%;
+    color: #fff;
+    border: none;
+    margin: 0 5px 0 5px;
 }
 
-#page-counter:focus-visible {
-outline: none;
-}
+    #page-counter:focus-visible {
+        outline: none;
+    }
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
--webkit-appearance: none;
+    -webkit-appearance: none;
 }
 
 input[type=number] {
--moz-appearance: textfield;
+    -moz-appearance: textfield;
 }
