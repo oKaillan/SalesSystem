@@ -7,8 +7,10 @@ using SalesSystem.API.Services;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
+using SalesSystem.Shared.Database.Database.Dtos.FilterDto;
 using SalesSystem.Shared.Database.Database.Dtos.ProductDto;
 using SalesSystem.Shared.Database.Entities;
+using SalesSystem.Shared.Database.Enum;
 using SalesSystem.Shared.Database.Responses;
 
 namespace SalesSystem.API.Controllers;
@@ -32,9 +34,16 @@ public class EmployeeController(EmployeeService empService, IMapper mapper) : Co
     /// <response code="204">If there are no content</response>
     [HttpGet]
     [ProducesResponseType(typeof(PagedResult<GetEmployeeDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetEmployeesAsync(int skip = 0, int take = 50)
+    public async Task<IActionResult> GetEmployeesAsync(
+        string? nameOrEmail,
+        EmployeeOrderByFilter orderBy,
+        int skip = 0, 
+        int take = 50,
+        bool descending = false
+        )
     {
-        return (await _empService.GetAllAsync(skip, take)).ToActionResult();
+        var filter = new EmployeeFilterDto(nameOrEmail, orderBy, descending);
+        return (await _empService.GetAllAsync(skip, take, filter)).ToActionResult();
     }
 
     /// <summary>

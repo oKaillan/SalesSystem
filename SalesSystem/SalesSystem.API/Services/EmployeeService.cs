@@ -4,8 +4,11 @@ using SalesSystem.API.Enum;
 using SalesSystem.Database;
 using SalesSystem.Entities;
 using SalesSystem.Shared.Database.Database.Dtos.EmployeeDto;
+using SalesSystem.Shared.Database.Database.Dtos.FilterDto;
 using SalesSystem.Shared.Database.Entities;
+using SalesSystem.Shared.Database.Enum;
 using SalesSystem.Shared.Database.Responses;
+using System.Linq.Expressions;
 
 namespace SalesSystem.API.Services;
 /// <summary>
@@ -20,9 +23,40 @@ public class EmployeeService(IMapper mapper, DAL<Employee> empDAL, UserManager<A
     private readonly DAL<Employee> _empDAL = empDAL;
     private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-    internal async Task<ResultService<PagedResult<GetEmployeeDto>>> GetAllAsync(int skip, int take)
+    internal async Task<ResultService<PagedResult<GetEmployeeDto>>> GetAllAsync
+        (
+        int skip, 
+        int take,
+        EmployeeFilterDto search,
+        Func<IQueryable<Employee>, IOrderedQueryable<Employee>>? orderBy = null
+        )
     {
-        var getEmployees = await _empDAL.GetAllPagedAsync(skip, take);
+        Expression<Func<Employee, bool>>? filter = null;
+
+        if (search is not null)
+        {
+            filter = p =>
+            (string.IsNullOrEmpty(search.NameOrEmail) 
+            || p.Name.Contains(search.NameOrEmail) 
+            || p.Email.Contains(search.NameOrEmail));
+        }
+
+        if (search?.OrderBy is not null)
+        {
+            orderBy = search.OrderBy switch
+            {
+                EmployeeOrderByFilter.NameOrEmail => search.Desc
+                ? q => q.OrderByDescending(e => e.Name)
+                : q => q.OrderBy(e => e.Name),
+
+                EmployeeOrderByFilter.Id => search.Desc
+                ? q => q.OrderByDescending(e => e.Id)
+                : q => q.OrderBy(e => e.Id),
+                _ => null
+            };
+        }
+
+        var getEmployees = await _empDAL.GetAllPagedWithFilterAsync(skip, take, filter, orderBy);
         if (getEmployees.Data is null || getEmployees.Data.Count == 0)
             return ResultService<PagedResult<GetEmployeeDto>>.Fail("There's no Employees in database.", ResultStatus.NoContent);
 

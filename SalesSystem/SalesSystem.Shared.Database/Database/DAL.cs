@@ -36,6 +36,36 @@ namespace SalesSystem.Database
                 TotalCount = count
             };
         }
+
+        public async Task<PagedResult<T>> GetAllPagedWithFilterAsync(
+            int skip,
+            int take,
+            Expression<Func<T, bool>>? filter,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy
+            )
+        {
+            IQueryable<T> query = _context.Set<T>();
+            if (filter is not null) 
+                query = query.Where(filter);
+
+            if (orderBy is not null)
+            {
+                query = orderBy(query);
+            }
+
+            var count = await query.CountAsync();
+
+            var data = await query
+                .Skip(skip)
+                .Take(take)
+                .ToListAsync();
+
+            return new PagedResult<T>
+            {
+                Data = data,
+                TotalCount = count
+            };
+        }
         public async Task<PagedResult<TResult>> GetAllPagedWithSelectorAsync<TResult>(
     int skip,
     int take,

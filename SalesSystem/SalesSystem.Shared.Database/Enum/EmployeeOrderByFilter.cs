@@ -3,6 +3,5 @@
 public enum EmployeeOrderByFilter
 {
     Id,
-    Name,
-    Email
+    NameOrEmail
 }
